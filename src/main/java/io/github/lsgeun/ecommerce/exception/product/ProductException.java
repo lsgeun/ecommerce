@@ -1,4 +1,7 @@
-package io.github.lsgeun.ecommerce.exception;
+package io.github.lsgeun.ecommerce.exception.product;
+
+import io.github.lsgeun.ecommerce.exception.BusinessException;
+import io.github.lsgeun.ecommerce.exception.ErrorCode;
 
 public abstract class ProductException extends BusinessException {
     protected ProductException(ErrorCode errorCode) {

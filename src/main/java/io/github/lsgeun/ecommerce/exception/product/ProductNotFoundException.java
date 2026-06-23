@@ -1,0 +1,9 @@
+package io.github.lsgeun.ecommerce.exception.product;
+
+import io.github.lsgeun.ecommerce.exception.ErrorCode;
+
+public class ProductNotFoundException extends ProductException {
+    public ProductNotFoundException(String number) {
+        super(ErrorCode.PRODUCT_NOT_FOUND, "productId: " + number);
+    }
+}

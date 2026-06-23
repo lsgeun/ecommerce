@@ -3,14 +3,25 @@ package io.github.lsgeun.ecommerce.domain.product;
 import jakarta.persistence.*;
 import lombok.Getter;
 
-@Entity
+@Table(
+    uniqueConstraints = {
+        @UniqueConstraint(
+            name = "product_number_index",
+            columnNames = "product_number"
+        )
+    }
+)
 @Getter
+@Entity
 public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private Long id;
 
-    @Column
+    @Column(name = "product_number", nullable = false)
+    private String number;
+
+    @Column(name = "product_name", nullable = false)
     private String name;
 
     @Column

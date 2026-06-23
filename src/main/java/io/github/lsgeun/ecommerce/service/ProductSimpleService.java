@@ -3,7 +3,7 @@ package io.github.lsgeun.ecommerce.service;
 import io.github.lsgeun.ecommerce.domain.product.Product;
 import io.github.lsgeun.ecommerce.domain.product.ProductRepository;
 import io.github.lsgeun.ecommerce.domain.product.ProductDto;
-import io.github.lsgeun.ecommerce.exception.ProductNotFoundException;
+import io.github.lsgeun.ecommerce.exception.product.ProductNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
