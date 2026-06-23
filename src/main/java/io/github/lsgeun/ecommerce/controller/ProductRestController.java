@@ -1,6 +1,6 @@
 package io.github.lsgeun.ecommerce.controller;
 
-import io.github.lsgeun.ecommerce.domain.dto.ProductDto;
+import io.github.lsgeun.ecommerce.domain.product.ProductDto;
 import io.github.lsgeun.ecommerce.service.ProductSimpleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

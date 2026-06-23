@@ -1,4 +1,4 @@
-package io.github.lsgeun.ecommerce.domain.dto;
+package io.github.lsgeun.ecommerce.domain.product;
 
 import lombok.Builder;
 

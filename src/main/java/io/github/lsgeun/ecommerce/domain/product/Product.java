@@ -1,4 +1,4 @@
-package io.github.lsgeun.ecommerce.domain;
+package io.github.lsgeun.ecommerce.domain.product;
 
 import jakarta.persistence.*;
 import lombok.Getter;

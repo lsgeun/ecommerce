@@ -1,4 +1,4 @@
-package io.github.lsgeun.ecommerce.domain;
+package io.github.lsgeun.ecommerce.domain.product;
 
 import java.util.Optional;
 

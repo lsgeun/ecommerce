@@ -1,7 +1,7 @@
 package io.github.lsgeun.ecommerce.service;
 
-import io.github.lsgeun.ecommerce.domain.Product;
-import io.github.lsgeun.ecommerce.domain.dto.ProductDto;
+import io.github.lsgeun.ecommerce.domain.product.Product;
+import io.github.lsgeun.ecommerce.domain.product.ProductDto;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")

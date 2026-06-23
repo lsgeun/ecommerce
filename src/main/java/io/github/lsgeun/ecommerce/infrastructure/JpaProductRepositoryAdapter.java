@@ -1,7 +1,7 @@
 package io.github.lsgeun.ecommerce.infrastructure;
 
-import io.github.lsgeun.ecommerce.domain.Product;
-import io.github.lsgeun.ecommerce.domain.ProductRepository;
+import io.github.lsgeun.ecommerce.domain.product.Product;
+import io.github.lsgeun.ecommerce.domain.product.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
