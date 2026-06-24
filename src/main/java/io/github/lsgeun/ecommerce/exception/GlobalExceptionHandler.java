@@ -12,7 +12,6 @@ public class GlobalExceptionHandler {
 
     private final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
-    // 비즈니스 에러 처리
     @ExceptionHandler(BusinessException.class)
     public ResponseEntity<ErrorDto> handleExceptionBusinessException(BusinessException e) {
         ErrorCode errorCode = e.getErrorCode();
@@ -20,7 +19,6 @@ public class GlobalExceptionHandler {
         return createErrorResponse(errorCode);
     }
 
-    // 예기치 못한 에러 처리
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorDto> handleException(Exception e) {
         ErrorCode errorCode = ErrorCode.UNEXPECTED_SERVER_ERROR;
@@ -51,8 +49,7 @@ public class GlobalExceptionHandler {
         }
     }
 
-    // ErrorCode를 이용해 ErrorDto를 담는 ResponseEntity 생성
-    // 매퍼 역할
+    // 매퍼 역할, ErrorCode를 이용해 ErrorDto를 담는 ResponseEntity 생성
     private ResponseEntity<ErrorDto> createErrorResponse(ErrorCode errorCode) {
         return ResponseEntity
                 .status(errorCode.getHttpStatus())

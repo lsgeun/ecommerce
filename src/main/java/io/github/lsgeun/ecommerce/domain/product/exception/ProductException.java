@@ -1,4 +1,4 @@
-package io.github.lsgeun.ecommerce.exception.product;
+package io.github.lsgeun.ecommerce.domain.product.exception;
 
 import io.github.lsgeun.ecommerce.exception.BusinessException;
 import io.github.lsgeun.ecommerce.exception.ErrorCode;

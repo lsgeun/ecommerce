@@ -1,8 +1,8 @@
-package io.github.lsgeun.ecommerce.infrastructure;
+package io.github.lsgeun.ecommerce.infrastructure.product;
 
 import io.github.lsgeun.ecommerce.domain.product.Product;
 import io.github.lsgeun.ecommerce.domain.product.ProductRepository;
-import io.github.lsgeun.ecommerce.exception.product.ProductNotFoundException;
+import io.github.lsgeun.ecommerce.domain.product.exception.ProductNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -31,16 +31,15 @@ public class JpaProductRepositoryAdapter implements ProductRepository {
 
     @Override
     public Product delete(Product product) {
-        // todo product 레코드 존재 유무 확인
-        jpaProductRepository.delete(product);
-        return product;
+        Product productToDelete = getByNumber(product.getNumber());
+        jpaProductRepository.delete(productToDelete);
+        return productToDelete;
     }
 
     @Override
     public Product deleteByNumber(String number) {
-        // todo product 레코드 존재 유무 확인
-        jpaProductRepository.deleteByNumber(number);
-        return product;
+        Product productToDelete = getByNumber(number);
+        return this.delete(productToDelete);
     }
 
     @Override
