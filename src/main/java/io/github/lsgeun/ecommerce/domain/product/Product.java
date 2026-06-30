@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Table(
+    name = "product_tb",
     uniqueConstraints = {
         @UniqueConstraint(
             name = "uk_product_number",
@@ -20,12 +21,15 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private Long id;
-    @Column(name = "product_number", nullable = false)
+    @Column(name = "product_number", nullable = false, length = 50)
     private String number;
-    @Column(name = "product_name", nullable = false)
+    @Column(nullable = false, length = 50)
     private String name;
-    @Column
-    private int price;
-    @Column
+    @Column(nullable = false)
+    private long price;
+    @Column(name = "stock_quantity", nullable = false)
     private int stock;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private ProductStatus status;
 }
