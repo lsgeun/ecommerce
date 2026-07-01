@@ -17,14 +17,16 @@ public class ProductSimpleService {
     @Transactional(readOnly = true)
     public ProductDto.ReadResponse getProduct(String number) {
         Product product = productRepository.getByNumber(number);
+
         return productDtoMapper.toReadResponse(product);
     }
-    // todo Product 도메인 규칙
+
     @Transactional
     public ProductDto.CreateResponse createProduct(ProductDto.CreateRequest createRequest) {
-        // todo CreateRequest 매퍼
-        // Product product = productRepository.create(createRequest);
-        // return productDtoMapper.toCreateResponse(product);
-        return null;
+        Product product = productDtoMapper.toProduct(createRequest);
+
+        Product createdProduct = productRepository.create(product);
+
+        return productDtoMapper.toCreateResponse(createdProduct);
     }
 }
