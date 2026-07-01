@@ -56,4 +56,31 @@ public class Product {
             .number(number).name(name).price(price).stock(stock).status(status)
             .build();
     }
+
+    // 기본키 id는 검증하지 않아도 됨.
+
+    private static void validateNumber(String number) {
+        // todo 검증 로직
+        // throw new 예외(...);
+    }
+
+    private static void validateName(String name) {
+        // todo 검증 로직
+        // throw new 예외(...);
+    }
+
+    private static void validatePrice(long price) {
+        // todo 검증 로직
+        // throw new 예외(...);
+    }
+
+    private static void validateStock(int stock) {
+        // todo 검증 로직
+        // throw new 예외(...);
+    }
+
+    private static void validateStatus(ProductStatus status) {
+        // todo 검증 로직
+        // throw new 예외(...);
+    }
 }
