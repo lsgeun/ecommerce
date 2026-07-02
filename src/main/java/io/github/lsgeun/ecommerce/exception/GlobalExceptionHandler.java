@@ -14,16 +14,16 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(BusinessException.class)
     public ResponseEntity<ErrorDto> handleExceptionBusinessException(BusinessException e) {
-        ErrorCode errorCode = e.getErrorCode();
-        logByLevel(errorCode.getLogLevel(), e.getMessage(), e);
-        return createErrorResponse(errorCode);
+        ErrorCodeSpec errorCodeSpec = e.getErrorCodeSpec();
+        logByLevel(errorCodeSpec.getLogLevel(), e.getMessage(), e);
+        return createErrorResponse(errorCodeSpec);
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorDto> handleException(Exception e) {
-        ErrorCode errorCode = ErrorCode.UNEXPECTED_SERVER_ERROR;
-        logByLevel(errorCode.getLogLevel(), e.getMessage(), e);
-        return createErrorResponse(errorCode);
+        ErrorCodeSpec ErrorCodeSpec = ErrorCode.UNEXPECTED_SERVER_ERROR;
+        logByLevel(ErrorCodeSpec.getLogLevel(), e.getMessage(), e);
+        return createErrorResponse(ErrorCodeSpec);
     }
 
     // LogLevel 수준으로 로그 출력
@@ -49,13 +49,13 @@ public class GlobalExceptionHandler {
         }
     }
 
-    // 매퍼 역할, ErrorCode를 이용해 ErrorDto를 담는 ResponseEntity 생성
-    private ResponseEntity<ErrorDto> createErrorResponse(ErrorCode errorCode) {
+    // 매퍼 역할, ErrorCodeSpec를 이용해 ErrorDto를 담는 ResponseEntity 생성
+    private ResponseEntity<ErrorDto> createErrorResponse(ErrorCodeSpec errorCodeSpec) {
         return ResponseEntity
-                .status(errorCode.getHttpStatus())
+                .status(errorCodeSpec.getHttpStatus())
                 .body(ErrorDto.builder()
-                        .message(errorCode.getMessage())
-                        .errorCode(errorCode.getCode())
+                        .message(errorCodeSpec.getMessage())
+                        .errorCodeSpec(errorCodeSpec.getCode())
                         .build());
     }
 }
