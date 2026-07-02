@@ -2,7 +2,7 @@ package io.github.lsgeun.ecommerce.infrastructure.product;
 
 import io.github.lsgeun.ecommerce.domain.product.Product;
 import io.github.lsgeun.ecommerce.domain.product.ProductRepository;
-import io.github.lsgeun.ecommerce.domain.product.exception.ProductNotFoundException;
+import io.github.lsgeun.ecommerce.exception.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -21,7 +21,7 @@ public class JpaProductRepositoryAdapter implements ProductRepository {
 
     @Override
     public Product getByNumber(String number) {
-        return this.findByNumber(number).orElseThrow(() -> new ProductNotFoundException(number));
+        return this.findByNumber(number).orElseThrow(() -> new EntityNotFoundException("Product", number));
     }
 
     @Override

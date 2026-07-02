@@ -1,6 +1,6 @@
 package io.github.lsgeun.ecommerce.domain.product;
 
-import io.github.lsgeun.ecommerce.domain.product.exception.InvalidProductException;
+import io.github.lsgeun.ecommerce.exception.InvalidInputException;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -62,37 +62,37 @@ public class Product {
 
     private static void validateNumber(String number) {
         if (Objects.isNull(number)) {
-            throw new InvalidProductException("...");
+            throw new InvalidInputException(Product.class, "number", null, "");
         }
         if (!(2 <= number.length() && number.length() <= 50)) {
-            throw new InvalidProductException("...");
+            throw new InvalidInputException(Product.class, "number", number, "문자열이 2 ~ 50자 이어야 합니다");
         }
     }
 
     private static void validateName(String name) {
         if (Objects.isNull(name)) {
-            throw new InvalidProductException("...");
+            throw new InvalidInputException(Product.class, "name", null, "");
         }
         if (!(2 <= name.length() && name.length() <= 50)) {
-            throw new InvalidProductException("...");
+            throw new InvalidInputException(Product.class, "name", name, "");
         }
     }
 
     private static void validatePrice(long price) {
         if (price < 0) {
-            throw new InvalidProductException("...");
+            throw new InvalidInputException(Product.class, "price", price, "");
         }
     }
 
     private static void validateStock(int stock) {
         if (stock < 0) {
-            throw new InvalidProductException("...");
+            throw new InvalidInputException(Product.class, "stock", stock, "");
         }
     }
 
     private static void validateStatus(ProductStatus status) {
         if (Objects.isNull(status)) {
-            throw new InvalidProductException("...");
+            throw new InvalidInputException(Product.class, "status", null, "");
         }
     }
 }
