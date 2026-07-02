@@ -1,10 +1,13 @@
 package io.github.lsgeun.ecommerce.domain.product;
 
+import io.github.lsgeun.ecommerce.domain.product.exception.InvalidProductException;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.Objects;
 
 @Table(
     name = "product_tb",
@@ -57,30 +60,39 @@ public class Product {
             .build();
     }
 
-    // 기본키 id는 검증하지 않아도 됨.
-
     private static void validateNumber(String number) {
-        // todo 검증 로직
-        // throw new 예외(...);
+        if (Objects.isNull(number)) {
+            throw new InvalidProductException("...");
+        }
+        if (!(2 <= number.length() && number.length() <= 50)) {
+            throw new InvalidProductException("...");
+        }
     }
 
     private static void validateName(String name) {
-        // todo 검증 로직
-        // throw new 예외(...);
+        if (Objects.isNull(name)) {
+            throw new InvalidProductException("...");
+        }
+        if (!(2 <= name.length() && name.length() <= 50)) {
+            throw new InvalidProductException("...");
+        }
     }
 
     private static void validatePrice(long price) {
-        // todo 검증 로직
-        // throw new 예외(...);
+        if (price < 0) {
+            throw new InvalidProductException("...");
+        }
     }
 
     private static void validateStock(int stock) {
-        // todo 검증 로직
-        // throw new 예외(...);
+        if (stock < 0) {
+            throw new InvalidProductException("...");
+        }
     }
 
     private static void validateStatus(ProductStatus status) {
-        // todo 검증 로직
-        // throw new 예외(...);
+        if (Objects.isNull(status)) {
+            throw new InvalidProductException("...");
+        }
     }
 }
