@@ -8,7 +8,7 @@ import lombok.Getter;
 public class ProductDto {
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    public record ReadResponse (
+    public record ReadResponse(
         Long id,
         String number,
         String name,
@@ -17,18 +17,18 @@ public class ProductDto {
         ProductStatus status
     ) {
         @Builder(builderMethodName = "builder")
-        public ReadResponse {}
+        public ReadResponse { }
     }
 
-    public record CreateRequest (
+    public record CreateRequest(
         String number,
         String name,
         int price,
         int stock,
         ProductStatus status
-    ) {}
+    ) { }
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    public record CreateResponse (
+    public record CreateResponse(
         Long id,
         String number,
         String name,
@@ -37,6 +37,6 @@ public class ProductDto {
         ProductStatus status
     ) {
         @Builder(builderMethodName = "builder")
-        public CreateResponse {}
+        public CreateResponse { }
     }
 }

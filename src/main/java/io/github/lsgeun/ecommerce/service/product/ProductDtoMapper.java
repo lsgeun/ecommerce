@@ -8,8 +8,16 @@ import org.mapstruct.Mapper;
 public interface ProductDtoMapper {
     ProductDto.ReadResponse toReadResponse(Product product);
 
+    // CreateDto <-> Domain
     default Product toProduct(ProductDto.CreateRequest createRequest) {
-        return Product.create(createRequest.number(), createRequest.name(), createRequest.price(), createRequest.stock(), createRequest.status());
+        return Product.create(
+            createRequest.number(),
+            createRequest.name(),
+            createRequest.price(),
+            createRequest.stock(),
+            createRequest.status()
+        );
     }
+
     ProductDto.CreateResponse toCreateResponse(Product product);
 }
