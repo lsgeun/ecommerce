@@ -14,8 +14,10 @@ public class ProductDto {
         int stock,
         ProductStatus status
     ) {
-        public ReadResponse { }
         @Builder
+        public ReadResponse {
+            // 내부 레코드에서 Lombok @Builder를 사용하기 위한 빈 컴팩트 생성자
+        }
     }
 
     public record CreateRequest(
@@ -35,7 +37,9 @@ public class ProductDto {
         int stock,
         ProductStatus status
     ) {
-        public CreateResponse { }
         @Builder
+        public CreateResponse {
+            // 내부 레코드에서 Lombok @Builder를 사용하기 위한 빈 컴팩트 생성자
+        }
     }
 }
