@@ -14,8 +14,8 @@ public class ProductDto {
         int stock,
         ProductStatus status
     ) {
-        @Builder(builderMethodName = "builder")
         public ReadResponse { }
+        @Builder
     }
 
     public record CreateRequest(
@@ -35,7 +35,7 @@ public class ProductDto {
         int stock,
         ProductStatus status
     ) {
-        @Builder(builderMethodName = "builder")
         public CreateResponse { }
+        @Builder
     }
 }

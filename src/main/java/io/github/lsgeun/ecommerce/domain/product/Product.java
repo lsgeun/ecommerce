@@ -45,7 +45,7 @@ public class Product {
     @Column(nullable = false)
     private ProductStatus status;
 
-    @Builder(access = AccessLevel.PRIVATE, builderMethodName = "builder")
+    @Builder(access = AccessLevel.PRIVATE)
     private Product(Long id, String number, String name, long price, int stock, ProductStatus status) {
         this.id = id;
         this.number = number;
