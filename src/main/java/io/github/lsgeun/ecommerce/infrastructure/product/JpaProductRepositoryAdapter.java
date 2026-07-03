@@ -12,7 +12,7 @@ import java.util.Optional;
 @Repository
 public class JpaProductRepositoryAdapter implements ProductRepository {
 
-    final private JpaProductRepository jpaProductRepository;
+    private final JpaProductRepository jpaProductRepository;
 
     @Override
     public Optional<Product> findByNumber(String number) {

@@ -11,8 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class ProductSimpleService {
 
-    final private ProductRepository productRepository;
-    final private ProductDtoMapper productDtoMapper;
+    private final ProductRepository productRepository;
+    private final ProductDtoMapper productDtoMapper;
 
     @Transactional(readOnly = true)
     public ProductDto.ReadResponse getProduct(String number) {

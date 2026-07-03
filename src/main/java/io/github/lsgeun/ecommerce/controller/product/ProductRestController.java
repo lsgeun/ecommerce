@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class ProductRestController {
 
-    final private ProductSimpleService productSimpleService;
+    private final ProductSimpleService productSimpleService;
 
     @GetMapping("{number}")
     public ResponseEntity<ProductDto.ReadResponse> getProduct(@PathVariable String number) {
