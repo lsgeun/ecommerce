@@ -21,12 +21,12 @@ public class ProductRestController {
     }
 
     @PostMapping
-    public ResponseEntity<Pro가ductDto.CreateResponse> createProduct(
+    public ResponseEntity<ProductDto.CreateResponse> createProduct(
         @RequestBody ProductDto.CreateRequest createRequest
     ) {
         ProductDto.CreateResponse createResponse = productSimpleService.createProduct(createRequest);
         return ResponseEntity.ok(createResponse);
     }
 
-    // todo update, delete 컨트롤러 메서드 만들기
+    // todo: update, delete 컨트롤러 메서드 만들기
 }
