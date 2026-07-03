@@ -3,7 +3,6 @@ package io.github.lsgeun.ecommerce.controller.product;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.github.lsgeun.ecommerce.domain.product.ProductStatus;
 import lombok.Builder;
-import lombok.Getter;
 
 public class ProductDto {
 
