@@ -4,7 +4,7 @@ import lombok.Getter;
 
 @Getter
 public abstract class BusinessException extends RuntimeException {
-    private final ErrorCodeSpec errorCodeSpec;
+    private final transient ErrorCodeSpec errorCodeSpec;
 
     protected BusinessException(ErrorCodeSpec errorCodeSpec) {
         super(errorCodeSpec.getMessage());
