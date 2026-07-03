@@ -52,10 +52,10 @@ public class GlobalExceptionHandler {
     // 매퍼 역할, ErrorCodeSpec를 이용해 ErrorDto를 담는 ResponseEntity 생성
     private ResponseEntity<ErrorDto> createErrorResponse(ErrorCodeSpec errorCodeSpec) {
         return ResponseEntity
-                .status(errorCodeSpec.getHttpStatus())
-                .body(ErrorDto.builder()
-                        .message(errorCodeSpec.getMessage())
-                        .errorCodeSpec(errorCodeSpec.getCode())
-                        .build());
+            .status(errorCodeSpec.getHttpStatus())
+            .body(ErrorDto.builder()
+                .message(errorCodeSpec.getMessage())
+                .errorCodeSpec(errorCodeSpec.getCode())
+                .build());
     }
 }

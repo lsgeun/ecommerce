@@ -5,7 +5,6 @@ import io.github.lsgeun.ecommerce.domain.product.ProductStatus;
 import lombok.Builder;
 
 public class ProductDto {
-
     @JsonInclude(JsonInclude.Include.NON_NULL)
     public record ReadResponse(
         Long id,
@@ -25,7 +24,8 @@ public class ProductDto {
         int price,
         int stock,
         ProductStatus status
-    ) { }
+    ) {
+    }
     @JsonInclude(JsonInclude.Include.NON_NULL)
     public record CreateResponse(
         Long id,

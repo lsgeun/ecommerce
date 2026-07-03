@@ -27,6 +27,4 @@ public class ProductRestController {
         ProductDto.CreateResponse createResponse = productSimpleService.createProduct(createRequest);
         return ResponseEntity.ok(createResponse);
     }
-
-    // todo: update, delete 컨트롤러 메서드 만들기
 }
