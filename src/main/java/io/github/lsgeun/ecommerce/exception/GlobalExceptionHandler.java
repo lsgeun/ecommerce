@@ -13,36 +13,36 @@ public class GlobalExceptionHandler {
     private final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @ExceptionHandler(BusinessException.class)
-    public ResponseEntity<ErrorDto> handleExceptionBusinessException(BusinessException e) {
-        ErrorCodeSpec errorCodeSpec = e.getErrorCodeSpec();
-        logByLevel(errorCodeSpec.getLogLevel(), e.getMessage(), e);
+    public ResponseEntity<ErrorDto> handleExceptionBusinessException(BusinessException exception) {
+        ErrorCodeSpec errorCodeSpec = exception.getErrorCodeSpec();
+        logByLevel(errorCodeSpec.getLogLevel(), exception.getMessage(), exception);
         return createErrorResponse(errorCodeSpec);
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorDto> handleException(Exception e) {
-        ErrorCodeSpec ErrorCodeSpec = ErrorCode.UNEXPECTED_SERVER_ERROR;
-        logByLevel(ErrorCodeSpec.getLogLevel(), e.getMessage(), e);
-        return createErrorResponse(ErrorCodeSpec);
+    public ResponseEntity<ErrorDto> handleException(Exception exception) {
+        ErrorCodeSpec errorCodeSpec = ErrorCode.UNEXPECTED_SERVER_ERROR;
+        logByLevel(errorCodeSpec.getLogLevel(), exception.getMessage(), exception);
+        return createErrorResponse(errorCodeSpec);
     }
 
     // LogLevel 수준으로 로그 출력
-    private void logByLevel(LogLevel logLevel, String message, Exception e) {
+    private void logByLevel(LogLevel logLevel, String message, Exception exception) {
         switch (logLevel) {
             case TRACE:
-                logger.trace(message, e);
+                logger.trace(message, exception);
                 break;
             case DEBUG:
-                logger.debug(message, e);
+                logger.debug(message, exception);
                 break;
             case INFO:
-                logger.info(message, e);
+                logger.info(message, exception);
                 break;
             case WARN:
-                logger.warn(message, e);
+                logger.warn(message, exception);
                 break;
             case ERROR:
-                logger.error(message, e);
+                logger.error(message, exception);
                 break;
             default:
                 break;
