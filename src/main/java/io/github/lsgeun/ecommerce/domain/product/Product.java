@@ -72,8 +72,16 @@ public class Product {
         if (Objects.isNull(number)) {
             throw new InvalidInputException(Product.class, "number", null, "");
         }
-        if (!(2 <= number.length() && number.length() <= 50)) {
-            throw new InvalidInputException(Product.class, "number", number, "문자열이 2 ~ 50자 이어야 합니다");
+
+        boolean isValid =
+            (2 <= number.length() && number.length() <= 50);
+        if (!isValid) {
+            throw new InvalidInputException(
+                Product.class,
+                "number",
+                number,
+                "문자열이 2 ~ 50자 이어야 합니다"
+            );
         }
     }
 
@@ -81,20 +89,40 @@ public class Product {
         if (Objects.isNull(name)) {
             throw new InvalidInputException(Product.class, "name", null, "");
         }
-        if (!(2 <= name.length() && name.length() <= 50)) {
-            throw new InvalidInputException(Product.class, "name", name, "");
+
+        boolean isValid =
+            (2 <= name.length() && name.length() <= 50);
+        if (!isValid) {
+            throw new InvalidInputException(
+                Product.class,
+                "name",
+                name,
+                ""
+            );
         }
     }
 
     private static void validatePrice(long price) {
-        if (price < 0) {
-            throw new InvalidInputException(Product.class, "price", price, "");
+        boolean isValid = (price >= 0);
+        if (!isValid) {
+            throw new InvalidInputException(
+                Product.class,
+                "price",
+                price,
+                ""
+            );
         }
     }
 
     private static void validateStock(int stock) {
-        if (stock < 0) {
-            throw new InvalidInputException(Product.class, "stock", stock, "");
+        boolean isValid = (stock >= 0);
+        if (!isValid) {
+            throw new InvalidInputException(
+                Product.class,
+                "stock",
+                stock,
+                ""
+            );
         }
     }
 
