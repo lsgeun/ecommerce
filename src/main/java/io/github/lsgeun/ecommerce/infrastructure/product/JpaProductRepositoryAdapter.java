@@ -31,15 +31,16 @@ public class JpaProductRepositoryAdapter implements ProductRepository {
 
     @Override
     public Product delete(Product product) {
-        Product productToDelete = getByNumber(product.getNumber());
-        jpaProductRepository.delete(productToDelete);
-        return productToDelete;
+        return this.deleteByNumber(product.getNumber());
     }
 
     @Override
     public Product deleteByNumber(String number) {
         Product productToDelete = getByNumber(number);
-        return this.delete(productToDelete);
+
+        jpaProductRepository.delete(productToDelete);
+
+        return productToDelete;
     }
 
     @Override
