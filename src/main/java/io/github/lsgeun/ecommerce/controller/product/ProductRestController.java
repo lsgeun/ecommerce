@@ -19,17 +19,23 @@ public class ProductRestController {
 
     @GetMapping("{number}")
     public ResponseEntity<ProductDto.ReadResponse> getProduct(
-        @PathVariable String number
+        @PathVariable
+        String number
     ) {
-        ProductDto.ReadResponse readResponse = productSimpleService.getProduct(number);
+        ProductDto.ReadResponse readResponse =
+            productSimpleService.getProduct(number);
+
         return ResponseEntity.ok(readResponse);
     }
 
     @PostMapping
     public ResponseEntity<ProductDto.CreateResponse> createProduct(
-        @RequestBody ProductDto.CreateRequest createRequest
+        @RequestBody
+        ProductDto.CreateRequest createRequest
     ) {
-        ProductDto.CreateResponse createResponse = productSimpleService.createProduct(createRequest);
+        ProductDto.CreateResponse createResponse =
+            productSimpleService.createProduct(createRequest);
+
         return ResponseEntity.ok(createResponse);
     }
 }

@@ -15,14 +15,18 @@ public class ProductSimpleService {
     private final ProductDtoMapper productDtoMapper;
 
     @Transactional(readOnly = true)
-    public ProductDto.ReadResponse getProduct(String number) {
+    public ProductDto.ReadResponse getProduct(
+        String number
+    ) {
         Product product = productRepository.getByNumber(number);
 
         return productDtoMapper.toReadResponse(product);
     }
 
     @Transactional
-    public ProductDto.CreateResponse createProduct(ProductDto.CreateRequest createRequest) {
+    public ProductDto.CreateResponse createProduct(
+        ProductDto.CreateRequest createRequest
+    ) {
         Product product = productDtoMapper.toProduct(createRequest);
 
         Product createdProduct = productRepository.create(product);

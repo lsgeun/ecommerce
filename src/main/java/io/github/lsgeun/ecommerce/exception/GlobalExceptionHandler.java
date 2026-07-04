@@ -10,24 +10,44 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-    private final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+    private final Logger logger =
+        LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @ExceptionHandler(BusinessException.class)
-    public ResponseEntity<ErrorDto> handleExceptionBusinessException(BusinessException exception) {
+    public ResponseEntity<ErrorDto> handleExceptionBusinessException(
+        BusinessException exception
+    ) {
         ErrorCodeSpec errorCodeSpec = exception.getErrorCodeSpec();
-        logByLevel(errorCodeSpec.getLogLevel(), exception.getMessage(), exception);
+
+        logByLevel(
+            errorCodeSpec.getLogLevel(),
+            exception.getMessage(),
+            exception
+        );
+
         return createErrorResponse(errorCodeSpec);
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorDto> handleException(Exception exception) {
+    public ResponseEntity<ErrorDto> handleException(
+        Exception exception
+    ) {
         ErrorCodeSpec errorCodeSpec = ErrorCode.UNEXPECTED_SERVER_ERROR;
-        logByLevel(errorCodeSpec.getLogLevel(), exception.getMessage(), exception);
+
+        logByLevel(
+            errorCodeSpec.getLogLevel(),
+            exception.getMessage(),
+            exception
+        );
+
         return createErrorResponse(errorCodeSpec);
     }
 
-    // LogLevel 수준으로 로그 출력
-    private void logByLevel(LogLevel logLevel, String message, Exception exception) {
+    private void logByLevel(
+        LogLevel logLevel,
+        String message,
+        Exception exception
+    ) {
         switch (logLevel) {
             case TRACE:
                 logger.trace(message, exception);
@@ -49,13 +69,16 @@ public class GlobalExceptionHandler {
         }
     }
 
-    // 매퍼 역할, ErrorCodeSpec를 이용해 ErrorDto를 담는 ResponseEntity 생성
-    private ResponseEntity<ErrorDto> createErrorResponse(ErrorCodeSpec errorCodeSpec) {
+    private ResponseEntity<ErrorDto> createErrorResponse(
+        ErrorCodeSpec errorCodeSpec
+    ) {
         return ResponseEntity
             .status(errorCodeSpec.getHttpStatus())
-            .body(ErrorDto.builder()
-                .message(errorCodeSpec.getMessage())
-                .errorCodeSpec(errorCodeSpec.getCode())
-                .build());
+            .body(
+                ErrorDto.builder()
+                    .message(errorCodeSpec.getMessage())
+                    .errorCodeSpec(errorCodeSpec.getCode())
+                    .build()
+            );
     }
 }

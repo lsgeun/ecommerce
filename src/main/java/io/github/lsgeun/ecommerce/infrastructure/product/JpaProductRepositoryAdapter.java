@@ -21,7 +21,10 @@ public class JpaProductRepositoryAdapter implements ProductRepository {
 
     @Override
     public Product getByNumber(String number) {
-        return this.findByNumber(number).orElseThrow(() -> new EntityNotFoundException("Product", number));
+        return this.findByNumber(number)
+            .orElseThrow(
+                () -> new EntityNotFoundException("Product", number)
+            );
     }
 
     @Override

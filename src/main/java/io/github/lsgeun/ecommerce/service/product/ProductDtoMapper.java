@@ -6,10 +6,16 @@ import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
 public interface ProductDtoMapper {
-    ProductDto.ReadResponse toReadResponse(Product product);
 
-    // CreateDto <-> Domain
-    default Product toProduct(ProductDto.CreateRequest createRequest) {
+    // Read
+    ProductDto.ReadResponse toReadResponse(
+        Product product
+    );
+
+    // Create
+    default Product toProduct(
+        ProductDto.CreateRequest createRequest
+    ) {
         return Product.create(
             createRequest.number(),
             createRequest.name(),
@@ -19,5 +25,7 @@ public interface ProductDtoMapper {
         );
     }
 
-    ProductDto.CreateResponse toCreateResponse(Product product);
+    ProductDto.CreateResponse toCreateResponse(
+        Product product
+    );
 }
