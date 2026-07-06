@@ -18,6 +18,8 @@ public class ProductSimpleService {
     public ProductDto.ReadResponse getProduct(
         String number
     ) {
+        Product.validateNumber(number);
+
         Product product = productRepository.getByNumber(number);
 
         return productDtoMapper.toReadResponse(product);
