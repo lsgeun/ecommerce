@@ -10,7 +10,7 @@ import static com.tngtech.archunit.core.domain.JavaClass.Predicates.resideInAPac
 import static com.tngtech.archunit.core.domain.JavaClass.Predicates.assignableTo;
 import static com.tngtech.archunit.base.DescribedPredicate.not;
 
-public class ArchitectureDomainTest {
+class ArchitectureDomainTest {
 
     @Test
     void 컨트롤러_계층은_도메인_계층을_직접_참조할_수_없다_단_공통_이넘은_허용() { // 💡 목적과 이름을 명확하게 일치!
