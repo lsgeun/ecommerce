@@ -94,7 +94,7 @@ public class Product {
             .build();
     }
 
-    private static void validateNumber(String number) {
+    public static void validateNumber(String number) {
         if (Objects.isNull(number)) {
             throw new InvalidInputException(
                 Product.class,
@@ -116,7 +116,7 @@ public class Product {
         }
     }
 
-    private static void validateName(String name) {
+    public static void validateName(String name) {
         if (Objects.isNull(name)) {
             throw new InvalidInputException(
                 Product.class,
@@ -138,7 +138,7 @@ public class Product {
         }
     }
 
-    private static void validatePrice(long price) {
+    public static void validatePrice(long price) {
         boolean isValid = (price >= 0);
         if (!isValid) {
             throw new InvalidInputException(
@@ -150,7 +150,7 @@ public class Product {
         }
     }
 
-    private static void validateStock(int stock) {
+    public static void validateStock(int stock) {
         boolean isValid = (stock >= 0);
         if (!isValid) {
             throw new InvalidInputException(
@@ -162,7 +162,7 @@ public class Product {
         }
     }
 
-    private static void validateStatus(ProductStatus status) {
+    public static void validateStatus(ProductStatus status) {
         if (Objects.isNull(status)) {
             throw new InvalidInputException(
                 Product.class,
