@@ -14,6 +14,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.NaturalId;
 
 import java.util.Objects;
 
@@ -36,6 +37,7 @@ public class Product {
     @Id
     private Long id;
 
+    @NaturalId
     @Column(name = "product_number", nullable = false, length = 50)
     private String number;
 
