@@ -9,7 +9,6 @@ public class ProductDto {
     // Read
     @JsonInclude(JsonInclude.Include.NON_NULL)
     public record ReadResponse(
-        Long id,
         String number,
         String name,
         int price,
@@ -34,7 +33,6 @@ public class ProductDto {
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     public record CreateResponse(
-        Long id,
         String number,
         String name,
         int price,
