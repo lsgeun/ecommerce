@@ -31,9 +31,11 @@ dependencies {
 	testCompileOnly 'org.projectlombok:lombok'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 	testAnnotationProcessor 'org.projectlombok:lombok'
-	// ArchUnit JUnit 5 연동 라이브러리 (테스트 환경에서만 사용하므로 testImplementation)
+
+	// ArchUnit JUnit 5
 	testImplementation 'com.tngtech.archunit:archunit-junit5:1.3.0'
 
+	// MapStruct
 	implementation 'org.mapstruct:mapstruct:1.5.5.Final'
 	annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
 	compileOnly 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
