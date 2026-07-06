@@ -1,7 +1,7 @@
 package io.github.lsgeun.ecommerce.infrastructure.product;
 
-import io.github.lsgeun.ecommerce.domain.product.QProduct;
 import io.github.lsgeun.ecommerce.domain.product.Product;
+import io.github.lsgeun.ecommerce.domain.product.QProduct;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.Session;
