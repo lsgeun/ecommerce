@@ -17,7 +17,7 @@ public record ErrorResponseDto(
 
     @JsonFormat(
         shape = JsonFormat.Shape.STRING,
-        pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX",
+        pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS",
         timezone = "Asia/Seoul"
     )
     LocalDateTime timestamp
