@@ -7,6 +7,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -14,7 +17,7 @@ public class GlobalExceptionHandler {
         LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @ExceptionHandler(BusinessException.class)
-    public ResponseEntity<ErrorDto> handleExceptionBusinessException(
+    public ResponseEntity<ErrorResponseDto> handleExceptionBusinessException(
         BusinessException exception
     ) {
         ErrorCodeSpec errorCodeSpec = exception.getErrorCodeSpec();
@@ -29,7 +32,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorDto> handleException(
+    public ResponseEntity<ErrorResponseDto> handleException(
         Exception exception
     ) {
         ErrorCodeSpec errorCodeSpec = ErrorCode.UNEXPECTED_SERVER_ERROR;
@@ -69,15 +72,16 @@ public class GlobalExceptionHandler {
         }
     }
 
-    private ResponseEntity<ErrorDto> createErrorResponse(
+    private ResponseEntity<ErrorResponseDto> createErrorResponse(
         ErrorCodeSpec errorCodeSpec
     ) {
         return ResponseEntity
             .status(errorCodeSpec.getHttpStatus())
             .body(
-                ErrorDto.builder()
+                ErrorResponseDto.builder()
                     .message(errorCodeSpec.getMessage())
-                    .errorCodeSpec(errorCodeSpec.getCode())
+                    .errorCode(errorCodeSpec.getCode())
+                    .timestamp(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
                     .build()
             );
     }
