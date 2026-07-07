@@ -13,7 +13,7 @@ import java.time.ZoneId;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-    private final Logger logger =
+    private final Logger log =
         LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @ExceptionHandler(BusinessException.class)
@@ -53,19 +53,19 @@ public class GlobalExceptionHandler {
     ) {
         switch (logLevel) {
             case TRACE:
-                logger.trace(message, exception);
+                log.trace(message, exception);
                 break;
             case DEBUG:
-                logger.debug(message, exception);
+                log.debug(message, exception);
                 break;
             case INFO:
-                logger.info(message, exception);
+                log.info(message, exception);
                 break;
             case WARN:
-                logger.warn(message, exception);
+                log.warn(message, exception);
                 break;
             case ERROR:
-                logger.error(message, exception);
+                log.error(message, exception);
                 break;
             default:
                 break;
