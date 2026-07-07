@@ -7,9 +7,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -75,14 +72,11 @@ public class GlobalExceptionHandler {
     private ResponseEntity<ErrorResponseDto> createErrorResponse(
         ErrorCodeSpec errorCodeSpec
     ) {
+        ErrorResponseDto errorResponseDto =
+            ErrorResponseDto.from(errorCodeSpec);
+
         return ResponseEntity
             .status(errorCodeSpec.getHttpStatus())
-            .body(
-                ErrorResponseDto.builder()
-                    .message(errorCodeSpec.getMessage())
-                    .errorCode(errorCodeSpec.getCode())
-                    .timestamp(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
-                    .build()
-            );
+            .body(errorResponseDto);
     }
 }
