@@ -15,6 +15,7 @@ public class ProductJpaCustomRepository {
 
     private final EntityManager entityManager;
 
+    // TODO: 2026-07-12까지 아래 코드 원리를 대략적으로 이해하고 메모로 남겨두기
     public Optional<Product> findByNumberWithCache(String number) {
         Product product = entityManager.unwrap(Session.class)
             .byNaturalId(Product.class)
