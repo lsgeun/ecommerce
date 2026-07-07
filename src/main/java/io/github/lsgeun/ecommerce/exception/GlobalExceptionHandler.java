@@ -1,9 +1,11 @@
 package io.github.lsgeun.ecommerce.exception;
 
+import jakarta.validation.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.logging.LogLevel;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -26,6 +28,15 @@ public class GlobalExceptionHandler {
         );
 
         return createErrorResponse(errorCodeSpec);
+    }
+
+    @ExceptionHandler({
+        MethodArgumentNotValidException.class,
+        ConstraintViolationException.class,
+        IllegalArgumentException.class
+    })
+    public ResponseEntity<ErrorResponseDto> handlePropertyAndArgumentFaults(Exception exception) {
+        return null;
     }
 
     @ExceptionHandler(Exception.class)
