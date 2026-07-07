@@ -26,7 +26,7 @@ public class InvalidInputException extends BusinessException {
         String reason
     ) {
         return String.format(
-            "도메인: %s, 필드: %s, 값: %s, 이유 %s",
+            "도메인: %s, 필드: %s, 값: %s, 이유: %s",
             targetClass.getSimpleName(),
             fieldName,
             inputValue,
