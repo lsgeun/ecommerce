@@ -1,6 +1,7 @@
 package io.github.lsgeun.ecommerce.service.product;
 
 import io.github.lsgeun.ecommerce.controller.product.ProductDto;
+import io.github.lsgeun.ecommerce.controller.product.ProductDtoMapper;
 import io.github.lsgeun.ecommerce.domain.product.Product;
 import io.github.lsgeun.ecommerce.domain.product.ProductRepository;
 import lombok.RequiredArgsConstructor;
