@@ -13,11 +13,10 @@ import java.util.Optional;
 public class JpaProductRepositoryAdapter implements ProductRepository {
 
     private final JpaProductRepository jpaProductRepository;
-    private final ProductJpaCustomRepository productJpaCustomRepository;
 
     @Override
     public Optional<Product> findByNumber(String number) {
-        return productJpaCustomRepository.findByNumberWithCache(number);
+        return jpaProductRepository.findByNumberWithCache(number);
     }
 
     @Override

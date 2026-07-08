@@ -11,7 +11,7 @@ import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
-public class ProductJpaCustomRepository {
+public class CustomJpaProductRepositoryImpl {
 
     private final EntityManager entityManager;
 
