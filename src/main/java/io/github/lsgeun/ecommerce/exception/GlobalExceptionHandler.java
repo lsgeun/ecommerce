@@ -9,6 +9,9 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -16,7 +19,7 @@ public class GlobalExceptionHandler {
         LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @ExceptionHandler(BusinessException.class)
-    public ResponseEntity<ErrorResponseDto> handleExceptionBusinessException(
+    public ResponseEntity<ErrorResponse> handleExceptionBusinessException(
         BusinessException exception
     ) {
         ErrorCodeSpec errorCodeSpec = exception.getErrorCodeSpec();
@@ -30,17 +33,60 @@ public class GlobalExceptionHandler {
         return createErrorResponse(errorCodeSpec);
     }
 
-    @ExceptionHandler({
-        MethodArgumentNotValidException.class,
-        ConstraintViolationException.class,
-        IllegalArgumentException.class
-    })
-    public ResponseEntity<ErrorResponseDto> handlePropertyAndArgumentFaults(Exception exception) {
-        return null;
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException exception) {
+        ErrorCodeSpec errorCodeSpec = ErrorCode.INVALID_INPUT_ERROR;
+
+        logByLevel(
+            errorCodeSpec.getLogLevel(),
+            exception.getMessage(),
+            exception
+        );
+
+        List<ErrorResponse.FieldErrorDetail> errors =
+            exception.getBindingResult()
+            .getFieldErrors()
+            .stream()
+            .map(fieldError ->
+                ErrorResponse.FieldErrorDetail.builder()
+                .field(fieldError.getField())
+                .reason(fieldError.getDefaultMessage())
+                .build()
+            )
+            .collect(Collectors.toList());
+
+        return createErrorResponseWithErrors(errorCodeSpec, errors);
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<ErrorResponse> handleConstraintViolationException(ConstraintViolationException exception) {
+        ErrorCodeSpec errorCodeSpec = ErrorCode.INVALID_INPUT_ERROR;
+
+        logByLevel(
+            errorCodeSpec.getLogLevel(),
+            exception.getMessage(),
+            exception
+        );
+
+        List<ErrorResponse.FieldErrorDetail> errors =
+            exception.getConstraintViolations()
+            .stream()
+            .map(violation -> {
+                String propertyPath = violation.getPropertyPath().toString();
+                String fieldName = propertyPath.substring(propertyPath.lastIndexOf('.') + 1);
+
+                return ErrorResponse.FieldErrorDetail.builder()
+                    .field(fieldName)
+                    .reason(violation.getMessage())
+                    .build();
+            })
+            .collect(Collectors.toList());
+
+        return createErrorResponseWithErrors(errorCodeSpec, errors);
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponseDto> handleException(
+    public ResponseEntity<ErrorResponse> handleException(
         Exception exception
     ) {
         ErrorCodeSpec errorCodeSpec = ErrorCode.UNEXPECTED_SERVER_ERROR;
@@ -80,14 +126,26 @@ public class GlobalExceptionHandler {
         }
     }
 
-    private ResponseEntity<ErrorResponseDto> createErrorResponse(
+    private ResponseEntity<ErrorResponse> createErrorResponse(
         ErrorCodeSpec errorCodeSpec
     ) {
-        ErrorResponseDto errorResponseDto =
-            ErrorResponseDto.from(errorCodeSpec);
+        ErrorResponse errorResponse =
+            ErrorResponse.from(errorCodeSpec);
 
         return ResponseEntity
             .status(errorCodeSpec.getHttpStatus())
-            .body(errorResponseDto);
+            .body(errorResponse);
+    }
+
+    private ResponseEntity<ErrorResponse> createErrorResponseWithErrors(
+        ErrorCodeSpec errorCodeSpec,
+        List<ErrorResponse.FieldErrorDetail> errors
+    ) {
+        ErrorResponse errorResponse =
+            ErrorResponse.of(errorCodeSpec, errors);
+
+        return ResponseEntity
+            .status(errorCodeSpec.getHttpStatus())
+            .body(errorResponse);
     }
 }
