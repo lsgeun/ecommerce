@@ -106,23 +106,12 @@ public class GlobalExceptionHandler {
         Exception exception
     ) {
         switch (logLevel) {
-            case TRACE:
-                log.trace(message, exception);
-                break;
-            case DEBUG:
-                log.debug(message, exception);
-                break;
-            case INFO:
-                log.info(message, exception);
-                break;
-            case WARN:
-                log.warn(message, exception);
-                break;
-            case ERROR:
-                log.error(message, exception);
-                break;
-            default:
-                break;
+            case TRACE: log.trace(message, exception); break;
+            case DEBUG: log.debug(message, exception); break;
+            case INFO: log.info(message, exception); break;
+            case WARN: log.warn(message, exception); break;
+            case ERROR: log.error(message, exception); break;
+            default: break;
         }
     }
 
