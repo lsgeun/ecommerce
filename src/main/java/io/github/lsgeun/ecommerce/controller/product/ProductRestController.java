@@ -1,6 +1,7 @@
 package io.github.lsgeun.ecommerce.controller.product;
 
 import io.github.lsgeun.ecommerce.service.product.ProductSimpleService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +20,7 @@ public class ProductRestController {
 
     @GetMapping("{number}")
     public ResponseEntity<ProductDto.ReadResponse> getProduct(
+        @Valid
         @PathVariable
         String number
     ) {
@@ -30,6 +32,7 @@ public class ProductRestController {
 
     @PostMapping
     public ResponseEntity<ProductDto.CreateResponse> createProduct(
+        @Valid
         @RequestBody
         ProductDto.CreateRequest createRequest
     ) {
