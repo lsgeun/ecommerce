@@ -97,12 +97,12 @@ public record ErrorResponse(
         LocalDateTime time
     ) {
         if (errorCodeSpec == null) {
-            errorCodeSpec = ErrorCode.UNEXPECTED_SERVER_ERROR;
-
             log.error(
                 "[ERROR] ErrorCodeSpec이 null입니다. 발생시각: {}",
                 time
             );
+
+            return ErrorCode.UNEXPECTED_SERVER_ERROR;
         }
 
         return errorCodeSpec;
