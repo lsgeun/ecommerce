@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.Value;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,30 +12,37 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
 
+@Value
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public record ErrorResponse(
-    String message,
-    String code,
-    int status,
+public class ErrorResponse {
+
+    private static final Logger log =
+        LoggerFactory.getLogger(ErrorResponse.class);
+    private static final ZoneId SEOUL_ZONE = ZoneId.of("Asia/Seoul");
+
+    String message;
+    String code;
+    int status;
 
     @JsonFormat(
         shape = JsonFormat.Shape.STRING,
         pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS",
         timezone = "Asia/Seoul"
     )
-    LocalDateTime timestamp,
+    LocalDateTime timestamp;
 
-    List<FieldErrorDetail> errors
-) {
-
-    private static final Logger log =
-        LoggerFactory.getLogger(ErrorResponse.class);
-    private static final ZoneId SEOUL_ZONE = ZoneId.of("Asia/Seoul");
+    List<FieldErrorDetail> errors;
 
     @Builder(access = AccessLevel.PRIVATE)
-    public ErrorResponse {
+    private ErrorResponse(
+        String message,
+        String code,
+        int status,
+        LocalDateTime timestamp,
+        List<FieldErrorDetail> errors
+    ) {
         if (timestamp == null) {
-            log.error("[ERROR] 에러 응답의 타임스탬프가 누락되었습니다.");
+            log.warn("에러 응답의 타임스탬프가 누락되었습니다.");
 
             timestamp = LocalDateTime.now(SEOUL_ZONE);
         }
@@ -43,7 +51,7 @@ public record ErrorResponse(
             code == null || code.isBlank() ||
             status < 100 || status > 599) {
 
-            log.error("[ERROR] 에러 응답의 메시지, 코드, 상태 중 하나 누락되어 기본값으로 대체합니다.\nmessage: {}, code: {}, status: {}", message, code, status);
+            log.error("에러 응답의 메시지, 코드, 상태 중 하나 누락되어 기본값으로 대체합니다.\nmessage: {}, code: {}, status: {}", message, code, status);
 
             message = ErrorCode.UNEXPECTED_SERVER_ERROR.getMessage();
             code = ErrorCode.UNEXPECTED_SERVER_ERROR.getCode();
@@ -54,20 +62,23 @@ public record ErrorResponse(
             // 불변 리스트로 변환
             errors = List.copyOf(errors);
         }
+
+        this.message = message;
+        this.code = code;
+        this.status = status;
+        this.timestamp = timestamp;
+        this.errors = errors;
     }
 
     public static ErrorResponse from(
         ErrorCodeSpec errorCodeSpec
     ) {
-        LocalDateTime time = getCurrentTime(SEOUL_ZONE);
-
-        errorCodeSpec = resolveErrorCodeSpec(errorCodeSpec, time);
+        errorCodeSpec = resolveErrorCodeSpec(errorCodeSpec);
 
         return builder()
             .message(errorCodeSpec.getMessage())
             .code(errorCodeSpec.getCode())
             .status(errorCodeSpec.getHttpStatus().value())
-            .timestamp(time)
             .build();
     }
 
@@ -75,32 +86,21 @@ public record ErrorResponse(
         ErrorCodeSpec errorCodeSpec,
         List<FieldErrorDetail> errors
     ) {
-        LocalDateTime time = getCurrentTime(SEOUL_ZONE);
-
-        errorCodeSpec = resolveErrorCodeSpec(errorCodeSpec, time);
+        errorCodeSpec = resolveErrorCodeSpec(errorCodeSpec);
 
         return builder()
             .message(errorCodeSpec.getMessage())
             .code(errorCodeSpec.getCode())
             .status(errorCodeSpec.getHttpStatus().value())
-            .timestamp(time)
             .errors(errors)
             .build();
     }
 
-    private static LocalDateTime getCurrentTime(ZoneId zoneId) {
-        return LocalDateTime.now(zoneId);
-    }
-
     private static ErrorCodeSpec resolveErrorCodeSpec (
-        ErrorCodeSpec errorCodeSpec,
-        LocalDateTime time
+        ErrorCodeSpec errorCodeSpec
     ) {
         if (errorCodeSpec == null) {
-            log.error(
-                "[ERROR] ErrorCodeSpec이 null입니다. 발생시각: {}",
-                time
-            );
+            log.error("ErrorCodeSpec이 null입니다.");
 
             return ErrorCode.UNEXPECTED_SERVER_ERROR;
         }
@@ -108,14 +108,19 @@ public record ErrorResponse(
         return errorCodeSpec;
     }
 
-    public record FieldErrorDetail(
-        String field,
-        String reason
-    ) {
+    @Value
+    public static class FieldErrorDetail {
+
+        String field;
+        String reason;
 
         @Builder
-        public FieldErrorDetail {
-            // 내부 레코드에서 Lombok @Builder를 사용하기 위한 빈 컴팩트 생성자
+        private FieldErrorDetail(
+            String field,
+            String reason
+        ) {
+            this.field = field;
+            this.reason = reason;
         }
     }
 }
