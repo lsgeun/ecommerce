@@ -6,108 +6,151 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
+import lombok.Value;
 
-public class ProductDto {
+public interface ProductDto {
 
     // Read
+    @Value
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    public record ReadResponse(
-        String number,
-        String name,
-        int price,
-        int stock,
-        ProductStatus status
-    ) {
+    class ReadResponse {
+        String number;
+        String name;
+        int price;
+        int stock;
+        ProductStatus status;
 
         @Builder
-        public ReadResponse {
-            // 내부 레코드에서 Lombok @Builder를 사용하기 위한 빈 컴팩트 생성자
+        private ReadResponse(
+            String number,
+            String name,
+            int price,
+            int stock,
+            ProductStatus status
+        ) {
+            this.number = number;
+            this.name = name;
+            this.price = price;
+            this.stock = stock;
+            this.status = status;
         }
     }
 
     // Create
-    public record CreateRequest(
+    @Value
+    class CreateRequest {
         @NotNull(message = "상품 번호는 필수입니다.")
         @Size(min = 2, max = 50, message = "상품 번호는 2자 이상 50자 이하이어야 합니다.")
-        String number,
+        String number;
 
         @NotNull(message = "상품 이름은 필수입니다.")
         @Size(min = 2, max = 50, message = "상품 이름은 2자 이상 50자 이하이어야 합니다.")
-        String name,
+        String name;
 
         @Min(value = 0, message = "상품 가격은 0 이상이어야 합니다.")
-        int price,
+        int price;
 
         @Min(value = 0, message = "상품 재고는 0 이상이어야 합니다.")
-        int stock,
+        int stock;
 
         @NotNull(message = "상품 상태는 필수입니다.")
-        ProductStatus status
-    ) {}
+        ProductStatus status;
+    }
 
+    @Value
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    public record CreateResponse(
-        String number,
-        String name,
-        int price,
-        int stock,
-        ProductStatus status
-    ) {
+    class CreateResponse {
+        String number;
+        String name;
+        int price;
+        int stock;
+        ProductStatus status;
 
         @Builder
-        public CreateResponse {
-            // 내부 레코드에서 Lombok @Builder를 사용하기 위한 빈 컴팩트 생성자
+        private CreateResponse(
+            String number,
+            String name,
+            int price,
+            int stock,
+            ProductStatus status
+        ) {
+            this.number = number;
+            this.name = name;
+            this.price = price;
+            this.stock = stock;
+            this.status = status;
         }
     }
 
     // Update
-    public record UpdateRequest(
+    @Value
+    class UpdateRequest {
         @NotNull(message = "상품 번호는 필수입니다.")
         @Size(min = 2, max = 50, message = "상품 번호는 2자 이상 50자 이하이어야 합니다.")
-        String number,
+        String number;
 
         @NotNull(message = "상품 이름은 필수입니다.")
         @Size(min = 2, max = 50, message = "상품 이름은 2자 이상 50자 이하이어야 합니다.")
-        String name,
+        String name;
 
         @Min(value = 0, message = "상품 가격은 0 이상이어야 합니다.")
-        int price,
+        int price;
 
         @Min(value = 0, message = "상품 재고는 0 이상이어야 합니다.")
-        int stock,
+        int stock;
 
         @NotNull(message = "상품 상태는 필수입니다.")
-        ProductStatus status
-    ) {}
+        ProductStatus status;
+    }
 
+    @Value
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    public record UpdateResponse(
-        String number,
-        String name,
-        int price,
-        int stock,
-        ProductStatus status
-    ) {
+    class UpdateResponse {
+        String number;
+        String name;
+        int price;
+        int stock;
+        ProductStatus status;
 
         @Builder
-        public UpdateResponse {
-            // 내부 레코드에서 Lombok @Builder를 사용하기 위한 빈 컴팩트 생성자
+        private UpdateResponse(
+            String number,
+            String name,
+            int price,
+            int stock,
+            ProductStatus status
+        ) {
+            this.number = number;
+            this.name = name;
+            this.price = price;
+            this.stock = stock;
+            this.status = status;
         }
     }
 
     // DELETE
+    @Value
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    public record DeleteResponse(
-        String number,
-        String name,
-        int price,
-        int stock,
-        ProductStatus status
-    ) {
+    class DeleteResponse {
+        String number;
+        String name;
+        int price;
+        int stock;
+        ProductStatus status;
 
         @Builder
-        public DeleteResponse {
-            // 내부 레코드에서 Lombok @Builder를 사용하기 위한 빈 컴팩트 생성자
+        private DeleteResponse(
+            String number,
+            String name,
+            int price,
+            int stock,
+            ProductStatus status
+        ) {
+            this.number = number;
+            this.name = name;
+            this.price = price;
+            this.stock = stock;
+            this.status = status;
         }
     }
 }

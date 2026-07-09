@@ -16,11 +16,11 @@ public interface ProductDtoMapper {
         ProductDto.CreateRequest createRequest
     ) {
         return Product.create(
-            createRequest.number(),
-            createRequest.name(),
-            createRequest.price(),
-            createRequest.stock(),
-            createRequest.status()
+            createRequest.getNumber(),
+            createRequest.getName(),
+            createRequest.getPrice(),
+            createRequest.getStock(),
+            createRequest.getStatus()
         );
     }
 
