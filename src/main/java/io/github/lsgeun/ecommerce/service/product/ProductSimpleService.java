@@ -44,4 +44,29 @@ public class ProductSimpleService {
 
         return productDtoMapper.toCreateResponse(createdProduct);
     }
+
+    @Transactional
+    public ProductDto.UpdateResponse updateProduct(
+        @Valid
+        ProductDto.UpdateRequest updateRequest
+    ) {
+        Product product = productRepository.getByNumber(
+            updateRequest.getNumber()
+        );
+
+        productDtoMapper.updateFromDto(updateRequest, product);
+
+        return productDtoMapper.toUpdateResponse(product);
+    }
+
+    @Transactional
+    public ProductDto.DeleteResponse deleteProduct(
+        @NotNull(message = "상품 번호는 필수입니다.")
+        @Size(min = 2, max = 50, message = "상품 번호는 2자 이상 50자 이하이어야 합니다.")
+        String number
+    ) {
+        Product product = productRepository.deleteByNumber(number);
+
+        return productDtoMapper.toDeleteResponse(product);
+    }
 }

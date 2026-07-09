@@ -1,7 +1,9 @@
 package io.github.lsgeun.ecommerce.controller.product;
 
 import io.github.lsgeun.ecommerce.domain.product.Product;
+import io.github.lsgeun.ecommerce.domain.product.vo.ProductNumber;
 import org.mapstruct.Mapper;
+import org.mapstruct.MappingTarget;
 
 @Mapper(componentModel = "spring")
 public interface ProductDtoMapper {
@@ -27,4 +29,28 @@ public interface ProductDtoMapper {
     ProductDto.CreateResponse toCreateResponse(
         Product product
     );
+
+    // Update
+    ProductDto.UpdateResponse toUpdateResponse(
+        Product product
+    );
+
+    void updateFromDto(
+        ProductDto.UpdateRequest updateRequest,
+        @MappingTarget Product product
+    );
+
+    // Delete
+    ProductDto.DeleteResponse toDeleteResponse(
+        Product product
+    );
+
+    // Common
+    default ProductNumber toProductNumber(String value) {
+        return value == null ? null : new ProductNumber(value);
+    }
+
+    default String toString(ProductNumber productNumber) {
+        return productNumber == null ? null : productNumber.getValue();
+    }
 }
