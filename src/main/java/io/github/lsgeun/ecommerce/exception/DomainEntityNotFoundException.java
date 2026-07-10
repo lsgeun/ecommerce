@@ -1,10 +1,10 @@
 package io.github.lsgeun.ecommerce.exception;
 
-public class EntityNotFoundException extends BusinessException {
+public class DomainEntityNotFoundException extends BusinessException {
 
-    public EntityNotFoundException(String name, Object id) {
+    public DomainEntityNotFoundException(String name, Object id) {
         super(
-            ErrorCode.ENTITY_NOT_FOUND_ERROR,
+            ErrorCode.DOMAIN_ENTITY_NOT_FOUND_ERROR,
             generateMessage(name, id)
         );
     }
