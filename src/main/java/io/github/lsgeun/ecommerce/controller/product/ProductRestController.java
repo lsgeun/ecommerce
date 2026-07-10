@@ -61,7 +61,7 @@ public class ProductRestController {
         return ResponseEntity.ok(updateResponse);
     }
 
-    @DeleteMapping("{number}")
+    @DeleteMapping("/{number}")
     public ResponseEntity<ProductDto.DeleteResponse> deleteProduct(
         @PathVariable
         @NotNull(message = "상품 번호는 필수입니다.")
