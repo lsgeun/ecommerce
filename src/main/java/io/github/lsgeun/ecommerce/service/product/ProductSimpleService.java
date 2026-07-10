@@ -4,6 +4,7 @@ import io.github.lsgeun.ecommerce.controller.product.ProductDto;
 import io.github.lsgeun.ecommerce.controller.product.ProductDtoMapper;
 import io.github.lsgeun.ecommerce.domain.product.Product;
 import io.github.lsgeun.ecommerce.domain.product.ProductRepository;
+import io.github.lsgeun.ecommerce.exception.DomainEntityAlreadyExistsException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -35,6 +36,10 @@ public class ProductSimpleService {
         ProductDto.CreateRequest createRequest
     ) {
         Product product = productDtoMapper.toProduct(createRequest);
+
+        if (productRepository.existsByNumber(product.getNumber())) {
+            throw new DomainEntityAlreadyExistsException("Product", product.getNumber());
+        }
 
         Product createdProduct = productRepository.create(product);
 
