@@ -41,11 +41,7 @@ public class ErrorResponse {
         LocalDateTime timestamp,
         List<FieldErrorDetail> fieldErrorDetails
     ) {
-        if (timestamp == null) {
-            log.warn("에러 응답의 타임스탬프가 누락되었습니다.");
-
-            timestamp = LocalDateTime.now(SEOUL_ZONE);
-        }
+        timestamp = (timestamp == null) ? LocalDateTime.now(SEOUL_ZONE) : timestamp;
 
         if (message == null || message.isBlank() ||
             code == null || code.isBlank() ||
