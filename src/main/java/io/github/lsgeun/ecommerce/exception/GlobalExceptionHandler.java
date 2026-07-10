@@ -33,6 +33,21 @@ public class GlobalExceptionHandler {
         return createErrorResponse(errorCodeSpec);
     }
 
+    @ExceptionHandler(InvalidDomainFieldException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidDomainFieldException(
+        InvalidDomainFieldException exception
+    ) {
+        ErrorCodeSpec errorCodeSpec = exception.getErrorCodeSpec();
+
+        logByLevel(
+            errorCodeSpec.getLogLevel(),
+            exception.getMessage(),
+            exception
+        );
+
+        return createErrorResponseWithFieldErrorDetails(errorCodeSpec, exception.getFieldErrorDetails());
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException exception) {
         ErrorCodeSpec errorCodeSpec = ErrorCode.INVALID_INPUT_ERROR;
