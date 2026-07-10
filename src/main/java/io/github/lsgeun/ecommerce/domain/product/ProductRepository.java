@@ -14,5 +14,5 @@ public interface ProductRepository {
 
     Product deleteByNumber(String number);
 
-    boolean validateNotExistsByNumber(String number);
+    boolean existsByNumber(String number);
 }

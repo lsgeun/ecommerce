@@ -47,7 +47,7 @@ public class JpaProductRepositoryAdapter implements ProductRepository {
     }
 
     @Override
-    public boolean validateNotExistsByNumber(String number) {
+    public boolean existsByNumber(String number) {
         return jpaProductRepository.existsByNumber(number);
     }
 }
