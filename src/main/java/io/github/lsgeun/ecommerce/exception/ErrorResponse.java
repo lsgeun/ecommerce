@@ -31,7 +31,7 @@ public class ErrorResponse {
     )
     LocalDateTime timestamp;
 
-    List<FieldErrorDetail> errors;
+    List<FieldErrorDetail> fieldErrorDetails;
 
     @Builder(access = AccessLevel.PRIVATE)
     private ErrorResponse(
@@ -39,7 +39,7 @@ public class ErrorResponse {
         String code,
         int status,
         LocalDateTime timestamp,
-        List<FieldErrorDetail> errors
+        List<FieldErrorDetail> fieldErrorDetails
     ) {
         if (timestamp == null) {
             log.warn("에러 응답의 타임스탬프가 누락되었습니다.");
@@ -58,16 +58,16 @@ public class ErrorResponse {
             status = ErrorCode.UNEXPECTED_SERVER_ERROR.getHttpStatus().value();
         }
 
-        if (errors != null) {
+        if (fieldErrorDetails != null) {
             // 불변 리스트로 변환
-            errors = List.copyOf(errors);
+            fieldErrorDetails = List.copyOf(fieldErrorDetails);
         }
 
         this.message = message;
         this.code = code;
         this.status = status;
         this.timestamp = timestamp;
-        this.errors = errors;
+        this.fieldErrorDetails = fieldErrorDetails;
     }
 
     public static ErrorResponse from(
@@ -84,7 +84,7 @@ public class ErrorResponse {
 
     public static ErrorResponse of(
         ErrorCodeSpec errorCodeSpec,
-        List<FieldErrorDetail> errors
+        List<FieldErrorDetail> fieldErrorDetails
     ) {
         errorCodeSpec = resolveErrorCodeSpec(errorCodeSpec);
 
@@ -92,7 +92,7 @@ public class ErrorResponse {
             .message(errorCodeSpec.getMessage())
             .code(errorCodeSpec.getCode())
             .status(errorCodeSpec.getHttpStatus().value())
-            .errors(errors)
+            .fieldErrorDetails(fieldErrorDetails)
             .build();
     }
 

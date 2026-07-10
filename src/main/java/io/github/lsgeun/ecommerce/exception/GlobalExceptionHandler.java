@@ -43,7 +43,7 @@ public class GlobalExceptionHandler {
             exception
         );
 
-        List<ErrorResponse.FieldErrorDetail> errors =
+        List<ErrorResponse.FieldErrorDetail> fieldErrorDetails =
             exception.getBindingResult()
             .getFieldErrors()
             .stream()
@@ -55,7 +55,7 @@ public class GlobalExceptionHandler {
             )
             .collect(Collectors.toList());
 
-        return createErrorResponseWithErrors(errorCodeSpec, errors);
+        return createErrorResponseWithFieldErrorDetails(errorCodeSpec, fieldErrorDetails);
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
@@ -68,7 +68,7 @@ public class GlobalExceptionHandler {
             exception
         );
 
-        List<ErrorResponse.FieldErrorDetail> errors =
+        List<ErrorResponse.FieldErrorDetail> fieldErrorDetails =
             exception.getConstraintViolations()
             .stream()
             .map(violation -> {
@@ -82,7 +82,7 @@ public class GlobalExceptionHandler {
             })
             .collect(Collectors.toList());
 
-        return createErrorResponseWithErrors(errorCodeSpec, errors);
+        return createErrorResponseWithFieldErrorDetails(errorCodeSpec, fieldErrorDetails);
     }
 
     @ExceptionHandler(Exception.class)
@@ -126,12 +126,12 @@ public class GlobalExceptionHandler {
             .body(errorResponse);
     }
 
-    private ResponseEntity<ErrorResponse> createErrorResponseWithErrors(
+    private ResponseEntity<ErrorResponse> createErrorResponseWithFieldErrorDetails(
         ErrorCodeSpec errorCodeSpec,
-        List<ErrorResponse.FieldErrorDetail> errors
+        List<ErrorResponse.FieldErrorDetail> fieldErrorDetails
     ) {
         ErrorResponse errorResponse =
-            ErrorResponse.of(errorCodeSpec, errors);
+            ErrorResponse.of(errorCodeSpec, fieldErrorDetails);
 
         return ResponseEntity
             .status(errorCodeSpec.getHttpStatus())
