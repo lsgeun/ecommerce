@@ -100,7 +100,7 @@ public class Product {
                 Product.class,
                 "number",
                 null,
-                ""
+                "상품 번호는 필수입니다."
             );
         }
 
@@ -111,7 +111,7 @@ public class Product {
                 Product.class,
                 "number",
                 number,
-                "문자열이 2 ~ 50자 이어야 합니다"
+                "상품 번호는 2자 이상 50자 이하이어야 합니다."
             );
         }
     }
@@ -122,7 +122,7 @@ public class Product {
                 Product.class,
                 "name",
                 null,
-                ""
+                "상품 이름은 필수입니다."
             );
         }
 
@@ -133,7 +133,7 @@ public class Product {
                 Product.class,
                 "name",
                 name,
-                ""
+                "상품 이름은 2자 이상 50자 이하이어야 합니다."
             );
         }
     }
@@ -145,7 +145,7 @@ public class Product {
                 Product.class,
                 "price",
                 price,
-                ""
+                "상품 가격은 0 이상이어야 합니다."
             );
         }
     }
@@ -157,7 +157,7 @@ public class Product {
                 Product.class,
                 "stock",
                 stock,
-                ""
+                "상품 재고는 0 이상이어야 합니다."
             );
         }
     }
@@ -168,7 +168,7 @@ public class Product {
                 Product.class,
                 "status",
                 null,
-                ""
+                "상품 상태는 필수입니다."
             );
         }
     }
