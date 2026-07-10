@@ -6,7 +6,8 @@ import java.util.List;
 
 @Getter
 public class InvalidDomainFieldException extends BusinessException {
-    private final List<ErrorResponse.FieldErrorDetail> fieldErrorDetails;
+
+    private final transient List<ErrorResponse.FieldErrorDetail> fieldErrorDetails;
 
     public InvalidDomainFieldException(
         Class<?> targetClass,
