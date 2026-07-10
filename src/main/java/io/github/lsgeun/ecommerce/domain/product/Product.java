@@ -1,6 +1,6 @@
 package io.github.lsgeun.ecommerce.domain.product;
 
-import io.github.lsgeun.ecommerce.exception.InvalidInputException;
+import io.github.lsgeun.ecommerce.exception.InvalidDomainFieldException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -96,7 +96,7 @@ public class Product {
 
     public static void validateNumber(String number) {
         if (Objects.isNull(number)) {
-            throw new InvalidInputException(
+            throw new InvalidDomainFieldException(
                 Product.class,
                 "number",
                 null,
@@ -107,7 +107,7 @@ public class Product {
         boolean isValid =
             (2 <= number.length() && number.length() <= 50);
         if (!isValid) {
-            throw new InvalidInputException(
+            throw new InvalidDomainFieldException(
                 Product.class,
                 "number",
                 number,
@@ -118,7 +118,7 @@ public class Product {
 
     public static void validateName(String name) {
         if (Objects.isNull(name)) {
-            throw new InvalidInputException(
+            throw new InvalidDomainFieldException(
                 Product.class,
                 "name",
                 null,
@@ -129,7 +129,7 @@ public class Product {
         boolean isValid =
             (2 <= name.length() && name.length() <= 50);
         if (!isValid) {
-            throw new InvalidInputException(
+            throw new InvalidDomainFieldException(
                 Product.class,
                 "name",
                 name,
@@ -141,7 +141,7 @@ public class Product {
     public static void validatePrice(long price) {
         boolean isValid = (price >= 0);
         if (!isValid) {
-            throw new InvalidInputException(
+            throw new InvalidDomainFieldException(
                 Product.class,
                 "price",
                 price,
@@ -153,7 +153,7 @@ public class Product {
     public static void validateStock(int stock) {
         boolean isValid = (stock >= 0);
         if (!isValid) {
-            throw new InvalidInputException(
+            throw new InvalidDomainFieldException(
                 Product.class,
                 "stock",
                 stock,
@@ -164,7 +164,7 @@ public class Product {
 
     public static void validateStatus(ProductStatus status) {
         if (Objects.isNull(status)) {
-            throw new InvalidInputException(
+            throw new InvalidDomainFieldException(
                 Product.class,
                 "status",
                 null,
