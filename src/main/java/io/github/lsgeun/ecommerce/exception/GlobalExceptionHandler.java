@@ -19,7 +19,7 @@ public class GlobalExceptionHandler {
         LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @ExceptionHandler(BusinessException.class)
-    public ResponseEntity<ErrorResponse> handleExceptionBusinessException(
+    public ResponseEntity<ErrorResponse> handleBusinessException(
         BusinessException exception
     ) {
         ErrorCodeSpec errorCodeSpec = exception.getErrorCodeSpec();
