@@ -71,6 +71,18 @@ public class Product {
         this.status = status;
     }
 
+    public void updateFrom(Product product) {
+        validateName(name);
+        validatePrice(price);
+        validateStock(stock);
+        validateStatus(status);
+
+        this.name = product.name;
+        this.price = product.price;
+        this.stock = product.stock;
+        this.status = product.status;
+    }
+
     public static Product create(
         String number,
         String name,

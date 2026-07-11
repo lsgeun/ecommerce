@@ -1,11 +1,8 @@
 package io.github.lsgeun.ecommerce.service.product;
 
-import io.github.lsgeun.ecommerce.controller.product.ProductDto;
-import io.github.lsgeun.ecommerce.controller.product.ProductDtoMapper;
 import io.github.lsgeun.ecommerce.domain.product.Product;
 import io.github.lsgeun.ecommerce.domain.product.ProductRepository;
 import io.github.lsgeun.ecommerce.exception.DomainEntityAlreadyExistsException;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,59 +14,36 @@ import org.springframework.validation.annotation.Validated;
 public class ProductSimpleService {
 
     private final ProductRepository productRepository;
-    private final ProductDtoMapper productDtoMapper;
 
     @Transactional(readOnly = true)
-    public ProductDto.ReadResponse getProduct(
-        String number
-    ) {
+    public Product getProduct(String number) {
         Product.validateNumber(number);
 
-        Product product = productRepository.getByNumber(number);
-
-        return productDtoMapper.toReadResponse(product);
+        return productRepository.getByNumber(number);
     }
 
     @Transactional
-    public ProductDto.CreateResponse createProduct(
-        @Valid
-        ProductDto.CreateRequest createRequest
-    ) {
-        Product product = productDtoMapper.toProduct(createRequest);
-
+    public Product createProduct(Product product) {
         if (productRepository.existsByNumber(product.getNumber())) {
             throw new DomainEntityAlreadyExistsException("Product", product.getNumber());
         }
 
-        Product createdProduct = productRepository.create(product);
-
-        return productDtoMapper.toCreateResponse(createdProduct);
+        return productRepository.create(product);
     }
 
     @Transactional
-    public ProductDto.UpdateResponse updateProduct(
-        @Valid
-        ProductDto.UpdateRequest updateRequest
-    ) {
-        Product product = productRepository.getByNumber(
-            updateRequest.getNumber()
-        );
+    public Product updateProduct(Product product) {
+        Product productToUpdate = productRepository.getByNumber(product.getNumber());
 
-        productDtoMapper.updateFromDto(updateRequest, product);
+        productToUpdate.updateFrom(product);
 
-        Product updatedProduct = productRepository.update(product);
-
-        return productDtoMapper.toUpdateResponse(updatedProduct);
+        return productRepository.update(productToUpdate);
     }
 
     @Transactional
-    public ProductDto.DeleteResponse deleteProduct(
-        String number
-    ) {
+    public Product deleteProduct(String number) {
         Product.validateNumber(number);
 
-        Product deletedProduct = productRepository.deleteByNumber(number);
-
-        return productDtoMapper.toDeleteResponse(deletedProduct);
+        return productRepository.deleteByNumber(number);
     }
 }

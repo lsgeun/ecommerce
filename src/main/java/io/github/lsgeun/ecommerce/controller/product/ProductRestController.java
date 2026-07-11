@@ -1,5 +1,6 @@
 package io.github.lsgeun.ecommerce.controller.product;
 
+import io.github.lsgeun.ecommerce.domain.product.Product;
 import io.github.lsgeun.ecommerce.service.product.ProductSimpleService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ProductRestController {
 
     private final ProductSimpleService productSimpleService;
+    private final ProductDtoMapper productDtoMapper;
 
     @GetMapping("/{number}")
     public ResponseEntity<ProductDto.ReadResponse> getProduct(
@@ -31,10 +33,9 @@ public class ProductRestController {
         @Size(min = 2, max = 50, message = "상품 번호는 2자 이상 50자 이하이어야 합니다.")
         String number
     ) {
-        ProductDto.ReadResponse readResponse =
-            productSimpleService.getProduct(number);
+        Product product = productSimpleService.getProduct(number);
 
-        return ResponseEntity.ok(readResponse);
+        return ResponseEntity.ok(productDtoMapper.toReadResponse(product));
     }
 
     @PostMapping
@@ -43,10 +44,11 @@ public class ProductRestController {
         @Valid
         ProductDto.CreateRequest createRequest
     ) {
-        ProductDto.CreateResponse createResponse =
-            productSimpleService.createProduct(createRequest);
+        Product product = productDtoMapper.toProduct(createRequest);
 
-        return ResponseEntity.ok(createResponse);
+        Product createdProduct = productSimpleService.createProduct(product);
+
+        return ResponseEntity.ok(productDtoMapper.toCreateResponse(createdProduct));
     }
 
     @PutMapping
@@ -55,10 +57,11 @@ public class ProductRestController {
         @Valid
         ProductDto.UpdateRequest updateRequest
     ) {
-        ProductDto.UpdateResponse updateResponse =
-            productSimpleService.updateProduct(updateRequest);
+        Product product = productDtoMapper.toProduct(updateRequest);
 
-        return ResponseEntity.ok(updateResponse);
+        Product updatedProduct = productSimpleService.updateProduct(product);
+
+        return ResponseEntity.ok(productDtoMapper.toUpdateResponse(updatedProduct));
     }
 
     @DeleteMapping("/{number}")
@@ -68,9 +71,8 @@ public class ProductRestController {
         @Size(min = 2, max = 50, message = "상품 번호는 2자 이상 50자 이하이어야 합니다.")
         String number
     ) {
-        ProductDto.DeleteResponse deleteResponse =
-            productSimpleService.deleteProduct(number);
+        Product deletedProduct = productSimpleService.deleteProduct(number);
 
-        return ResponseEntity.ok(deleteResponse);
+        return ResponseEntity.ok(productDtoMapper.toDeleteResponse(deletedProduct));
     }
 }
