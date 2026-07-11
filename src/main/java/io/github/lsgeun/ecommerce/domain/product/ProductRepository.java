@@ -10,6 +10,8 @@ public interface ProductRepository {
 
     Product create(Product product);
 
+    Product update(Product product);
+
     Product delete(Product product);
 
     Product deleteByNumber(String number);

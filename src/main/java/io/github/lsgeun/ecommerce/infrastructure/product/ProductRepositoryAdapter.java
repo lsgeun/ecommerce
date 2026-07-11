@@ -33,6 +33,11 @@ public class ProductRepositoryAdapter implements ProductRepository {
     }
 
     @Override
+    public Product update(Product product) {
+        return productJpaRepository.save(product);
+    }
+
+    @Override
     public Product delete(Product product) {
         return this.deleteByNumber(product.getNumber());
     }

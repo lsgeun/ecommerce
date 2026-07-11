@@ -57,7 +57,9 @@ public class ProductSimpleService {
 
         productDtoMapper.updateFromDto(updateRequest, product);
 
-        return productDtoMapper.toUpdateResponse(product);
+        Product updatedProduct = productRepository.update(product);
+
+        return productDtoMapper.toUpdateResponse(updatedProduct);
     }
 
     @Transactional
