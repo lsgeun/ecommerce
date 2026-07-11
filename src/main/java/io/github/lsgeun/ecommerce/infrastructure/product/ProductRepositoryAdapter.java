@@ -39,11 +39,11 @@ public class ProductRepositoryAdapter implements ProductRepository {
 
     @Override
     public Product deleteByNumber(String number) {
-        Product productToDelete = getByNumber(number);
+        Product product = getByNumber(number);
 
-        productJpaRepository.delete(productToDelete);
+        productJpaRepository.delete(product);
 
-        return productToDelete;
+        return product;
     }
 
     @Override
