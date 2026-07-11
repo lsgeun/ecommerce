@@ -66,8 +66,8 @@ public class ProductSimpleService {
     ) {
         Product.validateNumber(number);
 
-        Product product = productRepository.deleteByNumber(number);
+        Product deletedProduct = productRepository.deleteByNumber(number);
 
-        return productDtoMapper.toDeleteResponse(product);
+        return productDtoMapper.toDeleteResponse(deletedProduct);
     }
 }
