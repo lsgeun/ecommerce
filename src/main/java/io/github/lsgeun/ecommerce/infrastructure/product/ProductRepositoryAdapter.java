@@ -10,13 +10,13 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 @Repository
-public class JpaProductRepositoryAdapter implements ProductRepository {
+public class ProductRepositoryAdapter implements ProductRepository {
 
-    private final JpaProductRepository jpaProductRepository;
+    private final ProductJpaRepository productJpaRepository;
 
     @Override
     public Optional<Product> findByNumber(String number) {
-        return jpaProductRepository.findByNumberWithCache(number);
+        return productJpaRepository.findByNumberWithCache(number);
     }
 
     @Override
@@ -29,7 +29,7 @@ public class JpaProductRepositoryAdapter implements ProductRepository {
 
     @Override
     public Product create(Product product) {
-        return jpaProductRepository.save(product);
+        return productJpaRepository.save(product);
     }
 
     @Override
@@ -41,13 +41,13 @@ public class JpaProductRepositoryAdapter implements ProductRepository {
     public Product deleteByNumber(String number) {
         Product productToDelete = getByNumber(number);
 
-        jpaProductRepository.delete(productToDelete);
+        productJpaRepository.delete(productToDelete);
 
         return productToDelete;
     }
 
     @Override
     public boolean existsByNumber(String number) {
-        return jpaProductRepository.existsByNumber(number);
+        return productJpaRepository.existsByNumber(number);
     }
 }

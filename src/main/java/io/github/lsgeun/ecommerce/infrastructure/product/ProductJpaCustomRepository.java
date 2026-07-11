@@ -4,7 +4,7 @@ import io.github.lsgeun.ecommerce.domain.product.Product;
 
 import java.util.Optional;
 
-public interface CustomJpaProductRepository {
+public interface ProductJpaCustomRepository {
 
     public Optional<Product> findByNumberWithCache(String number);
 }
