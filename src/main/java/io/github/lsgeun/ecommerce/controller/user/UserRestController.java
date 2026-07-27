@@ -1,8 +1,11 @@
 package io.github.lsgeun.ecommerce.controller.user;
 
+import io.github.lsgeun.ecommerce.domain.user.User;
+import io.github.lsgeun.ecommerce.service.user.UserSimpleService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -12,10 +15,16 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @Validated
+@RequiredArgsConstructor
 @RequestMapping("/api/v1/users")
+@RestController
 public class UserRestController {
+
+    private final UserSimpleService userSimpleService;
+    private final UserDtoMapper userDtoMapper;
 
     @GetMapping("/{nickname}")
     public ResponseEntity<UserDto.ReadResponse> getUser(
@@ -27,7 +36,9 @@ public class UserRestController {
         @PathVariable
         String nickname
     ) {
-        return ResponseEntity.ok().build();
+        User user = userSimpleService.getUser(nickname);
+
+        return ResponseEntity.ok(userDtoMapper.toReadResponse(user));
     }
 
     @PostMapping("")
@@ -36,7 +47,11 @@ public class UserRestController {
         @RequestBody
         UserDto.CreateRequest createRequest
     ) {
-        return ResponseEntity.ok().build();
+        User user = userDtoMapper.toUser(createRequest);
+
+        User createdUser = userSimpleService.createUser(user);
+
+        return ResponseEntity.ok(userDtoMapper.toCreateResponse(createdUser));
     }
 
     @PutMapping("")
@@ -45,7 +60,11 @@ public class UserRestController {
         @RequestBody
         UserDto.UpdateRequest updateRequest
     ) {
-        return ResponseEntity.ok().build();
+        User user = userDtoMapper.toUser(updateRequest);
+
+        User updatedUser = userSimpleService.updateUser(user);
+
+        return ResponseEntity.ok(userDtoMapper.toUpdateResponse(updatedUser));
     }
 
     @DeleteMapping("/{nickname}")
@@ -58,6 +77,8 @@ public class UserRestController {
         @PathVariable
         String nickname
     ) {
-        return ResponseEntity.ok().build();
+        User deletedUser = userSimpleService.deleteUser(nickname);
+
+        return ResponseEntity.ok(userDtoMapper.toDeleteResponse(deletedUser));
     }
 }

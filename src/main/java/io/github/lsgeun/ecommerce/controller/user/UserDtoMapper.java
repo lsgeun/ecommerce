@@ -1,6 +1,5 @@
-package io.github.lsgeun.ecommerce.service.user;
+package io.github.lsgeun.ecommerce.controller.user;
 
-import io.github.lsgeun.ecommerce.controller.user.UserDto;
 import io.github.lsgeun.ecommerce.domain.user.User;
 import org.mapstruct.Mapper;
 
@@ -22,8 +21,6 @@ public interface UserDtoMapper {
     UserDto.CreateResponse toCreateResponse(User user);
 
     // Update
-    UserDto.UpdateResponse toUpdateResponse(User user);
-
     default User toUser(UserDto.UpdateRequest updateRequest) {
         return User.create(
             updateRequest.getNickname(),
@@ -31,6 +28,8 @@ public interface UserDtoMapper {
             updateRequest.getEmail()
         );
     }
+
+    UserDto.UpdateResponse toUpdateResponse(User user);
 
     // Delete
     UserDto.DeleteResponse toDeleteResponse(User user);

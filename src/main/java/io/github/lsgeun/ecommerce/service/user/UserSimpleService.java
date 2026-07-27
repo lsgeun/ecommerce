@@ -1,6 +1,8 @@
 package io.github.lsgeun.ecommerce.service.user;
 
-import io.github.lsgeun.ecommerce.controller.user.UserDto;
+import io.github.lsgeun.ecommerce.domain.user.User;
+import io.github.lsgeun.ecommerce.domain.user.UserRepository;
+import io.github.lsgeun.ecommerce.exception.DomainEntityAlreadyExistsException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -9,25 +11,37 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class UserSimpleService {
 
-    private final UserDtoMapper userDtoMapper;
+    private final UserRepository userRepository;
 
     @Transactional(readOnly = true)
-    public UserDto.ReadResponse getUser(String nickname) {
-        return null;
+    public User getUser(String nickname) {
+        User.validateNickname(nickname);
+
+        return userRepository.getByNickname(nickname);
     }
 
     @Transactional
-    public UserDto.CreateResponse createUser(UserDto.CreateRequest createRequest) {
-        return null;
+    public User createUser(User user) {
+        if (userRepository.existsByNickname(user.getNickname())) {
+            throw new DomainEntityAlreadyExistsException("User", user.getNickname());
+        }
+
+        return userRepository.create(user);
     }
 
     @Transactional
-    public UserDto.UpdateResponse updateUser(UserDto.UpdateRequest updateRequest) {
-        return null;
+    public User updateUser(User user) {
+        User userToUpdate = userRepository.getByNickname(user.getNickname());
+
+        userToUpdate.updateFrom(user);
+
+        return userRepository.update(userToUpdate);
     }
 
     @Transactional
-    public UserDto.DeleteResponse deleteUser(String nickname) {
-        return null;
+    public User deleteUser(String nickname) {
+        User.validateNickname(nickname);
+
+        return userRepository.deleteByNickname(nickname);
     }
 }

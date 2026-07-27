@@ -7,17 +7,31 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.NaturalId;
 
 import java.util.Objects;
 import java.util.regex.Pattern;
 
 @Getter
 @Entity
-@Table(name = "user_tb")
+@Table(
+    name = "user_tb",
+    uniqueConstraints = {
+        @UniqueConstraint(
+            name = "uk_user_nickname",
+            columnNames = "user_nickname"
+        ),
+        @UniqueConstraint(
+            name = "uk_user_email",
+            columnNames = "user_email"
+        )
+    }
+)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User {
 
@@ -32,6 +46,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NaturalId
     @Column(name = "user_nickname", nullable = false, unique = true)
     private String nickname;
 
@@ -53,11 +68,21 @@ public class User {
         this.email = email;
     }
 
+    public void updateFrom(User user) {
+        validateNickname(user.getNickname());
+        validatePassword(user.getPassword());
+        validateEmail(user.getEmail());
+
+        this.nickname = user.getNickname();
+        this.password = user.getPassword();
+        this.email = user.getEmail();
+    }
+
     public static User create(String nickname, String password, String email) {
         return User.builder().email(email).password(password).nickname(nickname).build();
     }
 
-    private static void validateNickname(String nickname) {
+    public static void validateNickname(String nickname) {
         if (Objects.isNull(nickname)) {
             throw new InvalidDomainFieldException(User.class, "nickname", nickname, "닉네임은 필수입니다.");
         }
@@ -66,7 +91,7 @@ public class User {
         }
     }
 
-    private static void validatePassword(String password) {
+    public static void validatePassword(String password) {
         if (Objects.isNull(password)) {
             throw new InvalidDomainFieldException(User.class, "password", password, "비밀번호는 필수입니다.");
         }
@@ -75,7 +100,7 @@ public class User {
         }
     }
 
-    private static void validateEmail(String email) {
+    public static void validateEmail(String email) {
         if (Objects.isNull(email)) {
             throw new InvalidDomainFieldException(User.class, "email", email, "이메일은 필수입니다.");
         }

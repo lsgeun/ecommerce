@@ -1,6 +1,7 @@
 package io.github.lsgeun.ecommerce.controller.user;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.Builder;
@@ -8,6 +9,7 @@ import lombok.Value;
 
 public interface UserDto {
 
+    @Schema(name = "UserReadResponse")
     @Value
     @JsonInclude(JsonInclude.Include.NON_NULL)
     class ReadResponse {
@@ -24,6 +26,7 @@ public interface UserDto {
         }
     }
 
+    @Schema(name = "UserCreateRequest")
     @Value
     class CreateRequest {
 
@@ -49,6 +52,7 @@ public interface UserDto {
         String email;
     }
 
+    @Schema(name = "UserCreateResponse")
     @Value
     @JsonInclude(JsonInclude.Include.NON_NULL)
     class CreateResponse {
@@ -65,6 +69,7 @@ public interface UserDto {
         }
     }
 
+    @Schema(name = "UserUpdateRequest")
     @Value
     class UpdateRequest {
 
@@ -90,6 +95,7 @@ public interface UserDto {
         String email;
     }
 
+    @Schema(name = "UserUpdateResponse")
     @Value
     @JsonInclude(JsonInclude.Include.NON_NULL)
     class UpdateResponse {
@@ -106,6 +112,7 @@ public interface UserDto {
         }
     }
 
+    @Schema(name = "UserDeleteResponse")
     @Value
     @JsonInclude(JsonInclude.Include.NON_NULL)
     class DeleteResponse {
