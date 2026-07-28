@@ -16,8 +16,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.NaturalId;
 
-import java.util.Objects;
-
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(
@@ -107,7 +105,7 @@ public class Product {
     }
 
     public static void validateNumber(String number) {
-        if (Objects.isNull(number)) {
+        if (number == null) {
             throw new InvalidDomainFieldException(
                 Product.class,
                 "number",
@@ -129,7 +127,7 @@ public class Product {
     }
 
     public static void validateName(String name) {
-        if (Objects.isNull(name)) {
+        if (name == null) {
             throw new InvalidDomainFieldException(
                 Product.class,
                 "name",
@@ -175,7 +173,7 @@ public class Product {
     }
 
     public static void validateStatus(ProductStatus status) {
-        if (Objects.isNull(status)) {
+        if (status == null) {
             throw new InvalidDomainFieldException(
                 Product.class,
                 "status",
