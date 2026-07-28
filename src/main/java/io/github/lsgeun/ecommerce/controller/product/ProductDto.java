@@ -24,11 +24,7 @@ public interface ProductDto {
 
         @Builder
         private ReadResponse(
-            String number,
-            String name,
-            int price,
-            int stock,
-            ProductStatus status
+            String number, String name, int price, int stock, ProductStatus status
         ) {
             this.number = number;
             this.name = name;
@@ -72,11 +68,7 @@ public interface ProductDto {
 
         @Builder
         private CreateResponse(
-            String number,
-            String name,
-            int price,
-            int stock,
-            ProductStatus status
+            String number, String name, int price, int stock, ProductStatus status
         ) {
             this.number = number;
             this.name = name;
@@ -120,11 +112,7 @@ public interface ProductDto {
 
         @Builder
         private UpdateResponse(
-            String number,
-            String name,
-            int price,
-            int stock,
-            ProductStatus status
+            String number, String name, int price, int stock, ProductStatus status
         ) {
             this.number = number;
             this.name = name;
@@ -147,11 +135,7 @@ public interface ProductDto {
 
         @Builder
         private DeleteResponse(
-            String number,
-            String name,
-            int price,
-            int stock,
-            ProductStatus status
+            String number, String name, int price, int stock, ProductStatus status
         ) {
             this.number = number;
             this.name = name;
