@@ -10,30 +10,14 @@ public interface ProductDtoMapper {
     ProductDto.ReadResponse toReadResponse(Product product);
 
     // Create
-    default Product toProduct(ProductDto.CreateRequest createRequest) {
-        return Product.create(
-            createRequest.getNumber(),
-            createRequest.getName(),
-            createRequest.getPrice(),
-            createRequest.getStock(),
-            createRequest.getStatus()
-        );
-    }
+    Product toProduct(ProductDto.CreateRequest createRequest);
 
     ProductDto.CreateResponse toCreateResponse(Product product);
 
     // Update
-    ProductDto.UpdateResponse toUpdateResponse(Product product);
+    Product toProduct(ProductDto.UpdateRequest updateRequest);
 
-    default Product toProduct(ProductDto.UpdateRequest updateRequest) {
-        return Product.create(
-            updateRequest.getNumber(),
-            updateRequest.getName(),
-            updateRequest.getPrice(),
-            updateRequest.getStock(),
-            updateRequest.getStatus()
-        );
-    }
+    ProductDto.UpdateResponse toUpdateResponse(Product product);
 
     // Delete
     ProductDto.DeleteResponse toDeleteResponse(Product product);

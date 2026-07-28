@@ -1,7 +1,6 @@
 package io.github.lsgeun.ecommerce.infrastructure.product;
 
 import io.github.lsgeun.ecommerce.domain.product.Product;
-import io.github.lsgeun.ecommerce.domain.product.QProduct;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.Session;
@@ -18,10 +17,9 @@ public class ProductJpaCustomRepositoryImpl implements ProductJpaCustomRepositor
     public Optional<Product> findByNumberWithCache(String number) {
         Product product = entityManager.unwrap(Session.class)
             .byNaturalId(Product.class)
-            .using(
-                QProduct.product.number.getMetadata().getName(),
-                number)
+            .using("number", number)
             .load();
+
         return Optional.ofNullable(product);
     }
 }
