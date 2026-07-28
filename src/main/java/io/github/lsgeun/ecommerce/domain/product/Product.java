@@ -61,6 +61,12 @@ public class Product {
         int stock,
         ProductStatus status
     ) {
+        validateNumber(number);
+        validateName(name);
+        validatePrice(price);
+        validateStock(stock);
+        validateStatus(status);
+
         this.id = id;
         this.number = number;
         this.name = name;
@@ -79,29 +85,6 @@ public class Product {
         this.price = product.price;
         this.stock = product.stock;
         this.status = product.status;
-    }
-
-    public static Product create(
-        String number,
-        String name,
-        long price,
-        int stock,
-        ProductStatus status
-    ) {
-        validateNumber(number);
-        validateName(name);
-        validatePrice(price);
-        validateStock(stock);
-        validateStatus(status);
-
-        return Product.builder()
-            .id(null)
-            .number(number)
-            .name(name)
-            .price(price)
-            .stock(stock)
-            .status(status)
-            .build();
     }
 
     public static void validateNumber(String number) {
