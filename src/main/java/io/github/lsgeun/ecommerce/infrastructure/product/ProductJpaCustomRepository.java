@@ -6,5 +6,5 @@ import java.util.Optional;
 
 public interface ProductJpaCustomRepository {
 
-    public Optional<Product> findByNumberWithCache(String number);
+    Optional<Product> findByNumberWithCache(String number);
 }
