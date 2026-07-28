@@ -18,10 +18,9 @@ public class ProductJpaCustomRepositoryImpl implements ProductJpaCustomRepositor
     public Optional<Product> findByNumberWithCache(String number) {
         Product product = entityManager.unwrap(Session.class)
             .byNaturalId(Product.class)
-            .using(
-                QProduct.product.number.getMetadata().getName(),
-                number)
+            .using("number", number)
             .load();
+
         return Optional.ofNullable(product);
     }
 }
