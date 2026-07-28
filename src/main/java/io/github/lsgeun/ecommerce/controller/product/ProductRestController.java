@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Validated
 @RequiredArgsConstructor
-@RequestMapping(path = "/product")
+@RequestMapping(path = "/products")
 @RestController
 public class ProductRestController {
 
