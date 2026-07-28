@@ -76,10 +76,10 @@ public class Product {
     }
 
     public void updateFrom(Product product) {
-        validateName(name);
-        validatePrice(price);
-        validateStock(stock);
-        validateStatus(status);
+        validateName(product.getName());
+        validatePrice(product.getPrice());
+        validateStock(product.getStock());
+        validateStatus(product.getStatus());
 
         this.name = product.name;
         this.price = product.price;
