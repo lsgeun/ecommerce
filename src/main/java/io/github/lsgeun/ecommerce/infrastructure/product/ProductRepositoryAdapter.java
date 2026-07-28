@@ -22,9 +22,7 @@ public class ProductRepositoryAdapter implements ProductRepository {
     @Override
     public Product getByNumber(String number) {
         return this.findByNumber(number)
-            .orElseThrow(
-                () -> new DomainEntityNotFoundException("Product", number)
-            );
+            .orElseThrow(() -> new DomainEntityNotFoundException("Product", number));
     }
 
     @Override
