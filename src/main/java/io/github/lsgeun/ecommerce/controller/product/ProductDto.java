@@ -2,6 +2,7 @@ package io.github.lsgeun.ecommerce.controller.product;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.github.lsgeun.ecommerce.domain.product.ProductStatus;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -11,6 +12,7 @@ import lombok.Value;
 public interface ProductDto {
 
     // Read
+    @Schema(name = "ProductReadResponse")
     @Value
     @JsonInclude(JsonInclude.Include.NON_NULL)
     class ReadResponse {
@@ -37,6 +39,7 @@ public interface ProductDto {
     }
 
     // Create
+    @Schema(name = "ProductCreateRequest")
     @Value
     class CreateRequest {
         @NotNull(message = "상품 번호는 필수입니다.")
@@ -57,6 +60,7 @@ public interface ProductDto {
         ProductStatus status;
     }
 
+    @Schema(name = "ProductCreateResponse")
     @Value
     @JsonInclude(JsonInclude.Include.NON_NULL)
     class CreateResponse {
@@ -83,6 +87,7 @@ public interface ProductDto {
     }
 
     // Update
+    @Schema(name = "ProductUpdateRequest")
     @Value
     class UpdateRequest {
         @NotNull(message = "상품 번호는 필수입니다.")
@@ -103,6 +108,7 @@ public interface ProductDto {
         ProductStatus status;
     }
 
+    @Schema(name = "ProductUpdateResponse")
     @Value
     @JsonInclude(JsonInclude.Include.NON_NULL)
     class UpdateResponse {
@@ -129,6 +135,7 @@ public interface ProductDto {
     }
 
     // DELETE
+    @Schema(name = "ProductDeleteResponse")
     @Value
     @JsonInclude(JsonInclude.Include.NON_NULL)
     class DeleteResponse {
