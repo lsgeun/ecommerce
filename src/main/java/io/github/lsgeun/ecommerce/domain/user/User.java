@@ -58,7 +58,7 @@ public class User {
     @Column(name = "user_email", nullable = false, unique = true)
     private String email;
 
-    @Builder(access = AccessLevel.PRIVATE)
+    @Builder
     private User(Long id, String nickname, String password, String email) {
         validateNickname(nickname);
         validatePassword(password);
@@ -76,10 +76,6 @@ public class User {
 
         this.password = user.getPassword();
         this.email = user.getEmail();
-    }
-
-    public static User create(String nickname, String password, String email) {
-        return User.builder().email(email).password(password).nickname(nickname).build();
     }
 
     public static void validateNickname(String nickname) {

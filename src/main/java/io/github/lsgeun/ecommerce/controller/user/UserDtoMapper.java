@@ -10,24 +10,12 @@ public interface UserDtoMapper {
     UserDto.ReadResponse toReadResponse(User user);
 
     // Create
-    default User toUser(UserDto.CreateRequest createRequest) {
-        return User.create(
-            createRequest.getNickname(),
-            createRequest.getPassword(),
-            createRequest.getEmail()
-        );
-    }
+    User toUser(UserDto.CreateRequest createRequest);
 
     UserDto.CreateResponse toCreateResponse(User user);
 
     // Update
-    default User toUser(UserDto.UpdateRequest updateRequest) {
-        return User.create(
-            updateRequest.getNickname(),
-            updateRequest.getPassword(),
-            updateRequest.getEmail()
-        );
-    }
+    User toUser(UserDto.UpdateRequest updateRequest) ;
 
     UserDto.UpdateResponse toUpdateResponse(User user);
 
