@@ -27,13 +27,12 @@ public class UserRestController {
     private final UserDtoMapper userDtoMapper;
 
     @GetMapping("/{nickname}")
-    public ResponseEntity<UserDto.ReadResponse> getUser(
-        @NotNull(message = "닉네임은 필수입니다.")
+    public ResponseEntity<UserDto.Read.Response> getUser(
+        @PathVariable @NotNull(message = "닉네임은 필수입니다.")
         @Pattern(
             regexp = "^[가-힣a-zA-Z0-9]{2,10}$",
             message = "닉네임은 한글, 영문, 숫자만 가능하며 2~10자여야 합니다."
         )
-        @PathVariable
         String nickname
     ) {
         User user = userSimpleService.getUser(nickname);
@@ -42,10 +41,8 @@ public class UserRestController {
     }
 
     @PostMapping("")
-    public ResponseEntity<UserDto.CreateResponse> createUser(
-        @Valid
-        @RequestBody
-        UserDto.CreateRequest createRequest
+    public ResponseEntity<UserDto.Create.Response> createUser(
+        @RequestBody @Valid  UserDto.Create.Request createRequest
     ) {
         User user = userDtoMapper.toUser(createRequest);
 
@@ -55,10 +52,8 @@ public class UserRestController {
     }
 
     @PutMapping("")
-    public ResponseEntity<UserDto.UpdateResponse> updateUser(
-        @Valid
-        @RequestBody
-        UserDto.UpdateRequest updateRequest
+    public ResponseEntity<UserDto.Update.Response> updateUser(
+        @RequestBody @Valid UserDto.Update.Request updateRequest
     ) {
         User user = userDtoMapper.toUser(updateRequest);
 
@@ -68,13 +63,12 @@ public class UserRestController {
     }
 
     @DeleteMapping("/{nickname}")
-    public ResponseEntity<UserDto.DeleteResponse> deleteUser(
-        @NotNull(message = "닉네임은 필수입니다.")
+    public ResponseEntity<UserDto.Delete.Response> deleteUser(
+        @PathVariable @NotNull(message = "닉네임은 필수입니다.")
         @Pattern(
             regexp = "^[가-힣a-zA-Z0-9]{2,10}$",
             message = "닉네임은 한글, 영문, 숫자만 가능하며 2~10자여야 합니다."
         )
-        @PathVariable
         String nickname
     ) {
         User deletedUser = userSimpleService.deleteUser(nickname);

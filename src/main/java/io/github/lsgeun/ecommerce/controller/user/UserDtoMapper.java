@@ -7,18 +7,18 @@ import org.mapstruct.Mapper;
 public interface UserDtoMapper {
 
     // Read
-    UserDto.ReadResponse toReadResponse(User user);
+    UserDto.Read.Response toReadResponse(User user);
 
     // Create
-    User toUser(UserDto.CreateRequest createRequest);
+    User toUser(UserDto.Create.Request createRequest);
 
-    UserDto.CreateResponse toCreateResponse(User user);
+    UserDto.Create.Response toCreateResponse(User user);
 
     // Update
-    User toUser(UserDto.UpdateRequest updateRequest) ;
+    User toUser(UserDto.Update.Request updateRequest) ;
 
-    UserDto.UpdateResponse toUpdateResponse(User user);
+    UserDto.Update.Response toUpdateResponse(User user);
 
     // Delete
-    UserDto.DeleteResponse toDeleteResponse(User user);
+    UserDto.Delete.Response toDeleteResponse(User user);
 }
