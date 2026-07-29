@@ -71,11 +71,9 @@ public class User {
     }
 
     public void updateFrom(User user) {
-        validateNickname(user.getNickname());
         validatePassword(user.getPassword());
         validateEmail(user.getEmail());
 
-        this.nickname = user.getNickname();
         this.password = user.getPassword();
         this.email = user.getEmail();
     }
