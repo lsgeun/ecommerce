@@ -7,18 +7,18 @@ import org.mapstruct.Mapper;
 public interface ProductDtoMapper {
 
     // Read
-    ProductDto.ReadResponse toReadResponse(Product product);
+    ProductDto.Read.Response toReadResponse(Product product);
 
     // Create
-    Product toProduct(ProductDto.CreateRequest createRequest);
+    Product toProduct(ProductDto.Create.Request createRequest);
 
-    ProductDto.CreateResponse toCreateResponse(Product product);
+    ProductDto.Create.Response toCreateResponse(Product product);
 
     // Update
-    Product toProduct(ProductDto.UpdateRequest updateRequest);
+    Product toProduct(ProductDto.Update.Request updateRequest);
 
-    ProductDto.UpdateResponse toUpdateResponse(Product product);
+    ProductDto.Update.Response toUpdateResponse(Product product);
 
     // Delete
-    ProductDto.DeleteResponse toDeleteResponse(Product product);
+    ProductDto.Delete.Response toDeleteResponse(Product product);
 }

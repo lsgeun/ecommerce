@@ -2,7 +2,6 @@ package io.github.lsgeun.ecommerce.controller.product;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.github.lsgeun.ecommerce.domain.product.ProductStatus;
-import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -11,137 +10,139 @@ import lombok.Value;
 
 public interface ProductDto {
 
-    // Read
-    @Schema(name = "ProductReadResponse")
-    @Value
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    class ReadResponse {
-        String number;
-        String name;
-        int price;
-        int stock;
-        ProductStatus status;
+    interface Read {
 
-        @Builder
-        private ReadResponse(
-            String number, String name, int price, int stock, ProductStatus status
-        ) {
-            this.number = number;
-            this.name = name;
-            this.price = price;
-            this.stock = stock;
-            this.status = status;
+        @Value
+        @JsonInclude(JsonInclude.Include.NON_NULL)
+        class Response {
+            String number;
+            String name;
+            int price;
+            int stock;
+            ProductStatus status;
+
+            @Builder
+            private Response(
+                String number, String name, int price, int stock, ProductStatus status
+            ) {
+                this.number = number;
+                this.name = name;
+                this.price = price;
+                this.stock = stock;
+                this.status = status;
+            }
         }
     }
 
-    // Create
-    @Schema(name = "ProductCreateRequest")
-    @Value
-    class CreateRequest {
-        @NotNull(message = "상품 번호는 필수입니다.")
-        @Size(min = 2, max = 50, message = "상품 번호는 2자 이상 50자 이하이어야 합니다.")
-        String number;
+    interface Create {
 
-        @NotNull(message = "상품 이름은 필수입니다.")
-        @Size(min = 2, max = 50, message = "상품 이름은 2자 이상 50자 이하이어야 합니다.")
-        String name;
+        @Value
+        class Request {
+            @NotNull(message = "상품 번호는 필수입니다.")
+            @Size(min = 2, max = 50, message = "상품 번호는 2자 이상 50자 이하이어야 합니다.")
+            String number;
 
-        @Min(value = 0, message = "상품 가격은 0 이상이어야 합니다.")
-        int price;
+            @NotNull(message = "상품 이름은 필수입니다.")
+            @Size(min = 2, max = 50, message = "상품 이름은 2자 이상 50자 이하이어야 합니다.")
+            String name;
 
-        @Min(value = 0, message = "상품 재고는 0 이상이어야 합니다.")
-        int stock;
+            @Min(value = 0, message = "상품 가격은 0 이상이어야 합니다.")
+            int price;
 
-        @NotNull(message = "상품 상태는 필수입니다.")
-        ProductStatus status;
-    }
+            @Min(value = 0, message = "상품 재고는 0 이상이어야 합니다.")
+            int stock;
 
-    @Schema(name = "ProductCreateResponse")
-    @Value
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    class CreateResponse {
-        String number;
-        String name;
-        int price;
-        int stock;
-        ProductStatus status;
+            @NotNull(message = "상품 상태는 필수입니다.")
+            ProductStatus status;
+        }
 
-        @Builder
-        private CreateResponse(
-            String number, String name, int price, int stock, ProductStatus status
-        ) {
-            this.number = number;
-            this.name = name;
-            this.price = price;
-            this.stock = stock;
-            this.status = status;
+        @Value
+        @JsonInclude(JsonInclude.Include.NON_NULL)
+        class Response {
+            String number;
+            String name;
+            int price;
+            int stock;
+            ProductStatus status;
+
+            @Builder
+            private Response(
+                String number, String name, int price, int stock, ProductStatus status
+            ) {
+                this.number = number;
+                this.name = name;
+                this.price = price;
+                this.stock = stock;
+                this.status = status;
+            }
         }
     }
 
-    // Update
-    @Schema(name = "ProductUpdateRequest")
-    @Value
-    class UpdateRequest {
-        @NotNull(message = "상품 번호는 필수입니다.")
-        @Size(min = 2, max = 50, message = "상품 번호는 2자 이상 50자 이하이어야 합니다.")
-        String number;
+    interface Update {
 
-        @NotNull(message = "상품 이름은 필수입니다.")
-        @Size(min = 2, max = 50, message = "상품 이름은 2자 이상 50자 이하이어야 합니다.")
-        String name;
+        @Value
+        class Request {
+            @NotNull(message = "상품 번호는 필수입니다.")
+            @Size(min = 2, max = 50, message = "상품 번호는 2자 이상 50자 이하이어야 합니다.")
+            String number;
 
-        @Min(value = 0, message = "상품 가격은 0 이상이어야 합니다.")
-        int price;
+            @NotNull(message = "상품 이름은 필수입니다.")
+            @Size(min = 2, max = 50, message = "상품 이름은 2자 이상 50자 이하이어야 합니다.")
+            String name;
 
-        @Min(value = 0, message = "상품 재고는 0 이상이어야 합니다.")
-        int stock;
+            @Min(value = 0, message = "상품 가격은 0 이상이어야 합니다.")
+            int price;
 
-        @NotNull(message = "상품 상태는 필수입니다.")
-        ProductStatus status;
-    }
+            @Min(value = 0, message = "상품 재고는 0 이상이어야 합니다.")
+            int stock;
 
-    @Schema(name = "ProductUpdateResponse")
-    @Value
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    class UpdateResponse {
-        String number;
-        String name;
-        int price;
-        int stock;
-        ProductStatus status;
+            @NotNull(message = "상품 상태는 필수입니다.")
+            ProductStatus status;
+        }
 
-        @Builder
-        private UpdateResponse(
-            String number, String name, int price, int stock, ProductStatus status
-        ) {
-            this.number = number;
-            this.name = name;
-            this.price = price;
-            this.stock = stock;
-            this.status = status;
+        @Value
+        @JsonInclude(JsonInclude.Include.NON_NULL)
+        class Response {
+            String number;
+            String name;
+            int price;
+            int stock;
+            ProductStatus status;
+
+            @Builder
+            private Response(
+                String number, String name, int price, int stock, ProductStatus status
+            ) {
+                this.number = number;
+                this.name = name;
+                this.price = price;
+                this.stock = stock;
+                this.status = status;
+            }
         }
     }
 
-    // DELETE
-    @Schema(name = "ProductDeleteResponse")
-    @Value
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    class DeleteResponse {
-        String number;
-        String name;
-        int price;
-        int stock;
-        ProductStatus status;
+    interface Delete {
 
-        @Builder
-        private DeleteResponse(
-            String number, String name, int price, int stock, ProductStatus status
-        ) {
-            this.number = number;
-            this.name = name;
-            this.price = price;
-            this.stock = stock;
-            this.status = status;
+        @Value
+        @JsonInclude(JsonInclude.Include.NON_NULL)
+        class Response {
+            String number;
+            String name;
+            int price;
+            int stock;
+            ProductStatus status;
+
+            @Builder
+            private Response(
+                String number, String name, int price, int stock, ProductStatus status
+            ) {
+                this.number = number;
+                this.name = name;
+                this.price = price;
+                this.stock = stock;
+                this.status = status;
+            }
         }
     }
 }

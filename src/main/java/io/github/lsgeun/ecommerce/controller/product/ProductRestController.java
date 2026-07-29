@@ -27,9 +27,10 @@ public class ProductRestController {
     private final ProductDtoMapper productDtoMapper;
 
     @GetMapping("/{number}")
-    public ResponseEntity<ProductDto.ReadResponse> getProduct(
+    public ResponseEntity<ProductDto.Read.Response> getProduct(
         @PathVariable @NotNull(message = "상품 번호는 필수입니다.")
-        @Size(min = 2, max = 50, message = "상품 번호는 2자 이상 50자 이하이어야 합니다.") String number
+        @Size(min = 2, max = 50, message = "상품 번호는 2자 이상 50자 이하이어야 합니다.")
+        String number
     ) {
         Product product = productSimpleService.getProduct(number);
 
@@ -37,8 +38,8 @@ public class ProductRestController {
     }
 
     @PostMapping
-    public ResponseEntity<ProductDto.CreateResponse> createProduct(
-        @RequestBody @Valid ProductDto.CreateRequest createRequest
+    public ResponseEntity<ProductDto.Create.Response> createProduct(
+        @RequestBody @Valid ProductDto.Create.Request createRequest
     ) {
         Product product = productDtoMapper.toProduct(createRequest);
 
@@ -48,8 +49,8 @@ public class ProductRestController {
     }
 
     @PutMapping
-    public ResponseEntity<ProductDto.UpdateResponse> updateProduct(
-        @RequestBody @Valid ProductDto.UpdateRequest updateRequest
+    public ResponseEntity<ProductDto.Update.Response> updateProduct(
+        @RequestBody @Valid ProductDto.Update.Request updateRequest
     ) {
         Product product = productDtoMapper.toProduct(updateRequest);
 
@@ -59,9 +60,10 @@ public class ProductRestController {
     }
 
     @DeleteMapping("/{number}")
-    public ResponseEntity<ProductDto.DeleteResponse> deleteProduct(
+    public ResponseEntity<ProductDto.Delete.Response> deleteProduct(
         @PathVariable @NotNull(message = "상품 번호는 필수입니다.")
-        @Size(min = 2, max = 50, message = "상품 번호는 2자 이상 50자 이하이어야 합니다.") String number
+        @Size(min = 2, max = 50, message = "상품 번호는 2자 이상 50자 이하이어야 합니다.")
+        String number
     ) {
         Product deletedProduct = productSimpleService.deleteProduct(number);
 
