@@ -18,10 +18,9 @@ public class UserJpaCustomRepositoryImpl implements UserJpaCustomRepository {
     public Optional<User> findByNicknameWithCache(String nickname) {
         User user = entityManager.unwrap(Session.class)
             .byNaturalId(User.class)
-            .using(
-                "nickname",
-                nickname)
+            .using("nickname", nickname)
             .load();
+
         return Optional.ofNullable(user);
     }
 }
