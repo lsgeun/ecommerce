@@ -52,7 +52,7 @@ public class Product {
     @Column(nullable = false)
     private ProductStatus status;
 
-    @Builder(access = AccessLevel.PUBLIC)
+    @Builder
     private Product(
         Long id, String number, String name, long price, int stock, ProductStatus status
     ) {

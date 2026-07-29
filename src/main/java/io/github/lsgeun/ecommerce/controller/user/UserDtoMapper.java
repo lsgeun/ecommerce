@@ -7,30 +7,18 @@ import org.mapstruct.Mapper;
 public interface UserDtoMapper {
 
     // Read
-    UserDto.ReadResponse toReadResponse(User user);
+    UserDto.Read.Response toReadResponse(User user);
 
     // Create
-    default User toUser(UserDto.CreateRequest createRequest) {
-        return User.create(
-            createRequest.getNickname(),
-            createRequest.getPassword(),
-            createRequest.getEmail()
-        );
-    }
+    User toUser(UserDto.Create.Request createRequest);
 
-    UserDto.CreateResponse toCreateResponse(User user);
+    UserDto.Create.Response toCreateResponse(User user);
 
     // Update
-    default User toUser(UserDto.UpdateRequest updateRequest) {
-        return User.create(
-            updateRequest.getNickname(),
-            updateRequest.getPassword(),
-            updateRequest.getEmail()
-        );
-    }
+    User toUser(UserDto.Update.Request updateRequest) ;
 
-    UserDto.UpdateResponse toUpdateResponse(User user);
+    UserDto.Update.Response toUpdateResponse(User user);
 
     // Delete
-    UserDto.DeleteResponse toDeleteResponse(User user);
+    UserDto.Delete.Response toDeleteResponse(User user);
 }

@@ -14,6 +14,7 @@ public class ProductJpaCustomRepositoryImpl implements ProductJpaCustomRepositor
 
     private final EntityManager entityManager;
 
+    @Override
     public Optional<Product> findByNumberWithCache(String number) {
         Product product = entityManager.unwrap(Session.class)
             .byNaturalId(Product.class)

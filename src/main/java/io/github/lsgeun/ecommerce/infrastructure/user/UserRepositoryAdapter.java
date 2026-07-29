@@ -23,9 +23,7 @@ public class UserRepositoryAdapter implements UserRepository {
     @Override
     public User getByNickname(String nickname) {
         return this.findByNickname(nickname)
-            .orElseThrow(
-                () -> new DomainEntityNotFoundException("User", nickname)
-            );
+            .orElseThrow(() -> new DomainEntityNotFoundException("User", nickname));
     }
 
     @Override
