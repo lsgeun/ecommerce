@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class ProductRestController {
 
+
     private final ProductSimpleService productSimpleService;
     private final ProductDtoMapper productDtoMapper;
 
