@@ -50,7 +50,7 @@ class ProductTest {
     @DisplayName("가격이 음수이면 예외가 발생한다")
     void validatePrice_음수이면_예외() {
         // given
-        long invalidPrice = 1;
+        long invalidPrice = -1;
 
         // when & then - 음수 가격 검증 시 예외가 발생해야 한다
         assertThatThrownBy(() -> Product.validatePrice(invalidPrice))

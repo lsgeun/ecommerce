@@ -1,0 +1,77 @@
+name: Deploy to Amazon EC2
+
+on:
+  push:
+    branches:
+      - main
+      - test/28-product-user-domain
+
+env:
+  AWS_REGION: ap-northeast-2
+  S3_BUCKET_NAME: lsgeun-github-actions-s3-bucket-346560662486-ap-northeast-2-an
+  CODE_DEPLOY_APPLICATION_NAME: ecommerce-server-codedeploy-app
+  CODE_DEPLOY_DEPLOYMENT_GROUP_NAME: ecommerce-server-codedeploy-deployment-group
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+      # (1) 기본 체크아웃 (v4 적용)
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # (2) JDK 17 세팅 (v4 적용 및 프로젝트 버전에 맞게 수정)
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      # (3) Gradle 설정 및 Caching
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      # (4) Gradle build (Test 제외)
+      - name: Build with Gradle
+        run: ./gradlew clean build -x test
+
+      # (5) 실행 스크립트 권한 부여
+      - name: Grant execute permission for scripts
+        run: chmod +x scripts/*.sh
+
+      # (6) 배포에 필요한 파일만 묶어서 압축 (배포 속도/용량 최적화)
+      - name: Package deployment artifacts
+        run: |
+          mkdir -p deploy
+          cp build/libs/*.jar deploy/
+          cp appspec.yml deploy/
+          cp -r scripts deploy/
+          cd deploy && zip -r ../$GITHUB_SHA.zip .
+
+      # (7) AWS 인증 (v4 적용)
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      # (8) S3에 필요한 zip 파일만 업로드
+      - name: Upload to AWS S3
+        run: |
+          aws s3 cp $GITHUB_SHA.zip s3://$S3_BUCKET_NAME/$GITHUB_SHA.zip
+
+      # (9) CodeDeploy 실행
+      - name: Deploy to AWS EC2 from S3
+        run: |
+          aws deploy create-deployment \
+            --application-name ${{ env.CODE_DEPLOY_APPLICATION_NAME }} \
+            --deployment-config-name CodeDeployDefault.AllAtOnce \
+            --deployment-group-name ${{ env.CODE_DEPLOY_DEPLOYMENT_GROUP_NAME }} \
+            --s3-location bucket=$S3_BUCKET_NAME,key=$GITHUB_SHA.zip,bundleType=zip
