@@ -1,8 +1,9 @@
 spring:
   datasource:
-    url: jdbc:mysql://${AWS_DB_HOST}/ecommerce?serverTimezone=Asia/Seoul
-    username: ${AWS_DB_USERNAME}
-    password: ${AWS_DB_PASSWORD}
+    # TODO: MYSQL_DB_HOST, MYSQL_DB_USERNAME, MYSQL_DB_PASSWORD 환경 변수 설정하고, 깃헙 secret에 올리기
+    url: jdbc:mysql://${MYSQL_DB_HOST}/ecommerce?serverTimezone=Asia/Seoul
+    username: ${MYSQL_DB_USERNAME}
+    password: ${MYSQL_DB_PASSWORD}
 
 server:
   port: 8080
