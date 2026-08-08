@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 
 PROJECT_ROOT="/home/ubuntu/app"
-JAR_FILE="$PROJECT_ROOT/spring-webapp.jar"
+# -plain.jar가 아닌 실제 실행 가능한 .jar 파일 중 가장 최근 파일 1개 찾기
+JAR_FILE=$(ls -tr $PROJECT_ROOT/*.jar | grep -v 'plain\.jar$' | tail -n 1)
 
 DEPLOY_LOG="$PROJECT_ROOT/deploy.log"
 
