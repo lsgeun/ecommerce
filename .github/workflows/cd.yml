@@ -70,7 +70,12 @@ jobs:
       # (9) 배포에 필요한 파일만 묶어서 압축 (배포 속도/용량 최적화)
       - name: Package deployment artifacts
         run: |
-          zip -r $GITHUB_SHA.zip docker-compose.yml appspec.yml scripts nginx
+          mkdir -p deploy
+          cp docker-compose.yml deploy/
+          cp appspec.yml deploy/
+          cp -r scripts deploy/
+          cp -r nginx deploy/
+          cd deploy && zip -r ../$GITHUB_SHA.zip .
 
       # (10) AWS 인증 (v4 적용)
       - name: Configure AWS credentials
