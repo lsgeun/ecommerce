@@ -3,7 +3,7 @@ FROM eclipse-temurin:17-jre
 WORKDIR /app
 
 # 1. 보안용 계정 미리 생성
-RUN addgroup -S appuser && adduser -S appuser -G appuser
+RUN groupadd -r appuser && useradd -r -g appuser appuser
 
 # 2. 파일 복사 시점에 소유권(--chown)을 한 번에 부여 (추가 RUN chown 레이어 제거)
 COPY --chown=appuser:appuser build/libs/*-SNAPSHOT.jar app.jar
