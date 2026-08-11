@@ -41,16 +41,20 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew clean build -x test
 
-      # 3. Docker Hub 로그인 (docker/login-action 사용)
+      # 5. BuildKit 캐시 지원을 위한 필수 스텝
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      # 6. Docker Hub 로그인 (docker/login-action 사용)
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      # 4. Docker 이미지 빌드 및 Docker Hub 푸시 (docker/build-push-action 사용)
+      # 7. Docker 이미지 빌드 및 Docker Hub 푸시 (docker/build-push-action 사용)
       - name: Build and push Docker image
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: .
           file: ./Dockerfile
@@ -59,11 +63,11 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
         
-      # (5) 실행 스크립트 권한 부여
+      # (8) 실행 스크립트 권한 부여
       - name: Grant execute permission for scripts
         run: chmod +x scripts/*.sh
 
-      # (6) 배포에 필요한 파일만 묶어서 압축 (배포 속도/용량 최적화)
+      # (9) 배포에 필요한 파일만 묶어서 압축 (배포 속도/용량 최적화)
       - name: Package deployment artifacts
         run: |
           mkdir -p deploy
@@ -72,7 +76,7 @@ jobs:
           cp -r scripts deploy/
           cd deploy && zip -r ../$GITHUB_SHA.zip .
 
-      # (7) AWS 인증 (v4 적용)
+      # (10) AWS 인증 (v4 적용)
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -80,12 +84,12 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_DEPLOYMENT_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
 
-      # (8) S3에 필요한 zip 파일만 업로드
+      # (11) S3에 필요한 zip 파일만 업로드
       - name: Upload to AWS S3
         run: |
           aws s3 cp $GITHUB_SHA.zip s3://$S3_BUCKET_NAME/$GITHUB_SHA.zip
 
-      # (9) CodeDeploy 실행
+      # (12) CodeDeploy 실행
       - name: Deploy to AWS EC2 from S3
         run: |
           aws deploy create-deployment \
