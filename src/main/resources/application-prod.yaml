@@ -1,9 +1,8 @@
 spring:
   datasource:
-    # TODO: MYSQL_DB_HOST, MYSQL_DB_USERNAME, MYSQL_DB_PASSWORD 환경 변수 설정하고, 깃헙 secret에 올리기
-    url: jdbc:mysql://${MYSQL_DB_HOST}/ecommerce?serverTimezone=Asia/Seoul
-    username: ${MYSQL_DB_USERNAME}
-    password: ${MYSQL_DB_PASSWORD}
+    url: jdbc:mysql://${MYSQL_HOST}/ecommerce?serverTimezone=Asia/Seoul
+    username: ${MYSQL_USER}
+    password: ${MYSQL_PASSWORD}
 
 server:
   port: 8080

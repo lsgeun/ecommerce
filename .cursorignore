@@ -26,5 +26,6 @@ gradlew.bat
 # 4. 기타 불필요한 메타/문서 파일 (선택 제외)
 # ==========================================
 .git/
-.github/
+.github/*
+!.github/workflows/
 HELP.md

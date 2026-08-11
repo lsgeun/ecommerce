@@ -6,12 +6,6 @@ on:
       - main
       - test/28-product-user-domain
 
-env:
-  AWS_REGION: ap-northeast-2
-  S3_BUCKET_NAME: lsgeun-github-actions-s3-bucket-346560662486-ap-northeast-2-an
-  CODE_DEPLOY_APPLICATION_NAME: ecommerce-server-codedeploy-app
-  CODE_DEPLOY_DEPLOYMENT_GROUP_NAME: ecommerce-server-codedeploy-deployment-group
-
 permissions:
   contents: read
 
@@ -20,6 +14,12 @@ jobs:
     name: deploy
     runs-on: ubuntu-latest
     environment: production
+
+    env:
+      AWS_REGION: ${{ secrets.AWS_REGION }}
+      S3_BUCKET_NAME: ${{ secrets.S3_BUCKET_NAME }}
+      CODE_DEPLOY_APPLICATION_NAME: ${{ secrets.CODE_DEPLOY_APPLICATION_NAME }}
+      CODE_DEPLOY_DEPLOYMENT_GROUP_NAME: ${{ secrets.CODE_DEPLOY_DEPLOYMENT_GROUP_NAME }}
 
     steps:
       # (1) 기본 체크아웃 (v4 적용)
@@ -41,6 +41,24 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew clean build -x test
 
+      # 3. Docker Hub 로그인 (docker/login-action 사용)
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      # 4. Docker 이미지 빌드 및 Docker Hub 푸시 (docker/build-push-action 사용)
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/ecommerce-backend:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+        
       # (5) 실행 스크립트 권한 부여
       - name: Grant execute permission for scripts
         run: chmod +x scripts/*.sh
@@ -49,7 +67,7 @@ jobs:
       - name: Package deployment artifacts
         run: |
           mkdir -p deploy
-          cp build/libs/*.jar deploy/
+          cp docker-compose.yml deploy/
           cp appspec.yml deploy/
           cp -r scripts deploy/
           cd deploy && zip -r ../$GITHUB_SHA.zip .

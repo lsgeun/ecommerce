@@ -1,0 +1,68 @@
+version: '3.8'
+
+# 1. 공통 로그 설정 정의
+x-logging: &default-logging
+  driver: "json-file"
+  options:
+    max-size: "10m"
+    max-file: "3"
+
+services:
+  # 1. MySQL 데이터베이스 컨테이너
+  mysql-db:
+    image: mysql:8.0
+    container_name: mysql-db
+    restart: unless-stopped
+    logging: *default-logging # 공통 로그 설정 재사용
+    command:
+      - --default-time-zone=+09:00
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+    environment:
+      TZ: Asia/Seoul
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    ports:
+      - "3306:3306"
+    volumes:
+      # 컨테이너가 삭제되어도 DB 데이터가 유실되지 않도록 마운트
+      - mysql-data:/var/lib/mysql
+    networks:
+      - ecommerce-net
+    # MySQL이 완전히 켜질 때까지 헬스체크
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # 2. Spring Boot 백엔드 컨테이너
+  backend:
+    image: ${DOCKERHUB_USERNAME}/${DOCKER_IMAGE}:${DOCKER_TAG}
+    container_name: ecommerce-backend
+    restart: unless-stopped
+    logging: *default-logging # 공통 로그 설정 재사용
+    ports:
+      - "8080:8080"
+    environment:
+      TZ: Asia/Seoul
+      SPRING_PROFILES_ACTIVE: prod
+      JAVA_OPTS: -XX:+UseContainerSupport -XX:MaxRAMPercentage=75.0 -Xms128m -Xmx256m
+      # Docker 네트워크 내부에서는 서비스 이름(mysql-db)이 호스트명이 됩니다.
+      MYSQL_HOST: ${MYSQL_HOST}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    depends_on:
+      mysql-db:
+        condition: service_healthy # MySQL 헬스체크 통과 후 백엔드 실행
+    networks:
+      - ecommerce-net
+
+volumes:
+  mysql-data:
+
+networks:
+  ecommerce-net:
+    driver: bridge

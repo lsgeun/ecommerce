@@ -2,7 +2,7 @@ spring:
   application:
     name: ecommerce
   datasource:
-    url: jdbc:h2:mem:ecommerce-db
+    url: jdbc:h2:mem:ecommerce
     username: sa
     password:
   jpa:
