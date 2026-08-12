@@ -31,10 +31,11 @@ services:
       - ecommerce-net
     # MySQL이 완전히 켜질 때까지 헬스체크
     healthcheck:
-      test: ["CMD-SHELL", "mysql -u root -p'$$MYSQL_ROOT_PASSWORD' -e 'SELECT 1;'"]
+      test: [ "CMD-SHELL", "mysql -u root -p'${MYSQL_ROOT_PASSWORD}' -e 'SELECT 1;'" ]
       interval: 5s
       timeout: 5s
       retries: 10
+      start_period: 20s
 
   # 2. Spring Boot 백엔드 컨테이너
   backend:
