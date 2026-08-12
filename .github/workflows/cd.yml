@@ -46,7 +46,7 @@ jobs:
         env:
           DOCKER_USER: ${{ secrets.DOCKERHUB_USERNAME }}
           DOCKER_PASS: ${{ secrets.DOCKERHUB_DELETE_TOKEN }}
-          DOCKER_REPOSITORY: ${{ secrets.DOCKER_REPOSITORY }}
+          DOCKER_REPOSITORY: ${{ secrets.DOCKERHUB_REPOSITORY }}
         run: |
           echo "=========================================="
           echo " [작업 시작] 도커 허브 기존 태그 정리"
@@ -109,7 +109,7 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKER_REPOSITORY }}:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_REPOSITORY }}:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
