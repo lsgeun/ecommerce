@@ -49,7 +49,7 @@ jobs:
           DOCKER_REPOSITORY: ${{ secrets.DOCKERHUB_REPOSITORY }}
         run: |
           echo "=========================================="
-          echo " [작업 시작] 도커 허브 기존 태그 정리"
+          echo " [작업 시작] 도커 허브 이미지 다이제스트 삭제"
           echo "=========================================="
           
           # 1. 도커 허브 로그인 토큰(JWT) 발급
@@ -57,38 +57,42 @@ jobs:
             -H "Content-Type: application/json" \
             -d "{\"username\": \"$DOCKER_USER\", \"password\": \"$DOCKER_PASS\"}" \
             "https://hub.docker.com/v2/users/login/" | jq -r '.token')
-
+          
           if [ -z "$TOKEN" ] || [ "$TOKEN" == "null" ]; then
             echo "❌ [오류] 도커 허브 인증 실패! Secrets 설정을 확인하세요."
             exit 1
           fi
           echo "✅ 도커 허브 인증 성공"
-
-          # 2. 모든 태그가 지워질 때까지 반복 삭제 (페이지네이션 대응)
-          DELETED_COUNT=0
-          while true; do
-            TAGS=$(curl -s -H "Authorization: JWT $TOKEN" \
-              "https://hub.docker.com/v2/repositories/${DOCKER_USER}/${DOCKER_REPOSITORY}/tags/?page_size=100" \
-              | jq -r '.results[].name // empty')
-
-            if [ -z "$TAGS" ]; then
-              break
-            fi
-
-            for TAG in $TAGS; do
-              echo "🗑️ 태그 삭제 중: $TAG"
-              curl -s -X DELETE \
-                -H "Authorization: JWT $TOKEN" \
-                "https://hub.docker.com/v2/repositories/${DOCKER_USER}/${DOCKER_REPOSITORY}/tags/${TAG}/"
-              DELETED_COUNT=$((DELETED_COUNT+1))
-            done
-          done
-
-          if [ $DELETED_COUNT -eq 0 ]; then
-            echo "ℹ️ 삭제할 기존 태그가 없습니다."
-          else
-            echo "✅ 총 ${DELETED_COUNT}개의 기존 태그 삭제 완료!"
+          
+          # 2. 레포지토리 내 모든 이미지 다이제스트 추출 (중복 제거)
+          DIGESTS=$(curl -s -H "Authorization: JWT $TOKEN" \
+            "https://hub.docker.com/v2/repositories/${DOCKER_USER}/${DOCKER_REPOSITORY}/tags/?page_size=100" \
+            | jq -r '.results[].digest // empty' | sort -u)
+          
+          if [ -z "$DIGESTS" ]; then
+            echo "ℹ️ 삭제할 다이제스트가 없습니다."
+            exit 0
           fi
+          
+          # 3. 다이제스트 순회 삭제
+          DELETED_COUNT=0
+          for DIGEST in $DIGESTS; do
+            echo "🗑️ 다이제스트 삭제 중: $DIGEST"
+            
+            HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" -X DELETE \
+              -H "Authorization: JWT $TOKEN" \
+              "https://hub.docker.com/v2/repositories/${DOCKER_USER}/${DOCKER_REPOSITORY}/manifests/${DIGEST}")
+          
+            if [ "$HTTP_CODE" -eq 204 ] || [ "$HTTP_CODE" -eq 200 ]; then
+              DELETED_COUNT=$((DELETED_COUNT+1))
+            else
+              echo "❌ [오류] 다이제스트 삭제 실패 (HTTP $HTTP_CODE): $DIGEST"
+              echo "PAT 토큰에 Delete 권한이 있는지 확인하세요."
+              exit 1
+            fi
+          done
+          
+          echo "✅ 총 ${DELETED_COUNT}개의 다이제스트 삭제 완료!"
           echo "=========================================="
 
       # (6) BuildKit 캐시 지원을 위한 설정
@@ -148,7 +152,7 @@ jobs:
       - name: AWS CodeDeploy 배포 요청
         run: |
           echo "🚀 EC2 배포 요청 시작..."
-          aws deploy create-deployment 성\
+          aws deploy create-deployment \
             --application-name ${{ env.CODE_DEPLOY_APPLICATION_NAME }} \
             --deployment-config-name CodeDeployDefault.AllAtOnce \
             --deployment-group-name ${{ env.CODE_DEPLOY_DEPLOYMENT_GROUP_NAME }} \
