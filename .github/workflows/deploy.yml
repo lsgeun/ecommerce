@@ -37,7 +37,7 @@ jobs:
         with:
           name: app-build
           path: build/libs/*.jar
-          retention-days: 1
+          retention-days: 1 # 1일 뒤 자동 삭제
 
       # 5. CI 빌드 실패 시에만 슬랙 알림
       - name: Slack Notification on Failure
@@ -112,6 +112,7 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_REPOSITORY }}:latest
+          # 10GB 초과시 자동 삭제, 혹은 일정 기간 뒤 자동 삭제
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
