@@ -45,7 +45,7 @@ jobs:
       - name: 도커 허브 기존 이미지 태그 전체 삭제
         env:
           DOCKER_USER: ${{ secrets.DOCKERHUB_USERNAME }}
-          DOCKER_PASS: ${{ secrets.DOCKERHUB_DELETE_TOKEN }}
+          DOCKER_PASS: ${{ secrets.DOCKERHUB_TOKEN }}
           DOCKER_REPOSITORY: ${{ secrets.DOCKERHUB_REPOSITORY }}
         run: |
           echo "=========================================="
