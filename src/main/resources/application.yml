@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: ecommerce
+
+  # 기본 프로파일을 dev로 지정 (아무 옵션 없이 실행 시 dev 작동)
+  profiles:
+    default: dev
