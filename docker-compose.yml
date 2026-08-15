@@ -68,6 +68,7 @@ services:
       - "80:80" # 외부 HTTP 80 포트 연결
     volumes:
       - ./nginx:/etc/nginx/conf.d:ro
+      - /etc/tailscale/certs:/etc/nginx/certs:ro
     depends_on:
       - backend
     networks:
