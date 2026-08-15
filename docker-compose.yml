@@ -65,7 +65,8 @@ services:
     restart: unless-stopped
     logging: *default-logging # 공통 로그 설정 재사용
     ports:
-      - "80:80" # 외부 HTTP 80 포트 연결
+      - "100.75.142.26:80:80"
+      - "100.75.142.26:443:443"
     volumes:
       - ./nginx:/etc/nginx/conf.d:ro
       - /etc/tailscale/certs:/etc/nginx/certs:ro
