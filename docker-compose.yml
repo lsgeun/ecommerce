@@ -80,15 +80,12 @@ services:
     image: grafana/promtail:2.9.0
     container_name: ecommerce-promtail
     restart: unless-stopped
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
     volumes:
       - /var/lib/docker/containers:/var/lib/docker/containers:ro
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - ./promtail/promtail-config.yml:/etc/promtail/promtail-config.yml:ro
     command: -config.file=/etc/promtail/promtail-config.yml
-    networks:
-      - ecommerce-net
+    network_mode: host
 
 volumes:
   mysql-data:
