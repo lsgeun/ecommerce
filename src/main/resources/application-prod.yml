@@ -17,7 +17,9 @@ spring:
     open-in-view: false # OSIV 비활성화 (성능 및 커넥션 풀 고갈 방지)
     show-sql: false
     hibernate:
-      ddl-auto: validate # prod 환경에서는 none 또는 validate 사용 (create/update 금지)
+      # prod 환경에서는 none 또는 validate 사용 (create/update 금지)
+      # 하지만, 지금은 테스트 환경이라고 생각하고, validate 대신 update 사용함
+      ddl-auto: update
     properties:
       hibernate:
         format_sql: false # 운영 로그 용량 절약을 위해 SQL 포맷팅 끔
