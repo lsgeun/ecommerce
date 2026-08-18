@@ -40,14 +40,14 @@ services:
   # 2. Spring Boot 백엔드 컨테이너
   backend:
     image: ${DOCKERHUB_USERNAME}/${DOCKER_IMAGE}:${DOCKER_TAG}
-    container_name: ecommerce-backend
+    container_name: ecommerce-backend-stage
     restart: unless-stopped
     logging: *default-logging # 공통 로그 설정 재사용
     ports:
       - "127.0.0.1:8081:8081"
     environment:
       TZ: Asia/Seoul
-      SPRING_PROFILES_ACTIVE: prod
+      SPRING_PROFILES_ACTIVE: stage
       JAVA_OPTS: -XX:+UseContainerSupport -XX:MaxRAMPercentage=75.0 -Xms128m -Xmx256m
       # Docker 네트워크 내부에서는 서비스 이름(mysql-db)이 호스트명이 됩니다.
       MYSQL_HOST: ${MYSQL_HOST}
