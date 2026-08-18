@@ -26,7 +26,7 @@ services:
       - "127.0.0.1:3306:3306"
     volumes:
       # 컨테이너가 삭제되어도 DB 데이터가 유실되지 않도록 마운트
-      - mysql-data:/var/lib/mysql
+      - /home/ubuntu/app/mysql-data:/var/lib/mysql
     networks:
       - ecommerce-net
     # MySQL이 완전히 켜질 때까지 헬스체크
@@ -80,15 +80,13 @@ services:
     image: grafana/promtail:2.9.0
     container_name: ecommerce-promtail
     restart: unless-stopped
+    logging: *default-logging # 공통 로그 설정 재사용
     volumes:
       - /var/lib/docker/containers:/var/lib/docker/containers:ro
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - ./promtail/promtail-config.yml:/etc/promtail/promtail-config.yml:ro
     command: -config.file=/etc/promtail/promtail-config.yml
     network_mode: host
-
-volumes:
-  mysql-data:
 
 networks:
   ecommerce-net:
