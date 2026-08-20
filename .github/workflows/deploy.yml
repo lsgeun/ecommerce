@@ -6,6 +6,10 @@ on:
       - main
       - test/28-product-user-domain
 
+env:
+  PROJECT_DIR: '.'
+  SPRING_CORE_API_DIR: './backend/spring-core-api'
+      
 jobs:
   build-test:
     name: build-test
@@ -66,7 +70,7 @@ jobs:
 
     name: deploy
     runs-on: ubuntu-latest
-    environment: production
+    environment: stage
 
     env:
       AWS_REGION: ${{ secrets.AWS_REGION }}
