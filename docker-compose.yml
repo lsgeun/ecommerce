@@ -1,0 +1,93 @@
+# 1. 공통 로그 설정 정의
+x-logging: &default-logging
+  driver: "json-file"
+  options:
+    max-size: "10m"
+    max-file: "3"
+
+services:
+  # 1. MySQL 데이터베이스 컨테이너
+  mysql-db:
+    image: mysql:8.0
+    container_name: mysql-db
+    restart: unless-stopped
+    logging: *default-logging # 공통 로그 설정 재사용
+    command:
+      - --default-time-zone=+09:00
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+    environment:
+      TZ: Asia/Seoul
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    ports:
+      - "127.0.0.1:3306:3306"
+    volumes:
+      # 컨테이너가 삭제되어도 DB 데이터가 유실되지 않도록 마운트
+      - /home/ubuntu/app/mysql-data:/var/lib/mysql
+    networks:
+      - ecommerce-net
+    # MySQL이 완전히 켜질 때까지 헬스체크
+    healthcheck:
+      test: [ "CMD-SHELL", "mysql -u root -p'${MYSQL_ROOT_PASSWORD}' -e 'SELECT 1;'" ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+
+  # 2. Spring Boot 백엔드 컨테이너
+  backend:
+    image: ${DOCKERHUB_USERNAME}/${DOCKER_IMAGE}:${DOCKER_TAG}
+    container_name: ecommerce-backend-stage
+    restart: unless-stopped
+    logging: *default-logging # 공통 로그 설정 재사용
+    ports:
+      - "127.0.0.1:8081:8081"
+    environment:
+      TZ: Asia/Seoul
+      SPRING_PROFILES_ACTIVE: stage
+      JAVA_OPTS: -XX:+UseContainerSupport -XX:MaxRAMPercentage=75.0 -Xms128m -Xmx256m
+      # Docker 네트워크 내부에서는 서비스 이름(mysql-db)이 호스트명이 됩니다.
+      MYSQL_HOST: ${MYSQL_HOST}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    depends_on:
+      mysql-db:
+        condition: service_healthy # MySQL 헬스체크 통과 후 백엔드 실행
+    networks:
+      - ecommerce-net
+
+  nginx:
+    image: nginx:alpine
+    container_name: ecommerce-nginx
+    restart: unless-stopped
+    logging: *default-logging # 공통 로그 설정 재사용
+    ports:
+      - "100.75.142.26:80:80"
+      - "100.75.142.26:443:443"
+    volumes:
+      - ./nginx:/etc/nginx/conf.d:ro
+      - /etc/tailscale/certs:/etc/nginx/certs:ro
+    depends_on:
+      - backend
+    networks:
+      - ecommerce-net
+
+  # ecommerce/docker-compose.yml 에 추가할 Promtail 예시
+  promtail:
+    image: grafana/promtail:2.9.0
+    container_name: ecommerce-promtail
+    restart: unless-stopped
+    logging: *default-logging # 공통 로그 설정 재사용
+    volumes:
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./promtail/promtail-config.yml:/etc/promtail/promtail-config.yml:ro
+    command: -config.file=/etc/promtail/promtail-config.yml
+    network_mode: host
+
+networks:
+  ecommerce-net:
+    driver: bridge

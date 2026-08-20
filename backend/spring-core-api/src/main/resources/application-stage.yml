@@ -1,0 +1,67 @@
+server:
+  port: 8080
+
+spring:
+  # 1. H2 콘솔 완벽 비활성화
+  datasource:
+    url: jdbc:mysql://${MYSQL_HOST}/ecommerce?serverTimezone=Asia/Seoul
+    username: ${MYSQL_USER}
+    password: ${MYSQL_PASSWORD}
+
+  h2:
+    console:
+      enabled: false
+
+  # 2. JPA & OSIV 설정
+  jpa:
+    open-in-view: false # OSIV 비활성화 (성능 및 커넥션 풀 고갈 방지)
+    show-sql: false
+    hibernate:
+      # stage 환경에서 편의상 update 혹은 validate
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: false # 운영 로그 용량 절약을 위해 SQL 포맷팅 끔
+
+springdoc:
+  packages-to-scan: io.github.lsgeun
+  default-consumes-media-type: application/json;charset=UTF-8
+  default-produces-media-type: application/json;charset=UTF-8
+
+  swagger-ui:
+    # 편의상 swagger ui를 켜둠, 요청을 쉽게 하기 위해.
+    enabled: true
+    disable-swagger-default-url: true
+    display-request-duration: true
+    operations-sorter: alpha
+
+  api-docs:
+    # 편의상 swagger ui를 켜둠, 요청을 쉽게 하기 위해.
+    enabled: true
+
+management:
+  server:
+    port: 8081
+  endpoints:
+    web:
+      exposure:
+        include: prometheus
+      discovery:
+        enabled: false
+  endpoint:
+    prometheus:
+      access: unrestricted
+    health:
+      access: none
+    info:
+      access: none
+  metrics:
+    enable:
+      all: false
+      jvm: true
+      process: true
+      system: true
+      http: true
+      hikaricp: true
+      logback: true
+      tomcat: true

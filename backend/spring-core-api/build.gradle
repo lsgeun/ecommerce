@@ -13,6 +13,10 @@ java {
 	}
 }
 
+jar {
+	enabled = false // plain.jar 생성 안 함
+}
+
 repositories {
 	mavenCentral()
 }
@@ -23,7 +27,7 @@ dependencies {
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.17'
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'com.h2database:h2'
-//	runtimeOnly 'com.mysql:mysql-connector-j'
+	runtimeOnly 'com.mysql:mysql-connector-j'
 
 	annotationProcessor 'org.projectlombok:lombok'
 
@@ -39,8 +43,21 @@ dependencies {
 	implementation 'org.mapstruct:mapstruct:1.5.5.Final'
 	annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
 	compileOnly 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
+
+	// Monitoring
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	implementation 'io.micrometer:micrometer-registry-prometheus'
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
+
+	// Gradle 실행 시 콘솔에 개별 테스트 결과 출력 설정
+	testLogging {
+		events "passed", "skipped", "failed"
+
+		// ParameterizedTest 실행 시 주입된 파라미터 이름 및 DisplayName 표시
+		showStandardStreams = true
+		exceptionFormat = 'full'
+	}
 }
