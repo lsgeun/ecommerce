@@ -1,0 +1,14 @@
+global:
+  scrape_interval: 10s
+
+scrape_configs:
+  # 1. Prometheus 자기 자신 메트릭 수집 (이걸 추가하면 up 쿼리 시 1이 바로 뜸)
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  - job_name: 'remote-spring-boot'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      # 원격 서버의 실제 IP나 도메인을 입력합니다.
+      - targets:  ['host.docker.internal:18081']
