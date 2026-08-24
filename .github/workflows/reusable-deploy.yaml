@@ -63,17 +63,16 @@ jobs:
           chmod +x ${{ env.AWS_CODEDEPLOY_DIR }}/start.sh
           chmod +x ${{ env.AWS_CODEDEPLOY_DIR }}/stop.sh
       
-      # TODO
       # (8) 배포에 필요한 파일 아티팩트 압축
       - name: Package deployment artifacts (ZIP)
         run: |
           echo "📦 배포 파일 압축 시작..."
-          mkdir -p deploy
-          cp -r ${{ env.AWS_CODEDEPLOY_DIR }} deploy/
-          cp -r ${{ env.EGINX_DIR }} deploy/
-          cp -r ${{ env.PROMTAIL_DIR }} deploy/
-          cp ./docker-compose.yaml deploy/
-          cd deploy && zip -r ../${{ github.sha }}.zip .
+          mkdir -p dist
+          cp -r ${{ env.AWS_CODEDEPLOY_DIR }} dist/
+          cp -r ${{ env.EGINX_DIR }} dist/
+          cp -r ${{ env.PROMTAIL_DIR }} dist/
+          cp ./docker-compose.yaml dist/
+          cd dist && zip -r ../${{ github.sha }}.zip .
           echo "✅ 배포 파일 압축 완료: ${{ github.sha }}.zip"
 
       # (9) AWS 자격 증명 구성
