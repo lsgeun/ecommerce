@@ -70,8 +70,8 @@ jobs:
           
           mkdir -p dist/scripts/deploy
           cp ${{ env.AWS_CODEDEPLOY_DIR }}/appspec.yaml dist/
-          cp ${{ env.AWS_CODEDEPLOY_DIR }}/start.yaml dist/scripts/deploy/
-          cp ${{ env.AWS_CODEDEPLOY_DIR }}/stop.yaml dist/scripts/deploy/
+          cp ${{ env.AWS_CODEDEPLOY_DIR }}/start.sh dist/scripts/deploy/
+          cp ${{ env.AWS_CODEDEPLOY_DIR }}/stop.sh dist/scripts/deploy/
           cp -r ${{ env.EGINX_DIR }} dist/
           cp -r ${{ env.PROMTAIL_DIR }} dist/
           cp ./docker-compose.yaml dist/
