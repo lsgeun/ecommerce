@@ -84,8 +84,8 @@ services:
     volumes:
       - /var/lib/docker/containers:/var/lib/docker/containers:ro
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      - ./promtail/promtail-config.yml:/etc/promtail/promtail-config.yml:ro
-    command: -config.file=/etc/promtail/promtail-config.yml
+      - ./promtail/promtail-config.yaml:/etc/promtail/promtail-config.yaml:ro
+    command: -config.file=/etc/promtail/promtail-config.yaml
     network_mode: host
 
 networks:

@@ -7,6 +7,7 @@ TIME_NOW=$(date +%c)
 cd "$PROJECT_ROOT" || exit 1
 
 echo "$TIME_NOW > 최신 도커 이미지 다운로드(pull) 시작" >> "$DEPLOY_LOG"
+
 # 1. Docker Hub에서 latest 이미지 최신본 다운로드
 docker compose pull >> "$DEPLOY_LOG" 2>&1
 
