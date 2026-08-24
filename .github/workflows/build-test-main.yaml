@@ -4,9 +4,9 @@ on:
   pull_request:
     branches:
       - main
-      - '!infra/31-monorepo-settings'
 
 jobs:
   run-build-test:
+    if: github.head_ref != 'infra/31-monorepo-settings'
     uses: ./.github/workflows/reusable-build-test.yaml
     secrets: inherit
