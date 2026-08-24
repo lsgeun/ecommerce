@@ -26,10 +26,12 @@ jobs:
 
       # 3. Gradle 실행 권한 부여 및 CI 빌드/테스트
       - name: Grant execute permission for gradlew
-        run: chmod +x ${{ env.SPRING_CORE_API_DIR }}/gradlew
+        working-directory: ${{ env.SPRING_CORE_API_DIR }}
+        run: chmod +x ./gradlew
 
       - name: Build and test with Gradle
-        run: ${{ env.SPRING_CORE_API_DIR }}/gradlew clean build
+        working-directory: ${{ env.SPRING_CORE_API_DIR }}
+        run: ./gradlew clean build
 
       # 4. 빌드 결과물(JAR 파일) 업로드
       - name: Upload build artifact

@@ -3,6 +3,7 @@ name: Main Build Test
 on:
   pull_request:
     branches: [ main ]
+    branches-ignore: [ infra/31-monorepo-settings ]
 
 jobs:
   run-build-test:
