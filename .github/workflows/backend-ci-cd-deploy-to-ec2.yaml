@@ -76,6 +76,7 @@ jobs:
   deploy:
     name: Deploy to EC2
     needs: build-test
+    # `needs: build-test`가 있어서 `needs.build-test.result == 'success'`를 생략해도 되지만, needs와 if가 함께 있을 때, needs가 무시되는 현상이 가끔 있어서, 생략하지 않음.
     if: |
       needs.build-test.result == 'success' &&
       (github.ref == 'refs/heads/main' || contains(github.event.head_commit.message, '[deploy]'))
