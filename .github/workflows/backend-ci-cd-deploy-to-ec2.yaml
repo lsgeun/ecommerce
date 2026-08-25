@@ -4,13 +4,10 @@ on:
   push:
     branches:
       - '**'
-  pull_request:
-    branches:
-      - main
-      
+
 # 동일 브랜치에 연달아 Push할 경우 이전 실행 중인 워크플로우 자동 취소
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.ref }}-${{ github.event_name }}
   cancel-in-progress: true
 
 env:
@@ -80,7 +77,6 @@ jobs:
     name: Deploy to EC2
     needs: build-test
     if: |
-      github.event_name != 'pull_request' &&
       needs.build-test.result == 'success' &&
       (github.ref == 'refs/heads/main' || contains(github.event.head_commit.message, '[deploy]'))
     runs-on: ubuntu-latest
