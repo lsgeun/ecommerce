@@ -15,7 +15,7 @@ env:
   AWS_CODEDEPLOY_DIR: './deploy/aws-codedeploy'
   EGINX_DIR: './gateway/nginx'
   PROMTAIL_DIR: './monitoring/promtail'
-
+  
 jobs:
   build-test:
     name: Build & Test
