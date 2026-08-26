@@ -1,6 +1,3 @@
-server:
-  port: 8080
-
 spring:
   # 1. H2 콘솔 완벽 비활성화
   datasource:
