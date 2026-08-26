@@ -29,12 +29,18 @@ services:
       - /home/ubuntu/app/mysql-data:/var/lib/mysql
     networks:
       - ecommerce-net
-    # MySQL이 완전히 켜질 때까지 헬스체크
+    # MySQL 컨테이너가 요청을 처리할 수 있는 상태인지 주기적으로 확인
     healthcheck:
+      # 컨테이너 내부에서 실행할 상태 확인 명령. 정상적으로 접속해 SELECT 1을
+      # 실행하면 헬스체크가 성공하고, 실패하면 MySQL이 아직 준비되지 않은 것으로 판단
       test: [ "CMD-SHELL", "mysql -u root -p'${MYSQL_ROOT_PASSWORD}' -e 'SELECT 1;'" ]
+      # 헬스체크를 실행하는 주기
       interval: 5s
+      # 한 번의 헬스체크 명령이 응답을 기다리는 최대 시간, 이 시간을 넘기면 실패로 간주
       timeout: 5s
+      # 주어진 숫자만큼 연속으로 실패하면, 실패로 간주
       retries: 10
+      # 컨테이너 시작 후 헬스체크 실패를 허용하는 초기 대기 시간
       start_period: 20s
 
   # 2. Spring Boot 백엔드 컨테이너
