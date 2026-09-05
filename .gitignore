@@ -2,3 +2,6 @@
 bin/
 build/
 out/
+
+# grafana.db 제외
+grafana.db
