@@ -36,7 +36,7 @@ services:
     volumes:
       - ./grafana/provisioning:/etc/grafana/provisioning:ro
       - ./grafana/dashboards:/etc/grafana/dashboards:ro
-      - ./grafana/grafana.db:/var/lib/grafana/grafana.db:rw # 설정, 비밀번호 등의 대부분의 데이터 저장
+      - ./grafana/data:/var/lib/grafana:rw # 설정, 비밀번호 등의 대부분의 데이터 저장
     depends_on:
       - prometheus
       - loki
