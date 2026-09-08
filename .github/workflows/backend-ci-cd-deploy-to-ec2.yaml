@@ -51,27 +51,25 @@ jobs:
           path: ${{ env.SPRING_CORE_API_DIR }}/build/libs/*.jar
           retention-days: 1 # 1일 뒤 자동 삭제
 
-      # 5. CI 빌드 실패 시에만 슬랙 알림
-      - name: Notify Slack on failure
+      # 5. CI 빌드 실패 시 디스코드 알림
+      - name: Notify Discord on failure
         if: failure()
-        uses: slackapi/slack-github-action@v1.26.0
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
-        with:
-          payload: |
-            {
-              "text": "🚨 *CI 빌드 실패!*",
-              "blocks": [
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "🚨 *CI 빌드 또는 테스트 실패*\n• *Repository:* ${{ github.repository }}\n• *Branch:* ${{ github.head_ref || github.ref_name }}\n• *Author:* ${{ github.actor }}\n• *Action Run:* ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-                  }
-                }
-              ]
-            }
+        run: |
+          curl -H "Content-Type: application/json" \
+               -X POST \
+               -d '{
+                     "embeds": [{
+                       "title": "🚨 CI 빌드 또는 테스트 실패",
+                       "color": 15158332,
+                       "fields": [
+                         { "name": "Repository", "value": "${{ github.repository }}", "inline": true },
+                         { "name": "Branch", "value": "${{ github.head_ref || github.ref_name }}", "inline": true },
+                         { "name": "Author", "value": "${{ github.actor }}", "inline": true },
+                         { "name": "Action Run", "value": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" }
+                       ]
+                     }]
+                   }' \
+               ${{ secrets.DISCORD_WEBHOOK_URL }}
 
   deploy:
     name: Deploy to EC2
@@ -173,24 +171,22 @@ jobs:
             --s3-location bucket=${{ secrets.S3_BUCKET_NAME }},key=${{ github.sha }}.zip,bundleType=zip
           echo "✅ AWS CodeDeploy 배포 요청 완료!"
 
-      # (12) CD 배포 실패 시에만 슬랙 알림
-      - name: Notify Slack on deployment failure
+      # (12) CD 배포 실패 시 디스코드 알림
+      - name: Notify Discord on deployment failure
         if: failure()
-        uses: slackapi/slack-github-action@v1.26.0
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
-        with:
-          payload: |
-            {
-              "text": "🚨 *CD 배포 실패!*",
-              "blocks": [
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "🚨 *EC2 배포 과정 실패*\n• *Repository:* ${{ github.repository }}\n• *Branch:* ${{ github.ref_name }}\n• *Author:* ${{ github.actor }}\n• *Action Run:* ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-                  }
-                }
-              ]
-            }
+        run: |
+          curl -H "Content-Type: application/json" \
+               -X POST \
+               -d '{
+                     "embeds": [{
+                       "title": "🚨 EC2 배포 과정 실패",
+                       "color": 15158332,
+                       "fields": [
+                         { "name": "Repository", "value": "${{ github.repository }}", "inline": true },
+                         { "name": "Branch", "value": "${{ github.ref_name }}", "inline": true },
+                         { "name": "Author", "value": "${{ github.actor }}", "inline": true },
+                         { "name": "Action Run", "value": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" }
+                       ]
+                     }]
+                   }' \
+               ${{ secrets.DISCORD_WEBHOOK_URL }}
