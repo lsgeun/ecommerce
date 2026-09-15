@@ -46,4 +46,22 @@ public class ProductSimpleService {
 
         return productRepository.deleteByNumber(number);
     }
+
+    @Transactional
+    public Product updateStock(String number, int count, Product.StockUpdateType type) {
+        Product product = productRepository.getByNumber(number);
+
+        switch (type) {
+            case INCREASE:
+                product.increaseStock(count);
+                break;
+            case DECREASE:
+                product.decreaseStock(count);
+                break;
+            default:
+                break;
+        }
+
+        return productRepository.update(product);
+    }
 }

@@ -1,9 +1,11 @@
 package io.github.lsgeun.ecommerce.product.presentation;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import io.github.lsgeun.ecommerce.product.domain.Product;
 import io.github.lsgeun.ecommerce.product.domain.ProductStatus;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Value;
@@ -143,6 +145,20 @@ public interface ProductDto {
                 this.stock = stock;
                 this.status = status;
             }
+        }
+    }
+
+    interface Stock {
+
+        @Value
+        @JsonInclude(JsonInclude.Include.NON_NULL)
+        class Request {
+            @NotNull(message = "개수 지정은 필수입니다.")
+            @Positive(message = "개수는 양수이어야 합니다.")
+            int count;
+
+            @NotNull(message = "타입 지정은 필수입니다. ('INCREASE' 또는 'DECREASE')")
+            Product.StockUpdateType type;
         }
     }
 }
