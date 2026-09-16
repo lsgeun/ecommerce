@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -68,5 +69,17 @@ public class ProductRestController {
         Product deletedProduct = productSimpleService.deleteProduct(number);
 
         return ResponseEntity.ok(productDtoMapper.toDeleteResponse(deletedProduct));
+    }
+
+    @PatchMapping("/{number}/stock")
+    public ResponseEntity<ProductDto.Update.Response> updateProductStock(
+        @PathVariable @NotNull(message = "상품 번호는 필수입니다.")
+        @Size(min = 2, max = 50, message = "상품 번호는 2자 이상 50자 이하이어야 합니다.")
+        String number,
+        @RequestBody @Valid ProductDto.Stock.Request stockRequest
+    ) {
+        Product updatedProduct = productSimpleService.updateStock(number, stockRequest.getCount(), stockRequest.getType());
+
+        return ResponseEntity.ok(productDtoMapper.toUpdateResponse(updatedProduct));
     }
 }

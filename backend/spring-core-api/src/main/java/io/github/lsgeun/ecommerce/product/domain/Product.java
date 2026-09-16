@@ -31,6 +31,10 @@ import org.hibernate.annotations.NaturalId;
 @Getter
 public class Product {
 
+    public enum StockUpdateType {
+        INCREASE, DECREASE
+    }
+
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private Long id;
@@ -51,36 +55,6 @@ public class Product {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private ProductStatus status;
-
-    @Builder
-    private Product(
-        Long id, String number, String name, long price, int stock, ProductStatus status
-    ) {
-        validateNumber(number);
-        validateName(name);
-        validatePrice(price);
-        validateStock(stock);
-        validateStatus(status);
-
-        this.id = id;
-        this.number = number;
-        this.name = name;
-        this.price = price;
-        this.stock = stock;
-        this.status = status;
-    }
-
-    public void updateFrom(Product product) {
-        validateName(product.getName());
-        validatePrice(product.getPrice());
-        validateStock(product.getStock());
-        validateStatus(product.getStatus());
-
-        this.name = product.name;
-        this.price = product.price;
-        this.stock = product.stock;
-        this.status = product.status;
-    }
 
     public static void validateNumber(String number) {
         if (number == null) {
@@ -119,9 +93,9 @@ public class Product {
     }
 
     public static void validateStock(int stock) {
-        if (stock < 0) {
+        if ((stock < 0) || (stock > 999)) {
             throw new InvalidDomainFieldException(
-                Product.class, "stock", stock, "상품 재고는 0 이상이어야 합니다."
+                Product.class, "stock", stock, "상품 재고는 0 이상, 999 이하이어야 합니다."
             );
         }
     }
@@ -132,5 +106,47 @@ public class Product {
                 Product.class, "status", status, "상품 상태는 필수입니다."
             );
         }
+    }
+
+    @Builder
+    private Product(
+        Long id, String number, String name, long price, int stock, ProductStatus status
+    ) {
+        validateNumber(number);
+        validateName(name);
+        validatePrice(price);
+        validateStock(stock);
+        validateStatus(status);
+
+        this.id = id;
+        this.number = number;
+        this.name = name;
+        this.price = price;
+        this.stock = stock;
+        this.status = status;
+    }
+
+    public void updateFrom(Product product) {
+        validateName(product.getName());
+        validatePrice(product.getPrice());
+        validateStock(product.getStock());
+        validateStatus(product.getStatus());
+
+        this.name = product.name;
+        this.price = product.price;
+        this.stock = product.stock;
+        this.status = product.status;
+    }
+
+    public void increaseStock(int count) {
+        validateStock(this.stock + count);
+
+        this.stock += count;
+    }
+
+    public void decreaseStock(int count) {
+        validateStock(this.stock - count);
+
+        this.stock -= count;
     }
 }
