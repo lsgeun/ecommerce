@@ -50,6 +50,10 @@ dependencies {
 }
 
 tasks.named('test') {
+	enabled = false // 계층별 태스크(unitTest 등)로 대체
+}
+
+def configureTestTask = {
 	useJUnitPlatform()
 
 	// Gradle 실행 시 콘솔에 개별 테스트 결과 출력 설정
@@ -60,4 +64,36 @@ tasks.named('test') {
 		showStandardStreams = true
 		exceptionFormat = 'full'
 	}
+}
+
+tasks.register('unitTest', Test) {
+	configure(configureTestTask)
+	useJUnitPlatform { includeTags 'unit' }
+}
+
+tasks.register('sliceTest', Test) {
+	configure(configureTestTask)
+	useJUnitPlatform { includeTags 'slice' }
+	dependsOn unitTest
+}
+
+tasks.register('integrationTest', Test) {
+	configure(configureTestTask)
+	useJUnitPlatform { includeTags 'integration' }
+	dependsOn sliceTest
+}
+
+tasks.register('e2eTest', Test) {
+	configure(configureTestTask)
+	useJUnitPlatform { includeTags 'e2e' }
+	dependsOn integrationTest
+}
+
+// 단위 -> 슬라이스 -> 통합 -> e2e 순으로 실행되며, 앞 단계 실패 시 뒤 단계는 실행되지 않음(fail-fast)
+tasks.register('testAll') {
+	dependsOn e2eTest
+}
+
+tasks.named('check') {
+	dependsOn testAll
 }
