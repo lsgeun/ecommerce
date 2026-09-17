@@ -74,24 +74,25 @@ tasks.register('unitTest', Test) {
 tasks.register('sliceTest', Test) {
 	configure(configureTestTask)
 	useJUnitPlatform { includeTags 'slice' }
-	dependsOn unitTest
 }
 
 tasks.register('integrationTest', Test) {
 	configure(configureTestTask)
 	useJUnitPlatform { includeTags 'integration' }
-	dependsOn sliceTest
 }
 
 tasks.register('e2eTest', Test) {
 	configure(configureTestTask)
 	useJUnitPlatform { includeTags 'e2e' }
-	dependsOn integrationTest
 }
 
 // 단위 -> 슬라이스 -> 통합 -> e2e 순으로 실행되며, 앞 단계 실패 시 뒤 단계는 실행되지 않음(fail-fast)
+sliceTest.mustRunAfter unitTest
+integrationTest.mustRunAfter sliceTest
+e2eTest.mustRunAfter integrationTest
+
 tasks.register('testAll') {
-	dependsOn e2eTest
+	dependsOn unitTest, sliceTest, integrationTest, e2eTest
 }
 
 tasks.named('check') {
