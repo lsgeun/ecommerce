@@ -1,4 +1,4 @@
-# 프로젝트 구조 (Project Structure)
+# 프로젝트 디렉터리
 
 이 프로젝트는 모노리포(Monorepo) 구조입니다.
 
