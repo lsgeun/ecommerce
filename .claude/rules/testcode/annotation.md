@@ -16,7 +16,3 @@ paths:
   - 검증 대상에 따라 `@WebMvcTest`, `@DataJpaTest` 등을 추가로 명시한다.
 - **`@IntegrationTest`**: 모든 빈을 구동하여 수행하는 전체 통합 테스트
   - 내부 설정: `@Tag("integration")`, `@ActiveProfiles("test")`, `@SpringBootTest`
-
-> 참고: **빌드 파이프라인 및 테스트 실행 순서 (Fail-Fast Rule)**
-> `backend/spring-core-api/build.gradle` 설정에 의해 테스트 실행 순서는 **`UnitTest` ➔ `SliceTest` ➔ `IntegrationTest`** 로 강제된다.
-> 빠른 실행 속도를 가진 테스트를 먼저 수행하여, 피드백을 신속하게 받고 빌드 오버헤드를 줄이기 위함이다.

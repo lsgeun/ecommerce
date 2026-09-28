@@ -2,6 +2,7 @@ package io.github.lsgeun.ecommerce.product.application;
 
 import io.github.lsgeun.ecommerce.global.exception.DomainEntityAlreadyExistsException;
 import io.github.lsgeun.ecommerce.global.exception.DomainEntityNotFoundException;
+import io.github.lsgeun.ecommerce.global.exception.InvalidDomainFieldException;
 import io.github.lsgeun.ecommerce.product.domain.Product;
 import io.github.lsgeun.ecommerce.product.domain.ProductRepository;
 import io.github.lsgeun.ecommerce.product.domain.ProductStatus;
@@ -40,6 +41,16 @@ class ProductSimpleServiceUnitTest {
             .build();
     }
 
+    private Product createProduct(String number, int stock) {
+        return Product.builder()
+            .number(number)
+            .name("테스트상품")
+            .price(10_000L)
+            .stock(stock)
+            .status(ProductStatus.SELLING)
+            .build();
+    }
+
     @Test
     @DisplayName("성공: 존재하는 상품 번호로 조회하면 해당 상품을 반환한다")
     void getProduct_존재하는_번호_조회_성공() {
@@ -61,6 +72,16 @@ class ProductSimpleServiceUnitTest {
         // when & then
         assertThatThrownBy(() -> productSimpleService.getProduct("P999"))
             .isInstanceOf(DomainEntityNotFoundException.class);
+    }
+
+    @Test
+    @DisplayName("실패: 유효하지 않은 상품 번호로 조회하면 예외가 발생한다")
+    void getProduct_유효하지_않은_번호면_예외() {
+        // given - (저장된 상품 없음)
+
+        // when & then
+        assertThatThrownBy(() -> productSimpleService.getProduct("A"))
+            .isInstanceOf(InvalidDomainFieldException.class);
     }
 
     @Test
@@ -110,6 +131,17 @@ class ProductSimpleServiceUnitTest {
     }
 
     @Test
+    @DisplayName("실패: 존재하지 않는 상품 번호로 수정하면 예외가 발생한다")
+    void updateProduct_존재하지_않는_번호면_예외() {
+        // given - (저장된 상품 없음)
+        Product updateSource = createProduct("P999");
+
+        // when & then
+        assertThatThrownBy(() -> productSimpleService.updateProduct(updateSource))
+            .isInstanceOf(DomainEntityNotFoundException.class);
+    }
+
+    @Test
     @DisplayName("성공: 상품을 삭제하면 저장소에서 제거된다")
     void deleteProduct_삭제_성공() {
         // given
@@ -120,6 +152,26 @@ class ProductSimpleServiceUnitTest {
 
         // then
         assertThat(productRepository.existsByNumber("P001")).isFalse();
+    }
+
+    @Test
+    @DisplayName("실패: 존재하지 않는 상품 번호로 삭제하면 예외가 발생한다")
+    void deleteProduct_존재하지_않는_번호면_예외() {
+        // given - (저장된 상품 없음)
+
+        // when & then
+        assertThatThrownBy(() -> productSimpleService.deleteProduct("P999"))
+            .isInstanceOf(DomainEntityNotFoundException.class);
+    }
+
+    @Test
+    @DisplayName("실패: 유효하지 않은 상품 번호로 삭제하면 예외가 발생한다")
+    void deleteProduct_유효하지_않은_번호면_예외() {
+        // given - (저장된 상품 없음)
+
+        // when & then
+        assertThatThrownBy(() -> productSimpleService.deleteProduct("A"))
+            .isInstanceOf(InvalidDomainFieldException.class);
     }
 
     @Test
@@ -148,6 +200,69 @@ class ProductSimpleServiceUnitTest {
 
         // then
         assertThat(updatedProduct.getStock()).isEqualTo(3);
+    }
+
+    @Test
+    @DisplayName("성공: 재고 상한(999)까지 증가시키면 정상 처리된다")
+    void updateStock_상한까지_증가_성공() {
+        // given
+        productRepository.create(createProduct("P001", 998));
+
+        // when
+        Product updatedProduct =
+            productSimpleService.updateStock("P001", 1, Product.StockUpdateType.INCREASE);
+
+        // then
+        assertThat(updatedProduct.getStock()).isEqualTo(999);
+    }
+
+    @Test
+    @DisplayName("성공: 재고를 정확히 0까지 감소시키면 정상 처리된다")
+    void updateStock_0까지_감소_성공() {
+        // given
+        productRepository.create(createProduct("P001", 2));
+
+        // when
+        Product updatedProduct =
+            productSimpleService.updateStock("P001", 2, Product.StockUpdateType.DECREASE);
+
+        // then
+        assertThat(updatedProduct.getStock()).isEqualTo(0);
+    }
+
+    @Test
+    @DisplayName("실패: 존재하지 않는 상품 번호로 재고를 변경하면 예외가 발생한다")
+    void updateStock_존재하지_않는_번호면_예외() {
+        // given - (저장된 상품 없음)
+
+        // when & then
+        assertThatThrownBy(
+            () -> productSimpleService.updateStock("P999", 1, Product.StockUpdateType.INCREASE)
+        ).isInstanceOf(DomainEntityNotFoundException.class);
+    }
+
+    @Test
+    @DisplayName("실패: 재고 상한(999)을 초과하여 증가시키면 예외가 발생한다")
+    void updateStock_상한_초과_증가면_예외() {
+        // given
+        productRepository.create(createProduct("P001", 999));
+
+        // when & then
+        assertThatThrownBy(
+            () -> productSimpleService.updateStock("P001", 1, Product.StockUpdateType.INCREASE)
+        ).isInstanceOf(InvalidDomainFieldException.class);
+    }
+
+    @Test
+    @DisplayName("실패: 보유 재고보다 많은 수량을 감소시키면 예외가 발생한다")
+    void updateStock_재고보다_많은_수량_감소면_예외() {
+        // given
+        productRepository.create(createProduct("P001", 2));
+
+        // when & then
+        assertThatThrownBy(
+            () -> productSimpleService.updateStock("P001", 3, Product.StockUpdateType.DECREASE)
+        ).isInstanceOf(InvalidDomainFieldException.class);
     }
 
     // 외부 시스템 경계도 비결정적 요인도 아니므로, Mockito 대신 메모리 기반 Fake 구현체로 대체한다
