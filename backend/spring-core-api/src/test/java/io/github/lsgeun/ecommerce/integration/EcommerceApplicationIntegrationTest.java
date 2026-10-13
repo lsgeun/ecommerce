@@ -7,8 +7,8 @@ import io.github.lsgeun.ecommerce.support.annotation.IntegrationTest;
 @IntegrationTest
 class EcommerceApplicationIntegrationTest {
 
-	@Test
-	void contextLoads() {
-	}
+    @Test
+    void contextLoads() {
+    }
 
 }
