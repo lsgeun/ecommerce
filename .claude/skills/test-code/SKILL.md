@@ -1,4 +1,4 @@
 ---
 name: test-code
-description: 미정
+description: 미완성
 ---
