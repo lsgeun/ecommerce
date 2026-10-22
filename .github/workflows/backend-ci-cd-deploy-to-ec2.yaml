@@ -20,8 +20,9 @@ concurrency:
 env:
   SPRING_CORE_API_DIR: './backend/spring-core-api'
   AWS_CODEDEPLOY_DIR: './deploy/aws-codedeploy'
-  EGINX_DIR: './gateway/nginx'
-  PROMTAIL_DIR: './monitoring/promtail'
+  NGINX_DIR: './backend/nginx'
+  PROMTAIL_DIR: './backend/promtail'
+  DOCKER_COMPOSE_FILE: './backend/docker-compose.yaml'
 
 jobs:
   build-test:
@@ -145,9 +146,9 @@ jobs:
           cp ${{ env.AWS_CODEDEPLOY_DIR }}/appspec.yml dist/
           cp ${{ env.AWS_CODEDEPLOY_DIR }}/start.sh dist/scripts/deploy/
           cp ${{ env.AWS_CODEDEPLOY_DIR }}/stop.sh dist/scripts/deploy/
-          cp -r ${{ env.EGINX_DIR }} dist/
+          cp -r ${{ env.NGINX_DIR }} dist/
           cp -r ${{ env.PROMTAIL_DIR }} dist/
-          cp ./docker-compose.yaml dist/
+          cp ${{ env.DOCKER_COMPOSE_FILE }} dist/
           cd dist && zip -r ../${{ github.sha }}.zip .
           
           echo "✅ 배포 파일 압축 완료: ${{ github.sha }}.zip"
