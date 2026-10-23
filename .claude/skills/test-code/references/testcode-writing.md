@@ -1,8 +1,3 @@
----
-paths:
-  - "backend/**/src/test/**/{integration, product, user}/**/*.java"
----
-
 # 테스트 코드 작성
 
 - **Flat한 구조 유지:** `@Nested` 중첩 클래스를 절대 사용하지 않으며, 단일 클래스 내 평평한 메서드 구조로 작성한다.

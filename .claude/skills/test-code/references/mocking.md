@@ -1,8 +1,3 @@
----
-paths:
-  - "backend/**/src/test/**/{integration, product, user}/**/*.java"
----
-
 # 테스트 및 가짜 객체(Mocking) 작성 원칙
 
 너는 테스트 코드를 작성할 때 가짜 객체(Mock/Fake/Stub) 사용을 엄격히 제한하고, 가능한 한 실제 객체와 상태 기반 검증(State-based Testing)을 우선시해야 한다.

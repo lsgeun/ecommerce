@@ -1,8 +1,3 @@
----
-paths:
-  - "backend/**/src/test/**/{integration, product, user}/**/*.java"
----
-
 # 테스트 실행 규칙
 
 ## 빌드 파이프라인 및 테스트 실행 순서 (Fail-Fast Rule)

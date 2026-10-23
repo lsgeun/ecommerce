@@ -8,7 +8,6 @@ updated: 2026-10-22
 
 - 데이터 베이스 서버와 데이터 베이스 환경변수(`MYSQL_HOST`, `MYSQL_USER`, `MYSQL_PASSWORD`)가 필요하고, 로컬이 아닌 서버에서만 쓰는 프로필
 
-
 - 모든 `./gradlew` 명령은 **반드시** `gradlew` 스크립트를 가지고 있는 `backend/`의 스프링 프로젝트 디렉터리에서 실행
 
 # 백엔드 실행
@@ -27,6 +26,8 @@ updated: 2026-10-22
 
 # 테스트 실행
 
+> [!todo] 설정을 통해서 testAll 대신 test를 쓰면 더 좋을 거 같음
+
 | 명령                          | 실행 대상                       |
 | --------------------------- | --------------------------- |
 | `./gradlew unitTest`        | `@UnitTest` 태그              |
@@ -35,8 +36,6 @@ updated: 2026-10-22
 | `./gradlew e2eTest`         | `@E2ETest` 태그               |
 | `./gradlew testAll`         | 위 4개를 단위, 슬라이스, 통합, e2e 순으로 |
 | `./gradlew test`            | 기본 테스트 코드 실행, 비활성화          |
-
-> [!info] 설정을 통해서 testAll 대신 test를 쓰면 더 좋을 거 같음
 
 - 특정 클래스나 메서드만 실행하는 방법, 결과가 캐시될 때 `--rerun`을 붙이는 방법은 `test-code` 스킬의 `references/test-running.md`를 읽는다
 

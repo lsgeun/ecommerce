@@ -3,7 +3,7 @@ updated: 2026-10-22
 name: backend-convention
 description: |-
     ecommerce 백엔드(`backend/spring-core-api`)의 코드 작성 규칙 문서. 새 도메인 추가, RestController, DTO, DtoMapper, SimpleService, 엔티티, Repository 인터페이스, RepositoryAdapter, JpaRepository, 예외와 ErrorCode, 검증, 프로필별 설정.
-    위 클래스를 새로 만들거나 고치거나 삭제하기 전에 필요한 문서를 골라 읽는다. 테스트 코드는 `test-code` 스킬을 읽는다.
+    위 클래스를 새로 만들거나 고치거나 삭제하기 전에 필요한 문서를 골라 읽는다.
 ---
 
 # 백엔드 컨벤션
