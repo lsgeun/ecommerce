@@ -1,8 +1,3 @@
----
-paths:
-  - "backend/**/src/test/**/{integration, product, user}/**/*.java"
----
-
 # 유지보수 최적화
 
 - **상태 검증 우선:** 최종 반환값이나 객체/DB의 내부 상태 변화(`assertThat`)를 최우선으로 검증하며, 단순 메서드 호출 여부를 확인하는 `verify()` 남용을 지양한다.

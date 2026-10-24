@@ -4,6 +4,13 @@ on:
   push:
     branches:
       - '**'
+    paths-ignore:
+      # 아래 나열된 패턴의 파일만 포함되면 이 워크플로우를 실행하지 않음
+      # 그 외의 파일이 1개라도 포함되면 워크플로우를 실행함
+      # 이 속성으로 불필요한 ci, cd 횟수를 줄일 수 있음
+      - '**.md'
+      - '.claude/**'
+      - '.obsidian/**'
 
 # 동일 브랜치에 연달아 Push할 경우 이전 실행 중인 워크플로우 자동 취소
 concurrency:
@@ -13,8 +20,9 @@ concurrency:
 env:
   SPRING_CORE_API_DIR: './backend/spring-core-api'
   AWS_CODEDEPLOY_DIR: './deploy/aws-codedeploy'
-  EGINX_DIR: './gateway/nginx'
-  PROMTAIL_DIR: './monitoring/promtail'
+  NGINX_DIR: './backend/nginx'
+  PROMTAIL_DIR: './backend/promtail'
+  DOCKER_COMPOSE_FILE: './backend/docker-compose.yaml'
 
 jobs:
   build-test:
@@ -138,9 +146,9 @@ jobs:
           cp ${{ env.AWS_CODEDEPLOY_DIR }}/appspec.yml dist/
           cp ${{ env.AWS_CODEDEPLOY_DIR }}/start.sh dist/scripts/deploy/
           cp ${{ env.AWS_CODEDEPLOY_DIR }}/stop.sh dist/scripts/deploy/
-          cp -r ${{ env.EGINX_DIR }} dist/
+          cp -r ${{ env.NGINX_DIR }} dist/
           cp -r ${{ env.PROMTAIL_DIR }} dist/
-          cp ./docker-compose.yaml dist/
+          cp ${{ env.DOCKER_COMPOSE_FILE }} dist/
           cd dist && zip -r ../${{ github.sha }}.zip .
           
           echo "✅ 배포 파일 압축 완료: ${{ github.sha }}.zip"

@@ -1,8 +1,3 @@
----
-paths:
-  - "backend/**/src/test/**/{integration, product, user}/**/*.java"
----
-
 # 케이스 커버리지 규칙
 
 - 단순 Getter/Setter, DTO 기본 생성, Spring Framework 자체의 동작은 테스트 대상에서 제외한다.
