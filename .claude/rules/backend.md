@@ -6,21 +6,8 @@
 2. 기본 패키지 바로 아래에 도메인 패키지(`product`, `user`), 공용 패키지(`global`)를 둔다.
 3. 도메인 패키지 바로 아래에 4개의 계층 패키지(`presentation`, `application`, `domain`,  `infrastructure`)만 둔다
 
-```
-ecommerce/
-    product/
-        presentation/
-        application/
-        domain/
-        infrastructure/
-    user/        (product와 같은 모양)
-    global/
-        exception/
-```
-
 - 도메인 이름은 영문 소문자 단수형
 - 다른 도메인의 클래스를 **절대** `import`하지 않음 (참조 방식은 정하지 않음)
-- 새 도메인은 4계층 패키지를 모두 만들고 domain, infrastructure, application, presentation 순서로 작성
 
 # 계층
 
@@ -51,22 +38,9 @@ presentation -> application -> domain <- infrastructure
 
 ## 엔티티와 DTO
 
-> [!info] 도메인과 엔티티가 결합되었다는 걸 언급해야 할 듯
-
 엔티티는 **절대** HTTP 응답으로 직접 반환하지 않음.
 `presentation`의 DTO로 변환해서 반환
 `application`은 DTO를 **절대** 모르고, 엔티티를 받아서 엔티티를 반환
-
-# 이름
-
-`{Domain}`은 도메인 이름의 파스칼 케이스 (`Product`)
-
-| 계층             | 클래스                                                  |
-| ---------------- | ------------------------------------------------------- |
-| `presentation`   | `{Domain}RestController`, `{Domain}Dto`, `{Domain}DtoMapper` |
-| `application`    | `{Domain}SimpleService`                                 |
-| `domain`         | `{Domain}`, `{Domain}Status`, `{Domain}Repository`      |
-| `infrastructure` | `{Domain}RepositoryAdapter`, `{Domain}JpaRepository`, `{Domain}JpaCustomRepository(Impl)` |
 
 # 엔티티
 
@@ -79,12 +53,6 @@ presentation -> application -> domain <- infrastructure
 
 # Repository
 
-| 메서드 이름   | 반환          | 없을 때                         |
-| ------------- | ------------- | ------------------------------- |
-| `findByXxx`   | `Optional<T>` | 빈 `Optional`                   |
-| `getByXxx`    | `T`           | `DomainEntityNotFoundException` |
-| `existsByXxx` | `boolean`     | `false`                         |
-
 - 인터페이스는 `domain`, 구현은 `infrastructure`의 Adapter
 - 반환 타입에 Spring Data 타입(`Page` 등)을 쓰지 않음
 - `DomainEntityNotFoundException`은 Adapter의 `getByXxx`에서만 던짐
@@ -93,12 +61,8 @@ presentation -> application -> domain <- infrastructure
 # API
 
 - 리소스 이름은 복수형, 경로 식별자는 자연키 (`/products/{number}`)
-- RestController 메서드는 변환, SimpleService 호출, 응답 변환 3단계뿐
 - 응답은 **반드시** `ResponseEntity<DTO>`
-- 클래스에 `@Validated`, 요청 본문에 `@RequestBody @Valid`
-- DTO는 `{Domain}Dto` 인터페이스 하나에 `Read`, `Create`, `Update`, `Delete` 중첩 인터페이스로 모으고, 그 안에 `Request`, `Response`를 둠
 - Response에 비밀번호 같은 민감한 값을 **절대** 두지 않음
-- DtoMapper는 MapStruct (`componentModel = "spring"`)
 
 # 서비스
 
@@ -107,13 +71,6 @@ presentation -> application -> domain <- infrastructure
 - 서비스에서 `Optional`을 풀어 예외를 던지지 않고 `getByXxx`를 호출
 
 # 검증과 예외
-
-| 위치                 | 검증하는 것       | 실패 예외                         |
-| -------------------- | ----------------- | --------------------------------- |
-| Request DTO          | 형식 (null, 길이) | `MethodArgumentNotValidException` |
-| `@PathVariable`      | 형식              | `ConstraintViolationException`    |
-| 엔티티 `validateXxx` | 값 규칙           | `InvalidDomainFieldException`     |
-| 서비스               | 존재, 중복        | `DomainEntityNotFoundException`, `DomainEntityAlreadyExistsException` |
 
 - 검증 실패는 모두 `400`, `C002`. 같은 규칙의 문구는 DTO와 엔티티에서 같은 한글 문장으로 쓰고 마침표로 끝냄
 - 에러 코드는 도메인별이 아니라 종류별 공용 코드. `C`는 클라이언트(`WARN`), `S`는 서버(`ERROR`) 오류
