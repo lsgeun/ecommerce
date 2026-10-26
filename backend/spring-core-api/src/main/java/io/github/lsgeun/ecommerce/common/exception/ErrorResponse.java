@@ -1,4 +1,4 @@
-package io.github.lsgeun.ecommerce.global.exception;
+package io.github.lsgeun.ecommerce.common.exception;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;

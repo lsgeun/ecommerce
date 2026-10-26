@@ -1,4 +1,4 @@
-package io.github.lsgeun.ecommerce.global.exception;
+package io.github.lsgeun.ecommerce.common.exception;
 
 import jakarta.validation.ConstraintViolationException;
 import org.slf4j.Logger;

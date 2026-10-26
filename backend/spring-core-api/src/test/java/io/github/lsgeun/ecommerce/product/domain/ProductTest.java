@@ -1,6 +1,6 @@
 package io.github.lsgeun.ecommerce.product.domain;
 
-import io.github.lsgeun.ecommerce.global.exception.InvalidDomainFieldException;
+import io.github.lsgeun.ecommerce.common.exception.InvalidDomainFieldException;
 import io.github.lsgeun.ecommerce.support.annotation.UnitTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

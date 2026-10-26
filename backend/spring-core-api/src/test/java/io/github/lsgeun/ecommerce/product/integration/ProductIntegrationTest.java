@@ -1,7 +1,7 @@
 package io.github.lsgeun.ecommerce.product.integration;
 
-import io.github.lsgeun.ecommerce.global.exception.DomainEntityAlreadyExistsException;
-import io.github.lsgeun.ecommerce.global.exception.DomainEntityNotFoundException;
+import io.github.lsgeun.ecommerce.common.exception.DomainEntityAlreadyExistsException;
+import io.github.lsgeun.ecommerce.common.exception.DomainEntityNotFoundException;
 import io.github.lsgeun.ecommerce.product.application.ProductSimpleService;
 import io.github.lsgeun.ecommerce.product.domain.Product;
 import io.github.lsgeun.ecommerce.product.domain.ProductRepository;

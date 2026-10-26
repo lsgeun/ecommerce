@@ -1,8 +1,8 @@
 package io.github.lsgeun.ecommerce.user.infrastructure;
 
+import io.github.lsgeun.ecommerce.common.exception.DomainEntityNotFoundException;
 import io.github.lsgeun.ecommerce.user.domain.User;
 import io.github.lsgeun.ecommerce.user.domain.UserRepository;
-import io.github.lsgeun.ecommerce.global.exception.DomainEntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 

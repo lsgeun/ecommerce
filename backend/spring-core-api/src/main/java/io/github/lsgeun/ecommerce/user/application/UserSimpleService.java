@@ -1,8 +1,8 @@
 package io.github.lsgeun.ecommerce.user.application;
 
+import io.github.lsgeun.ecommerce.common.exception.DomainEntityAlreadyExistsException;
 import io.github.lsgeun.ecommerce.user.domain.User;
 import io.github.lsgeun.ecommerce.user.domain.UserRepository;
-import io.github.lsgeun.ecommerce.global.exception.DomainEntityAlreadyExistsException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,7 +16,6 @@ public class UserSimpleService {
     @Transactional(readOnly = true)
     public User getUser(String nickname) {
         User.validateNickname(nickname);
-
         return userRepository.getByNickname(nickname);
     }
 
