@@ -1,5 +1,3 @@
-`backend/spring-core-api`의 구조(패키지, 계층, 의존 방향)와 코드 작성 공통 규칙. 클래스별 세부 모양은 같은 계층의 기존 코드를 따름
-
 # 패키지
 
 1. 기본 패키지는 `io.github.lsgeun.ecommerce`
