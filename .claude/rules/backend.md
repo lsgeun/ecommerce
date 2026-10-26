@@ -1,37 +1,53 @@
-# 패키지
+# `backend/**/src/main/java/`
+
+## 패키지 폴더 구조
 
 1. 기본 패키지는 `io.github.lsgeun.ecommerce`
-2. 기본 패키지 바로 아래에 도메인 패키지(`product`, `user`), 공용 패키지(`global`)를 둔다.
-3. 도메인 패키지 바로 아래에 4개의 계층 패키지(`presentation`, `application`, `domain`,  `infrastructure`)만 둔다
+2. 기본 패키지 바로 아래에 **반드시** `도메인 패키지`(`product/`, `user/`, `notification/` 등), `공용 패키지`(`common/`)만 둔다.
+3. 도메인 패키지 바로 아래 **반드시** 4개의 패키지(`표현 계층` `presentation/`, `응용 계층` `application/`, `도메인 계층` `domain/`, `인프라 계층` `infrastructure/`)만 둔다
 
-- 도메인 이름은 영문 소문자 단수형
-- 다른 도메인의 클래스를 **절대** `import`하지 않음 (참조 방식은 정하지 않음)
-
-# 계층
-
-| 계층             | 하는 일                                          | 하지 않는 일                              |
-| ---------------- | ------------------------------------------------ | ----------------------------------------- |
-| `presentation`   | HTTP 입출력, 형식 검증, DTO와 엔티티 변환        | 비즈니스 규칙                             |
-| `application`    | 유스케이스 진행, 트랜잭션, 존재와 중복 확인      | DTO 사용, 값 계산 규칙                    |
-| `domain`         | 데이터, 불변식, 상태 변경                        | Spring MVC, 다른 계층 import              |
-| `infrastructure` | Repository 인터페이스를 JPA로 구현               | 비즈니스 규칙, `@Transactional`           |
-
-## 의존 방향
+화살표는 `import`하는 방향
 
 ```
 presentation -> application -> domain <- infrastructure
 ```
 
-화살표는 `import`하는 방향
+## `공용 패키지`
 
-`application`은 **반드시** `domain`의 Repository 인터페이스만 사용하고, `infrastructure`의 클래스를 **절대** `import`하지 않음
+`공용 패키지`에는 모든 도메인에서 사용되거나 백엔드 설정을 하는 등 백엔드 전반에 공통적으로 적용되는 패키지, 파일을 둔다. 예를 들면, 예외 처리, 공용 엔티티, cors 방지를 한 웹 설정 등
 
-`domain`은 **절대** `presentation`, `application`, `infrastructure`를 `import`하지 않음
-`domain`에서 JPA 애노테이션은 허용 (엔티티가 도메인 모델을 겸함). Spring MVC 애노테이션은 허용하지 않음
+### 의존
 
-`infrastructure`는 **절대** `presentation`, `application`을 `import`하지 않음
+`도메인 패키지`는 `공용 패키지`에 의존할 수 있다.
 
-`presentation`은 **절대** Repository를 직접 호출하지 않고, `application`의 SimpleService를 거침
+## `도메인 계층`
+
+### 의존
+
+`도메인 계층`에 있는 파일들은 **절대** `표현 계층`, `응용 계층`, `인프라 계층`에 의존하지 않는다.
+
+`도메인 계층`에서 도메인은 엔티티와 합쳐진 형태이므로, 엔티티 관련 라이브러리에 의존할 수 있다. 예를 들면, Jakarta Persistence 인터페이스, Spring Data JPA 라이브러리 등
+
+`도메인 계층`은 `공용 패키지`에 의존할 수 있다.
+
+
+## `인프라 계층`
+
+### 의존
+
+`인프라 계층`은 **절대** `표현 계층`, `응용 계층`에 의존하지 않는다.
+
+## `응용 계층`
+
+### 의존
+
+`응용 계층`은 **절대** `표현 계층`, `인프라 계층`에 의존하지 않는다.
+
+## `표현 계층`
+
+### 의존
+
+`표현 계층`은 **절대** `도메인 계층`, `인프라 계층`에 의존하지 않는다.
 `presentation`이 `domain`을 `import`하는 것은 허용 (DTO와 엔티티를 변환하기 때문)
 
 ## 엔티티와 DTO
