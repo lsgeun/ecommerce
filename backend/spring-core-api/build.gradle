@@ -52,6 +52,9 @@ dependencies {
 def configureTestTask = {
 	useJUnitPlatform()
 
+    // @ActiveProfiles를 빠뜨린 테스트가 local 프로파일로 실제 DB에 붙는 것을 막음
+    systemProperty 'spring.profiles.active', 'test'
+
 	// Gradle 실행 시 콘솔에 개별 테스트 결과 출력 설정
 	testLogging {
 		events "passed", "skipped", "failed"
