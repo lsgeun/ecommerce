@@ -80,5 +80,18 @@
       ],
       "key": "ArrowUp"
     }
+  ],
+  "editor:toggle-highlight": [
+    {
+      "modifiers": [],
+      "key": "F1"
+    }
+  ],
+  "app:open-help": [],
+  "editor:toggle-bold": [
+    {
+      "modifiers": [],
+      "key": "F2"
+    }
   ]
 }
