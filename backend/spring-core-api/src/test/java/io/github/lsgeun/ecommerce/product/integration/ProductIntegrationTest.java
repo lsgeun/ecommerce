@@ -10,6 +10,7 @@ import io.github.lsgeun.ecommerce.support.annotation.IntegrationTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -18,6 +19,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 // 실제 웹 환경을 띄우지 않는 통합 테스트이므로, @Transactional 롤백으로 DB 상태를 격리한다
 @Transactional
 @IntegrationTest
+@SpringBootTest
 class ProductIntegrationTest {
 
     @Autowired
