@@ -80,21 +80,15 @@ tasks.register('integrationTest', Test) {
 	useJUnitPlatform { includeTags 'integration' }
 }
 
-tasks.register('e2eTest', Test) {
-	configure(configureTestTask)
-	useJUnitPlatform { includeTags 'e2e' }
-}
-
-// 단위 -> 슬라이스 -> 통합 -> e2e 순으로 실행
+// 단위 -> 슬라이스 -> 통합 순으로 실행
 // 앞 단계 실패 시 뒤 단계는 실행되지 않음(fail-fast)
 sliceTest.mustRunAfter unitTest
 integrationTest.mustRunAfter sliceTest
-e2eTest.mustRunAfter integrationTest
 
-// 단위, 슬라이스, 통합, e2e 순으로 테스트 코드 실행 후,
+// 단위, 슬라이스, 통합 순으로 테스트 코드 실행 후,
 // 나머지 테스트 코드 실행
 tasks.named('test') {
     configure(configureTestTask)
-    useJUnitPlatform { excludeTags 'unit', 'slice', 'integration', 'e2e' }
-    dependsOn unitTest, sliceTest, integrationTest, e2eTest
+    useJUnitPlatform { excludeTags 'unit', 'slice', 'integration' }
+    dependsOn unitTest, sliceTest, integrationTest
 }
