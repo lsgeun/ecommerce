@@ -1,6 +1,5 @@
 package io.github.lsgeun.ecommerce.user.domain;
 
-import io.github.lsgeun.ecommerce.global.exception.InvalidDomainFieldException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -13,6 +12,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.NaturalId;
+
+import io.github.lsgeun.ecommerce.common.exception.InvalidDomainFieldException;
 
 import java.util.regex.Pattern;
 

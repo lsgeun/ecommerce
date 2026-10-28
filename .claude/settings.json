@@ -1,0 +1,41 @@
+{
+  "permissions": {
+    "defaultMode": "manual",
+    "allow": [
+      "Bash(./gradlew test*)",
+      "Bash(./gradlew *Test)",
+      "Bash(./gradlew compileJava*)",
+      "Bash(./gradlew compileTestJava*)",
+      "Bash(git status*)",
+      "Bash(git diff*)",
+      "Bash(git log*)",
+      "Bash(git show*)"
+    ],
+    "ask": [
+      "Bash(git commit*)",
+      "Bash(git push*)",
+      "Bash(docker*)"
+    ],
+    "deny": [
+      "Bash(rm *)",
+      "Bash(ssh *)",
+      "Bash(git push --force*)",
+      "Bash(git reset --hard*)",
+      "Bash(git clean*)"
+    ]
+  },
+  "hooks": {
+    "Notification": [
+      {
+        "hooks": [
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+        ]
+      }
+    ]
+  }
+}

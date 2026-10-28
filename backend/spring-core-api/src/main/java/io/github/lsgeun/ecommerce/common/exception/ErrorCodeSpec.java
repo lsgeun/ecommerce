@@ -1,4 +1,4 @@
-package io.github.lsgeun.ecommerce.global.exception;
+package io.github.lsgeun.ecommerce.common.exception;
 
 import org.springframework.boot.logging.LogLevel;
 import org.springframework.http.HttpStatus;

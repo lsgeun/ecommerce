@@ -1,6 +1,5 @@
 package io.github.lsgeun.ecommerce.product.domain;
 
-import io.github.lsgeun.ecommerce.global.exception.InvalidDomainFieldException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -15,6 +14,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.NaturalId;
+
+import io.github.lsgeun.ecommerce.common.exception.InvalidDomainFieldException;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

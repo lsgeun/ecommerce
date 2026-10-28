@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Tag;
 import org.springframework.test.context.ActiveProfiles;
 
 @ActiveProfiles("test")
-@Target({ElementType.TYPE, ElementType.METHOD})
+@Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Tag("slice")
 public @interface SliceTest {

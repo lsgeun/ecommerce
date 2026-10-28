@@ -81,7 +81,6 @@ services:
     networks:
       - ecommerce-net
 
-  # ecommerce/docker-compose.yml 에 추가할 Promtail 예시
   promtail:
     image: grafana/promtail:2.9.0
     container_name: ecommerce-promtail
