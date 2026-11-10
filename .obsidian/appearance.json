@@ -2,5 +2,7 @@
   "cssTheme": "Minimal",
   "interfaceFontFamily": "Menlo",
   "textFontFamily": "Menlo",
-  "monospaceFontFamily": "Menlo"
+  "monospaceFontFamily": "Menlo",
+  "accentColor": "#5690e2",
+  "nativeMenus": false
 }
