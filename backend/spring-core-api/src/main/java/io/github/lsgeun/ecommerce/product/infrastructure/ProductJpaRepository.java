@@ -9,9 +9,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.Optional;
 
-public interface ProductJpaRepository extends JpaRepository<Product, Long>, ProductJpaCustomRepository {
-
-    boolean existsByNumber(String number);
+public interface ProductJpaRepository extends JpaRepository<Product, Long> {
 
     // 재고를 동시에 차감하는 주문끼리 값이 덮어써지지 않도록 행에 쓰기 락을 건다
     @Lock(LockModeType.PESSIMISTIC_WRITE)
