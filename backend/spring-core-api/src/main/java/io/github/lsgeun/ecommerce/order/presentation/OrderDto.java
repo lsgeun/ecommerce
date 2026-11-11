@@ -1,7 +1,6 @@
 package io.github.lsgeun.ecommerce.order.presentation;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import io.github.lsgeun.ecommerce.order.domain.OrderStatus;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
