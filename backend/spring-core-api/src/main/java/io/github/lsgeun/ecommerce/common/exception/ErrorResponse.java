@@ -53,14 +53,8 @@ public class ErrorResponse {
         this.fieldErrorDetails = fieldErrorDetails;
     }
 
-    public static ErrorResponse from(ErrorCodeSpec errorCodeSpec) {
-        errorCodeSpec = resolveErrorCodeSpec(errorCodeSpec);
-
-        return builder()
-            .message(errorCodeSpec.getMessage())
-            .code(errorCodeSpec.getCode())
-            .status(errorCodeSpec.getHttpStatus().value())
-            .build();
+    public static ErrorResponse of(ErrorCodeSpec errorCodeSpec) {
+        return of(errorCodeSpec, null);
     }
 
     public static ErrorResponse of(ErrorCodeSpec errorCodeSpec, List<FieldErrorDetail> fieldErrorDetails) {
