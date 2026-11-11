@@ -283,6 +283,11 @@ class ProductSimpleServiceUnitTest {
         }
 
         @Override
+        public Product getByNumberForUpdate(String number) {
+            return getByNumber(number);
+        }
+
+        @Override
         public Product create(Product product) {
             Product persistedProduct = Product.builder()
                 .id(sequence.getAndIncrement())

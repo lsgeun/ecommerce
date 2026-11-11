@@ -26,6 +26,12 @@ public class ProductRepositoryAdapter implements ProductRepository {
     }
 
     @Override
+    public Product getByNumberForUpdate(String number) {
+        return productJpaRepository.findByNumberForUpdate(number)
+            .orElseThrow(() -> new DomainEntityNotFoundException("Product", number));
+    }
+
+    @Override
     public Product create(Product product) {
         return productJpaRepository.save(product);
     }

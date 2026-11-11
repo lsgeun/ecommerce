@@ -8,6 +8,8 @@ public interface ProductRepository {
 
     Product getByNumber(String number);
 
+    Product getByNumberForUpdate(String number);
+
     Product create(Product product);
 
     Product update(Product product);
