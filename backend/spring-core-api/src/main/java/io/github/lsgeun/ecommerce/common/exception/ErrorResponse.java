@@ -41,8 +41,8 @@ public class ErrorResponse {
             status = ErrorCode.UNEXPECTED_SERVER_ERROR.getHttpStatus().value();
         }
 
+        // 불변 리스트로 변환
         if (fieldErrorDetails != null) {
-            // 불변 리스트로 변환
             fieldErrorDetails = List.copyOf(fieldErrorDetails);
         }
 
@@ -83,11 +83,5 @@ public class ErrorResponse {
 
         String field;
         String reason;
-
-        @Builder
-        private FieldErrorDetail(String field, String reason) {
-            this.field = field;
-            this.reason = reason;
-        }
     }
 }

@@ -11,12 +11,7 @@ public class InvalidDomainFieldException extends BusinessException {
 
     public InvalidDomainFieldException(Class<?> targetClass, String field, Object inputValue, String reason) {
         super(ErrorCode.INVALID_INPUT_ERROR, generateMessage(targetClass, field, inputValue, reason));
-        this.fieldErrorDetails = List.of(
-            ErrorResponse.FieldErrorDetail.builder()
-                .field(field)
-                .reason(reason)
-                .build()
-        );
+        this.fieldErrorDetails = List.of(new ErrorResponse.FieldErrorDetail(field, reason));
     }
 
     private static String generateMessage(Class<?> targetClass, String field, Object inputValue, String reason) {

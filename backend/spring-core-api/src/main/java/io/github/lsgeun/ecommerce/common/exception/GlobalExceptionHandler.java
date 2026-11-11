@@ -47,12 +47,7 @@ public class GlobalExceptionHandler {
             exception.getBindingResult()
             .getFieldErrors()
             .stream()
-            .map(fieldError ->
-                ErrorResponse.FieldErrorDetail.builder()
-                .field(fieldError.getField())
-                .reason(fieldError.getDefaultMessage())
-                .build()
-            )
+            .map(error -> new ErrorResponse.FieldErrorDetail(error.getField(), error.getDefaultMessage()))
             .collect(Collectors.toList());
 
         return createErrorResponseWithFieldErrorDetails(errorCodeSpec, fieldErrorDetails);
@@ -71,10 +66,7 @@ public class GlobalExceptionHandler {
                 String propertyPath = violation.getPropertyPath().toString();
                 String fieldName = propertyPath.substring(propertyPath.lastIndexOf('.') + 1);
 
-                return ErrorResponse.FieldErrorDetail.builder()
-                    .field(fieldName)
-                    .reason(violation.getMessage())
-                    .build();
+                return new ErrorResponse.FieldErrorDetail(fieldName, violation.getMessage());
             })
             .collect(Collectors.toList());
 
