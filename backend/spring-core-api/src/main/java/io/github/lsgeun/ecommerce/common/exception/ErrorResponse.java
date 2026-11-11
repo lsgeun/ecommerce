@@ -32,6 +32,7 @@ public class ErrorResponse {
     ) {
         timestamp = (timestamp == null) ? LocalDateTime.now(SEOUL_ZONE) : timestamp;
 
+        // 응답 필수 값이 비정상이면 서버 오류 응답으로 대체
         if (message == null || message.isBlank() || code == null || code.isBlank() || status < 100 || status > 599) {
             log.error("에러 응답의 메시지, 코드, 상태 중 하나 누락되어 기본값으로 대체합니다.\nmessage: {}, code: {}, status: {}",
                 message, code, status);
@@ -41,7 +42,7 @@ public class ErrorResponse {
             status = ErrorCode.UNEXPECTED_SERVER_ERROR.getHttpStatus().value();
         }
 
-        // 불변 리스트로 변환
+        // 생성 후 외부에서 목록을 변경하지 못하도록 막음
         if (fieldErrorDetails != null) {
             fieldErrorDetails = List.copyOf(fieldErrorDetails);
         }
