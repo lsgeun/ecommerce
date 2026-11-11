@@ -18,7 +18,8 @@ description: 백엔드 테스트 코드(단위, 슬라이스, 통합)를 작성,
 - `@DisplayName`은 의도가 한눈에 보이게 구체적으로 쓴다.
   예: `@DisplayName("성공: 재고가 충분할 때 주문 생성에 성공하고 PENDING 상태를 반환한다")`
 - 모든 테스트 메서드는 `// given`, `// when`, `// then` 주석으로 구분한다.
-- 테스트끼리 실행 순서나 결과에 의존하지 않는다. 필요한 데이터는 테스트 안이나 `@BeforeEach`, 헬퍼 메서드로 직접 만든다.
+- 테스트끼리 절대 의존하지 않는다. 실행 순서나 결과에 따라 테스트 결과가 달라져서는 안된다.
+- 필요한 데이터는 테스트 안이나 `@BeforeEach`, 헬퍼 메서드 등으로 직접 만든다. 2개 이상의 테스트 메서드에 쓰이는 데이터는 테스트 클래스에 만들고, 1개의 테스트 메서드에서만 쓰이는 데이터는 테스트 메서드에 만든다.
 - DB는 기본적으로 `@Transactional` 롤백으로 격리한다. 롤백이 안 되는 환경(실제 웹 서버를 띄우는 통합 테스트 등)에서는 `@AfterEach`로 직접 정리한다.
 
 # 3. 어노테이션
@@ -36,23 +37,23 @@ description: 백엔드 테스트 코드(단위, 슬라이스, 통합)를 작성,
 
 유형별 추가 규칙:
 
-- **단위:** Spring 컨텍스트가 없으므로 `@MockitoBean`은 쓸 수 없다. 위 두 경우에만 Mockito를 쓴다.
+- **단위:** Spring 컨텍스트가 없으므로 `@MockitoBean`은 쓸 수 없다.
 - **슬라이스:** 검증 대상 레이어의 아래 레이어는 `@MockitoBean`으로 대체해도 된다. (예: `@WebMvcTest`로 Controller를 검증할 때 Service는 `@MockitoBean`)
-- **통합:** 내부 빈을 `@MockitoBean`으로 대체하지 않는다. 위 두 경우에만 Mockito를 쓴다.
+- **통합:** 내부 빈을 `@MockitoBean`으로 대체하지 않는다.
 
 엔티티, DTO 같은 객체는 Mock하지 않고, `createMember()` 같은 헬퍼 메서드로 실제 객체를 만들어 쓴다.
 
 # 5. 파일명과 디렉터리
 
 - **단위:** `<대상클래스명>UnitTest.java`, main과 동일한 패키지 경로
-  예: `main/.../product/application/ProductSimpleService.java` → `test/.../product/application/ProductSimpleServiceUnitTest.java`
+  예: `main/.../product/application/ProductSimpleService.java` -> `test/.../product/application/ProductSimpleServiceUnitTest.java`
 - **슬라이스:** `<대상클래스명>SliceTest.java`, main과 동일한 패키지 경로
 - **통합:**
   - 한 도메인에 속하는 테스트: `<도메인명><내용>IntegrationTest.java`, 해당 도메인 패키지 아래 `integration` 패키지
     예: `test/.../product/integration/ProductCrudIntegrationTest.java`
+    - 한 도메인이라도 검증 목적이 다르면 파일을 나눈다. (생성/조회/수정/삭제, 여러 단계 흐름, 복잡한 조회 등)
   - 여러 도메인에 걸친 흐름: `<유스케이스명>IntegrationTest.java`, 최상위 test 패키지 아래 `integration` 패키지
     예: `test/.../integration/CheckoutIntegrationTest.java`
-  - 한 도메인이라도 검증 목적이 다르면 파일을 나눈다. (생성/조회/수정/삭제, 여러 단계 흐름, 복잡한 조회 등)
 
 # 6. 케이스 작성 기준
 
