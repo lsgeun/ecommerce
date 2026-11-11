@@ -15,59 +15,39 @@ import java.util.stream.Collectors;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-    private final Logger log =
-        LoggerFactory.getLogger(GlobalExceptionHandler.class);
+    private final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @ExceptionHandler(BusinessException.class)
-    public ResponseEntity<ErrorResponse> handleBusinessException(
-        BusinessException exception
-    ) {
+    public ResponseEntity<ErrorResponse> handleBusinessException(BusinessException exception) {
         ErrorCodeSpec errorCodeSpec = exception.getErrorCodeSpec();
 
-        logByLevel(
-            errorCodeSpec.getLogLevel(),
-            exception.getMessage(),
-            exception
-        );
+        logByLevel(errorCodeSpec.getLogLevel(), exception.getMessage(), exception);
 
         return createErrorResponse(errorCodeSpec);
     }
 
     @ExceptionHandler(InvalidDomainFieldException.class)
-    public ResponseEntity<ErrorResponse> handleInvalidDomainFieldException(
-        InvalidDomainFieldException exception
-    ) {
+    public ResponseEntity<ErrorResponse> handleInvalidDomainFieldException(InvalidDomainFieldException exception) {
         ErrorCodeSpec errorCodeSpec = exception.getErrorCodeSpec();
 
-        logByLevel(
-            errorCodeSpec.getLogLevel(),
-            exception.getMessage(),
-            exception
-        );
+        logByLevel(errorCodeSpec.getLogLevel(), exception.getMessage(), exception);
 
         return createErrorResponseWithFieldErrorDetails(errorCodeSpec, exception.getFieldErrorDetails());
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException exception) {
+    public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(
+        MethodArgumentNotValidException exception
+    ) {
         ErrorCodeSpec errorCodeSpec = ErrorCode.INVALID_INPUT_ERROR;
 
-        logByLevel(
-            errorCodeSpec.getLogLevel(),
-            exception.getMessage(),
-            exception
-        );
+        logByLevel(errorCodeSpec.getLogLevel(), exception.getMessage(), exception);
 
         List<ErrorResponse.FieldErrorDetail> fieldErrorDetails =
             exception.getBindingResult()
             .getFieldErrors()
             .stream()
-            .map(fieldError ->
-                ErrorResponse.FieldErrorDetail.builder()
-                .field(fieldError.getField())
-                .reason(fieldError.getDefaultMessage())
-                .build()
-            )
+            .map(error -> new ErrorResponse.FieldErrorDetail(error.getField(), error.getDefaultMessage()))
             .collect(Collectors.toList());
 
         return createErrorResponseWithFieldErrorDetails(errorCodeSpec, fieldErrorDetails);
@@ -77,11 +57,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleConstraintViolationException(ConstraintViolationException exception) {
         ErrorCodeSpec errorCodeSpec = ErrorCode.INVALID_INPUT_ERROR;
 
-        logByLevel(
-            errorCodeSpec.getLogLevel(),
-            exception.getMessage(),
-            exception
-        );
+        logByLevel(errorCodeSpec.getLogLevel(), exception.getMessage(), exception);
 
         List<ErrorResponse.FieldErrorDetail> fieldErrorDetails =
             exception.getConstraintViolations()
@@ -90,10 +66,7 @@ public class GlobalExceptionHandler {
                 String propertyPath = violation.getPropertyPath().toString();
                 String fieldName = propertyPath.substring(propertyPath.lastIndexOf('.') + 1);
 
-                return ErrorResponse.FieldErrorDetail.builder()
-                    .field(fieldName)
-                    .reason(violation.getMessage())
-                    .build();
+                return new ErrorResponse.FieldErrorDetail(fieldName, violation.getMessage());
             })
             .collect(Collectors.toList());
 
@@ -101,25 +74,15 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> handleException(
-        Exception exception
-    ) {
+    public ResponseEntity<ErrorResponse> handleException(Exception exception) {
         ErrorCodeSpec errorCodeSpec = ErrorCode.UNEXPECTED_SERVER_ERROR;
 
-        logByLevel(
-            errorCodeSpec.getLogLevel(),
-            exception.getMessage(),
-            exception
-        );
+        logByLevel(errorCodeSpec.getLogLevel(), exception.getMessage(), exception);
 
         return createErrorResponse(errorCodeSpec);
     }
 
-    private void logByLevel(
-        LogLevel logLevel,
-        String message,
-        Exception exception
-    ) {
+    private void logByLevel(LogLevel logLevel, String message, Exception exception) {
         switch (logLevel) {
             case TRACE: log.trace(message, exception); break;
             case DEBUG: log.debug(message, exception); break;
@@ -130,26 +93,17 @@ public class GlobalExceptionHandler {
         }
     }
 
-    private ResponseEntity<ErrorResponse> createErrorResponse(
-        ErrorCodeSpec errorCodeSpec
-    ) {
-        ErrorResponse errorResponse =
-            ErrorResponse.from(errorCodeSpec);
+    private ResponseEntity<ErrorResponse> createErrorResponse(ErrorCodeSpec errorCodeSpec) {
+        ErrorResponse errorResponse = ErrorResponse.of(errorCodeSpec);
 
-        return ResponseEntity
-            .status(errorCodeSpec.getHttpStatus())
-            .body(errorResponse);
+        return ResponseEntity.status(errorCodeSpec.getHttpStatus()).body(errorResponse);
     }
 
     private ResponseEntity<ErrorResponse> createErrorResponseWithFieldErrorDetails(
-        ErrorCodeSpec errorCodeSpec,
-        List<ErrorResponse.FieldErrorDetail> fieldErrorDetails
+        ErrorCodeSpec errorCodeSpec, List<ErrorResponse.FieldErrorDetail> fieldErrorDetails
     ) {
-        ErrorResponse errorResponse =
-            ErrorResponse.of(errorCodeSpec, fieldErrorDetails);
+        ErrorResponse errorResponse = ErrorResponse.of(errorCodeSpec, fieldErrorDetails);
 
-        return ResponseEntity
-            .status(errorCodeSpec.getHttpStatus())
-            .body(errorResponse);
+        return ResponseEntity.status(errorCodeSpec.getHttpStatus()).body(errorResponse);
     }
 }

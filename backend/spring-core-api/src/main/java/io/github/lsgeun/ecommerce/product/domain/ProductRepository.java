@@ -1,20 +1,6 @@
 package io.github.lsgeun.ecommerce.product.domain;
 
-import java.util.Optional;
-
 public interface ProductRepository {
 
-    Optional<Product> findByNumber(String number);
-
-    Product getByNumber(String number);
-
-    Product create(Product product);
-
-    Product update(Product product);
-
-    Product delete(Product product);
-
-    Product deleteByNumber(String number);
-
-    boolean existsByNumber(String number);
+    Product getByNumberForUpdate(String number);
 }

@@ -3,10 +3,7 @@ package io.github.lsgeun.ecommerce.common.exception;
 public class DomainEntityNotFoundException extends BusinessException {
 
     public DomainEntityNotFoundException(String name, Object id) {
-        super(
-            ErrorCode.DOMAIN_ENTITY_NOT_FOUND_ERROR,
-            generateMessage(name, id)
-        );
+        super(ErrorCode.DOMAIN_ENTITY_NOT_FOUND_ERROR, generateMessage(name, id));
     }
 
     private static String generateMessage(String name, Object id) {

@@ -16,46 +16,34 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ErrorResponse {
 
-    private static final Logger log =
-        LoggerFactory.getLogger(ErrorResponse.class);
+    private static final Logger log = LoggerFactory.getLogger(ErrorResponse.class);
     private static final ZoneId SEOUL_ZONE = ZoneId.of("Asia/Seoul");
 
     String message;
     String code;
     int status;
-
-    @JsonFormat(
-        shape = JsonFormat.Shape.STRING,
-        pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS",
-        timezone = "Asia/Seoul"
-    )
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS", timezone = "Asia/Seoul")
     LocalDateTime timestamp;
-
     List<FieldErrorDetail> fieldErrorDetails;
 
     @Builder(access = AccessLevel.PRIVATE)
     private ErrorResponse(
-        String message,
-        String code,
-        int status,
-        LocalDateTime timestamp,
-        List<FieldErrorDetail> fieldErrorDetails
+        String message, String code, int status, LocalDateTime timestamp, List<FieldErrorDetail> fieldErrorDetails
     ) {
         timestamp = (timestamp == null) ? LocalDateTime.now(SEOUL_ZONE) : timestamp;
 
-        if (message == null || message.isBlank() ||
-            code == null || code.isBlank() ||
-            status < 100 || status > 599) {
-
-            log.error("에러 응답의 메시지, 코드, 상태 중 하나 누락되어 기본값으로 대체합니다.\nmessage: {}, code: {}, status: {}", message, code, status);
+        // 응답 필수 값이 비정상이면 서버 오류 응답으로 대체
+        if (message == null || message.isBlank() || code == null || code.isBlank() || status < 100 || status > 599) {
+            log.error("에러 응답의 메시지, 코드, 상태 중 하나 누락되어 기본값으로 대체합니다.\nmessage: {}, code: {}, status: {}",
+                message, code, status);
 
             message = ErrorCode.UNEXPECTED_SERVER_ERROR.getMessage();
             code = ErrorCode.UNEXPECTED_SERVER_ERROR.getCode();
             status = ErrorCode.UNEXPECTED_SERVER_ERROR.getHttpStatus().value();
         }
 
+        // 생성 후 외부에서 목록을 변경하지 못하도록 막음
         if (fieldErrorDetails != null) {
-            // 불변 리스트로 변환
             fieldErrorDetails = List.copyOf(fieldErrorDetails);
         }
 
@@ -66,22 +54,11 @@ public class ErrorResponse {
         this.fieldErrorDetails = fieldErrorDetails;
     }
 
-    public static ErrorResponse from(
-        ErrorCodeSpec errorCodeSpec
-    ) {
-        errorCodeSpec = resolveErrorCodeSpec(errorCodeSpec);
-
-        return builder()
-            .message(errorCodeSpec.getMessage())
-            .code(errorCodeSpec.getCode())
-            .status(errorCodeSpec.getHttpStatus().value())
-            .build();
+    public static ErrorResponse of(ErrorCodeSpec errorCodeSpec) {
+        return of(errorCodeSpec, null);
     }
 
-    public static ErrorResponse of(
-        ErrorCodeSpec errorCodeSpec,
-        List<FieldErrorDetail> fieldErrorDetails
-    ) {
+    public static ErrorResponse of(ErrorCodeSpec errorCodeSpec, List<FieldErrorDetail> fieldErrorDetails) {
         errorCodeSpec = resolveErrorCodeSpec(errorCodeSpec);
 
         return builder()
@@ -92,9 +69,7 @@ public class ErrorResponse {
             .build();
     }
 
-    private static ErrorCodeSpec resolveErrorCodeSpec (
-        ErrorCodeSpec errorCodeSpec
-    ) {
+    private static ErrorCodeSpec resolveErrorCodeSpec(ErrorCodeSpec errorCodeSpec) {
         if (errorCodeSpec == null) {
             log.error("ErrorCodeSpec이 null입니다.");
 
@@ -109,14 +84,5 @@ public class ErrorResponse {
 
         String field;
         String reason;
-
-        @Builder
-        private FieldErrorDetail(
-            String field,
-            String reason
-        ) {
-            this.field = field;
-            this.reason = reason;
-        }
     }
 }

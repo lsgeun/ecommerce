@@ -3,10 +3,7 @@ package io.github.lsgeun.ecommerce.common.exception;
 public class DomainEntityAlreadyExistsException extends BusinessException {
 
     public DomainEntityAlreadyExistsException(String name, Object id) {
-        super(
-            ErrorCode.DOMAIN_ENTITY_ALREADY_EXISTS_ERROR,
-            generateMessage(name, id)
-        );
+        super(ErrorCode.DOMAIN_ENTITY_ALREADY_EXISTS_ERROR, generateMessage(name, id));
     }
 
     private static String generateMessage(String name, Object id) {
