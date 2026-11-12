@@ -42,7 +42,7 @@ public class ErrorResponse {
 
             message = ErrorCode.UNEXPECTED_SERVER_ERROR.getMessage();
             code = ErrorCode.UNEXPECTED_SERVER_ERROR.getCode();
-            status = ErrorCode.UNEXPECTED_SERVER_ERROR.getHttpStatus().value();
+            status = ErrorCode.UNEXPECTED_SERVER_ERROR.getHttpStatusCode();
         }
 
         // 생성 후 외부에서 목록을 변경하지 못하도록 막음
@@ -67,7 +67,7 @@ public class ErrorResponse {
         return builder()
             .message(errorCodeSpec.getMessage())
             .code(errorCodeSpec.getCode())
-            .status(errorCodeSpec.getHttpStatus().value())
+            .status(errorCodeSpec.getHttpStatusCode())
             .fieldErrorDetails(fieldErrorDetails)
             .build();
     }

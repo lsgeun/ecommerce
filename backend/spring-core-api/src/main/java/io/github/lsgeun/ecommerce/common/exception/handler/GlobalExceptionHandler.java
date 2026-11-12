@@ -3,7 +3,6 @@ package io.github.lsgeun.ecommerce.common.exception.handler;
 import jakarta.validation.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.logging.LogLevel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -13,6 +12,7 @@ import io.github.lsgeun.ecommerce.common.exception.BusinessException;
 import io.github.lsgeun.ecommerce.common.exception.business.InvalidDomainFieldException;
 import io.github.lsgeun.ecommerce.common.exception.code.ErrorCode;
 import io.github.lsgeun.ecommerce.common.exception.code.ErrorCodeSpec;
+import io.github.lsgeun.ecommerce.common.exception.code.LogLevel;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -37,7 +37,10 @@ public class GlobalExceptionHandler {
 
         logByLevel(errorCodeSpec.getLogLevel(), exception.getMessage(), exception);
 
-        return createErrorResponseWithFieldErrorDetails(errorCodeSpec, exception.getFieldErrorDetails());
+        List<ErrorResponse.FieldErrorDetail> fieldErrorDetails =
+            List.of(new ErrorResponse.FieldErrorDetail(exception.getField(), exception.getReason()));
+
+        return createErrorResponseWithFieldErrorDetails(errorCodeSpec, fieldErrorDetails);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -89,8 +92,6 @@ public class GlobalExceptionHandler {
 
     private void logByLevel(LogLevel logLevel, String message, Exception exception) {
         switch (logLevel) {
-            case TRACE: log.trace(message, exception); break;
-            case DEBUG: log.debug(message, exception); break;
             case INFO: log.info(message, exception); break;
             case WARN: log.warn(message, exception); break;
             case ERROR: log.error(message, exception); break;
@@ -101,7 +102,7 @@ public class GlobalExceptionHandler {
     private ResponseEntity<ErrorResponse> createErrorResponse(ErrorCodeSpec errorCodeSpec) {
         ErrorResponse errorResponse = ErrorResponse.of(errorCodeSpec);
 
-        return ResponseEntity.status(errorCodeSpec.getHttpStatus()).body(errorResponse);
+        return ResponseEntity.status(errorResponse.getStatus()).body(errorResponse);
     }
 
     private ResponseEntity<ErrorResponse> createErrorResponseWithFieldErrorDetails(
@@ -109,6 +110,6 @@ public class GlobalExceptionHandler {
     ) {
         ErrorResponse errorResponse = ErrorResponse.of(errorCodeSpec, fieldErrorDetails);
 
-        return ResponseEntity.status(errorCodeSpec.getHttpStatus()).body(errorResponse);
+        return ResponseEntity.status(errorResponse.getStatus()).body(errorResponse);
     }
 }
