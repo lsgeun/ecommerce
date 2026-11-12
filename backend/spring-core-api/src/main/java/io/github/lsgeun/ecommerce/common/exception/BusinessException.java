@@ -1,5 +1,6 @@
 package io.github.lsgeun.ecommerce.common.exception;
 
+import io.github.lsgeun.ecommerce.common.exception.code.ErrorCodeSpec;
 import lombok.Getter;
 
 @Getter

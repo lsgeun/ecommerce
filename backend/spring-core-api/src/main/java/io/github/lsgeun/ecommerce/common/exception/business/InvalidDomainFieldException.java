@@ -1,8 +1,12 @@
-package io.github.lsgeun.ecommerce.common.exception;
+package io.github.lsgeun.ecommerce.common.exception.business;
 
 import lombok.Getter;
 
 import java.util.List;
+
+import io.github.lsgeun.ecommerce.common.exception.BusinessException;
+import io.github.lsgeun.ecommerce.common.exception.code.ErrorCode;
+import io.github.lsgeun.ecommerce.common.exception.handler.ErrorResponse;
 
 @Getter
 public class InvalidDomainFieldException extends BusinessException {

@@ -1,7 +1,10 @@
-package io.github.lsgeun.ecommerce.common.exception;
+package io.github.lsgeun.ecommerce.common.exception.handler;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
+
+import io.github.lsgeun.ecommerce.common.exception.code.ErrorCode;
+import io.github.lsgeun.ecommerce.common.exception.code.ErrorCodeSpec;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Value;

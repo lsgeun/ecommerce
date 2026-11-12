@@ -15,10 +15,10 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import io.github.lsgeun.ecommerce.common.exception.InvalidDomainFieldException;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import io.github.lsgeun.ecommerce.common.exception.business.InvalidDomainFieldException;
 
 @Entity
 @Table(name = "order_tb")

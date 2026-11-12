@@ -1,4 +1,4 @@
-package io.github.lsgeun.ecommerce.common.exception;
+package io.github.lsgeun.ecommerce.common.exception.handler;
 
 import jakarta.validation.ConstraintViolationException;
 import org.slf4j.Logger;
@@ -8,6 +8,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+
+import io.github.lsgeun.ecommerce.common.exception.BusinessException;
+import io.github.lsgeun.ecommerce.common.exception.business.InvalidDomainFieldException;
+import io.github.lsgeun.ecommerce.common.exception.code.ErrorCode;
+import io.github.lsgeun.ecommerce.common.exception.code.ErrorCodeSpec;
 
 import java.util.List;
 import java.util.stream.Collectors;

@@ -1,4 +1,4 @@
-package io.github.lsgeun.ecommerce.common.exception;
+package io.github.lsgeun.ecommerce.common.exception.code;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
