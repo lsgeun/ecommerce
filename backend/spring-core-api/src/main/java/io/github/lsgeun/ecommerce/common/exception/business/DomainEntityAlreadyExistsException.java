@@ -1,4 +1,7 @@
-package io.github.lsgeun.ecommerce.common.exception;
+package io.github.lsgeun.ecommerce.common.exception.business;
+
+import io.github.lsgeun.ecommerce.common.exception.BusinessException;
+import io.github.lsgeun.ecommerce.common.exception.code.ErrorCode;
 
 public class DomainEntityAlreadyExistsException extends BusinessException {
 

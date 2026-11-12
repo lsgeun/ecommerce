@@ -1,6 +1,6 @@
 package io.github.lsgeun.ecommerce.order.infrastructure;
 
-import io.github.lsgeun.ecommerce.common.exception.DomainEntityNotFoundException;
+import io.github.lsgeun.ecommerce.common.exception.business.DomainEntityNotFoundException;
 import io.github.lsgeun.ecommerce.order.domain.Order;
 import io.github.lsgeun.ecommerce.order.domain.OrderRepository;
 import lombok.RequiredArgsConstructor;

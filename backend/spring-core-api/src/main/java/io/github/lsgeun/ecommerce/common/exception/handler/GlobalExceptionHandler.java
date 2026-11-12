@@ -1,13 +1,18 @@
-package io.github.lsgeun.ecommerce.common.exception;
+package io.github.lsgeun.ecommerce.common.exception.handler;
 
 import jakarta.validation.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.logging.LogLevel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+
+import io.github.lsgeun.ecommerce.common.exception.BusinessException;
+import io.github.lsgeun.ecommerce.common.exception.business.InvalidDomainFieldException;
+import io.github.lsgeun.ecommerce.common.exception.code.ErrorCode;
+import io.github.lsgeun.ecommerce.common.exception.code.ErrorCodeSpec;
+import io.github.lsgeun.ecommerce.common.exception.code.LogLevel;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -15,13 +20,13 @@ import java.util.stream.Collectors;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-    private final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+    private final Logger logException = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @ExceptionHandler(BusinessException.class)
     public ResponseEntity<ErrorResponse> handleBusinessException(BusinessException exception) {
         ErrorCodeSpec errorCodeSpec = exception.getErrorCodeSpec();
 
-        logByLevel(errorCodeSpec.getLogLevel(), exception.getMessage(), exception);
+        logException(errorCodeSpec.getLogLevel(), exception.getMessage(), exception);
 
         return createErrorResponse(errorCodeSpec);
     }
@@ -30,9 +35,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleInvalidDomainFieldException(InvalidDomainFieldException exception) {
         ErrorCodeSpec errorCodeSpec = exception.getErrorCodeSpec();
 
-        logByLevel(errorCodeSpec.getLogLevel(), exception.getMessage(), exception);
+        logException(errorCodeSpec.getLogLevel(), exception.getMessage(), exception);
 
-        return createErrorResponseWithFieldErrorDetails(errorCodeSpec, exception.getFieldErrorDetails());
+        List<ErrorResponse.FieldErrorDetail> fieldErrorDetails =
+            List.of(new ErrorResponse.FieldErrorDetail(exception.getField(), exception.getReason()));
+
+        return createErrorResponseWithFieldErrorDetails(errorCodeSpec, fieldErrorDetails);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -41,7 +49,7 @@ public class GlobalExceptionHandler {
     ) {
         ErrorCodeSpec errorCodeSpec = ErrorCode.INVALID_INPUT_ERROR;
 
-        logByLevel(errorCodeSpec.getLogLevel(), exception.getMessage(), exception);
+        logException(errorCodeSpec.getLogLevel(), exception.getMessage(), exception);
 
         List<ErrorResponse.FieldErrorDetail> fieldErrorDetails =
             exception.getBindingResult()
@@ -57,7 +65,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleConstraintViolationException(ConstraintViolationException exception) {
         ErrorCodeSpec errorCodeSpec = ErrorCode.INVALID_INPUT_ERROR;
 
-        logByLevel(errorCodeSpec.getLogLevel(), exception.getMessage(), exception);
+        logException(errorCodeSpec.getLogLevel(), exception.getMessage(), exception);
 
         List<ErrorResponse.FieldErrorDetail> fieldErrorDetails =
             exception.getConstraintViolations()
@@ -77,18 +85,27 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleException(Exception exception) {
         ErrorCodeSpec errorCodeSpec = ErrorCode.UNEXPECTED_SERVER_ERROR;
 
-        logByLevel(errorCodeSpec.getLogLevel(), exception.getMessage(), exception);
+        logException(errorCodeSpec.getLogLevel(), exception.getMessage(), exception);
 
         return createErrorResponse(errorCodeSpec);
     }
 
-    private void logByLevel(LogLevel logLevel, String message, Exception exception) {
+    private void logException(LogLevel logLevel, String message, Exception exception) {
+        
+        // 메시지가 없는 경우, 메시지에 예외 메시지, 예외 이름 순으로 할당됨
+        if (message == null) {
+            if (exception.getMessage() != null) {
+                message = exception.getMessage();
+            } else {
+                message = exception.getClass().getName();
+            }
+        }
+        
         switch (logLevel) {
-            case TRACE: log.trace(message, exception); break;
-            case DEBUG: log.debug(message, exception); break;
-            case INFO: log.info(message, exception); break;
-            case WARN: log.warn(message, exception); break;
-            case ERROR: log.error(message, exception); break;
+            case INFO: logException.info(message); break;
+            case WARN: logException.warn(message); break;
+            // 에러만 스택 트레이스 남김
+            case ERROR: logException.error(message, exception); break;
             default: break;
         }
     }
@@ -96,7 +113,7 @@ public class GlobalExceptionHandler {
     private ResponseEntity<ErrorResponse> createErrorResponse(ErrorCodeSpec errorCodeSpec) {
         ErrorResponse errorResponse = ErrorResponse.of(errorCodeSpec);
 
-        return ResponseEntity.status(errorCodeSpec.getHttpStatus()).body(errorResponse);
+        return ResponseEntity.status(errorResponse.getStatus()).body(errorResponse);
     }
 
     private ResponseEntity<ErrorResponse> createErrorResponseWithFieldErrorDetails(
@@ -104,6 +121,6 @@ public class GlobalExceptionHandler {
     ) {
         ErrorResponse errorResponse = ErrorResponse.of(errorCodeSpec, fieldErrorDetails);
 
-        return ResponseEntity.status(errorCodeSpec.getHttpStatus()).body(errorResponse);
+        return ResponseEntity.status(errorResponse.getStatus()).body(errorResponse);
     }
 }

@@ -1,5 +1,6 @@
 package io.github.lsgeun.ecommerce.order.domain;
 
+import io.github.lsgeun.ecommerce.common.exception.business.InvalidDomainFieldException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -9,8 +10,6 @@ import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import io.github.lsgeun.ecommerce.common.exception.InvalidDomainFieldException;
 
 @Entity
 @Table(name = "order_item_tb")
