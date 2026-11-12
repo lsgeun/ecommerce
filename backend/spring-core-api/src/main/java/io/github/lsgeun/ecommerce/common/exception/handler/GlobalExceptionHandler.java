@@ -20,13 +20,13 @@ import java.util.stream.Collectors;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-    private final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+    private final Logger logException = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @ExceptionHandler(BusinessException.class)
     public ResponseEntity<ErrorResponse> handleBusinessException(BusinessException exception) {
         ErrorCodeSpec errorCodeSpec = exception.getErrorCodeSpec();
 
-        logByLevel(errorCodeSpec.getLogLevel(), exception.getMessage(), exception);
+        logException(errorCodeSpec.getLogLevel(), exception.getMessage(), exception);
 
         return createErrorResponse(errorCodeSpec);
     }
@@ -35,7 +35,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleInvalidDomainFieldException(InvalidDomainFieldException exception) {
         ErrorCodeSpec errorCodeSpec = exception.getErrorCodeSpec();
 
-        logByLevel(errorCodeSpec.getLogLevel(), exception.getMessage(), exception);
+        logException(errorCodeSpec.getLogLevel(), exception.getMessage(), exception);
 
         List<ErrorResponse.FieldErrorDetail> fieldErrorDetails =
             List.of(new ErrorResponse.FieldErrorDetail(exception.getField(), exception.getReason()));
@@ -49,7 +49,7 @@ public class GlobalExceptionHandler {
     ) {
         ErrorCodeSpec errorCodeSpec = ErrorCode.INVALID_INPUT_ERROR;
 
-        logByLevel(errorCodeSpec.getLogLevel(), exception.getMessage(), exception);
+        logException(errorCodeSpec.getLogLevel(), exception.getMessage(), exception);
 
         List<ErrorResponse.FieldErrorDetail> fieldErrorDetails =
             exception.getBindingResult()
@@ -65,7 +65,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleConstraintViolationException(ConstraintViolationException exception) {
         ErrorCodeSpec errorCodeSpec = ErrorCode.INVALID_INPUT_ERROR;
 
-        logByLevel(errorCodeSpec.getLogLevel(), exception.getMessage(), exception);
+        logException(errorCodeSpec.getLogLevel(), exception.getMessage(), exception);
 
         List<ErrorResponse.FieldErrorDetail> fieldErrorDetails =
             exception.getConstraintViolations()
@@ -85,16 +85,27 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleException(Exception exception) {
         ErrorCodeSpec errorCodeSpec = ErrorCode.UNEXPECTED_SERVER_ERROR;
 
-        logByLevel(errorCodeSpec.getLogLevel(), exception.getMessage(), exception);
+        logException(errorCodeSpec.getLogLevel(), exception.getMessage(), exception);
 
         return createErrorResponse(errorCodeSpec);
     }
 
-    private void logByLevel(LogLevel logLevel, String message, Exception exception) {
+    private void logException(LogLevel logLevel, String message, Exception exception) {
+        
+        // 메시지가 없는 경우, 메시지에 예외 메시지, 예외 이름 순으로 할당됨
+        if (message == null) {
+            if (exception.getMessage() != null) {
+                message = exception.getMessage();
+            } else {
+                message = exception.getClass().getName();
+            }
+        }
+        
         switch (logLevel) {
-            case INFO: log.info(message, exception); break;
-            case WARN: log.warn(message, exception); break;
-            case ERROR: log.error(message, exception); break;
+            case INFO: logException.info(message); break;
+            case WARN: logException.warn(message); break;
+            // 에러만 스택 트레이스 남김
+            case ERROR: logException.error(message, exception); break;
             default: break;
         }
     }
