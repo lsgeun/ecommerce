@@ -108,8 +108,18 @@ public class Product {
 
     // 주문 수량만큼 재고를 줄이며, 재고가 0 미만이 되면 예외로 주문을 막는다
     public void decreaseStock(int quantity) {
+        validateQuantity(quantity);
         validateStock(this.stock - quantity);
 
         this.stock -= quantity;
+    }
+
+    // 차감 수량이 음수이면 재고가 오히려 늘어나므로 막는다
+    private static void validateQuantity(int quantity) {
+        if (quantity < 0) {
+            throw new InvalidDomainFieldException(
+                Product.class, "quantity", quantity, "차감 수량은 0 이상이어야 합니다."
+            );
+        }
     }
 }
