@@ -13,6 +13,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @UnitTest
@@ -54,7 +55,8 @@ class ProductTest {
             String validNumber = "P001";
 
             // when & then
-            Product.validateNumber(validNumber);
+            assertThatCode(() -> Product.validateNumber(validNumber))
+                .doesNotThrowAnyException();
         }
 
         // 테스트에 주입할 파라미터 공급 메서드 (static 필수)
@@ -66,27 +68,75 @@ class ProductTest {
         }
     }
 
-    @ParameterizedTest
-    @NullAndEmptySource
-    @MethodSource("provideInvalidNames")
-    @DisplayName("상품 이름이 유효하지 않으면 예외가 발생한다")
-    void validateName_유효하지_않으면_예외(String invalidName) {
-        // given - (파라미터 주입으로 준비 완료)
+    @Nested
+    @DisplayName("validateName")
+    class ValidateName {
 
-        // when & then
-        assertThatThrownBy(() -> Product.validateName(invalidName))
-            .isInstanceOf(InvalidDomainFieldException.class);
+        @ParameterizedTest
+        @MethodSource("provideValidNames")
+        @DisplayName("상품 이름이 최소 길이 또는 최대 길이이면 검증을 통과한다")
+        void 경계값이면_통과(String validName) {
+            // given - (파라미터 주입으로 준비 완료)
+
+            // when & then
+            assertThatCode(() -> Product.validateName(validName))
+                .doesNotThrowAnyException();
+        }
+
+        @ParameterizedTest
+        @NullAndEmptySource
+        @MethodSource("provideInvalidNames")
+        @DisplayName("상품 이름이 유효하지 않으면 예외가 발생한다")
+        void 유효하지_않으면_예외(String invalidName) {
+            // given - (파라미터 주입으로 준비 완료)
+
+            // when & then
+            assertThatThrownBy(() -> Product.validateName(invalidName))
+                .isInstanceOf(InvalidDomainFieldException.class);
+        }
+
+        // 테스트에 주입할 파라미터 공급 메서드 (static 필수)
+        private static Stream<String> provideValidNames() {
+            return Stream.of(
+                "가".repeat(2),       // 2자 (최소 길이)
+                "가".repeat(50)       // 50자 (최대 길이)
+            );
+        }
+
+        // 테스트에 주입할 파라미터 공급 메서드 (static 필수)
+        private static Stream<String> provideInvalidNames() {
+            return Stream.of(
+                "A",                  // 1자 (너무 짧음)
+                "가".repeat(51)        // 51자 (너무 긺)
+            );
+        }
     }
 
-    @Test
-    @DisplayName("가격이 음수이면 예외가 발생한다")
-    void validatePrice_음수이면_예외() {
-        // given
-        long invalidPrice = -1;
+    @Nested
+    @DisplayName("validatePrice")
+    class ValidatePrice {
 
-        // when & then
-        assertThatThrownBy(() -> Product.validatePrice(invalidPrice))
-            .isInstanceOf(InvalidDomainFieldException.class);
+        @ParameterizedTest
+        @ValueSource(longs = {0L, 10_000L})
+        @DisplayName("가격이 0 이상이면 검증을 통과한다")
+        void 경계값과_정상값이면_통과(long validPrice) {
+            // given - (파라미터 주입으로 준비 완료)
+
+            // when & then
+            assertThatCode(() -> Product.validatePrice(validPrice))
+                .doesNotThrowAnyException();
+        }
+
+        @Test
+        @DisplayName("가격이 음수이면 예외가 발생한다")
+        void 음수이면_예외() {
+            // given
+            long invalidPrice = -1;
+
+            // when & then
+            assertThatThrownBy(() -> Product.validatePrice(invalidPrice))
+                .isInstanceOf(InvalidDomainFieldException.class);
+        }
     }
 
     @Nested
@@ -99,8 +149,10 @@ class ProductTest {
             // given - (경계값 최소, 최대)
 
             // when & then
-            Product.validateStock(Product.MIN_STOCK);
-            Product.validateStock(Product.MAX_STOCK);
+            assertThatCode(() -> Product.validateStock(Product.MIN_STOCK))
+                .doesNotThrowAnyException();
+            assertThatCode(() -> Product.validateStock(Product.MAX_STOCK))
+                .doesNotThrowAnyException();
         }
 
         @ParameterizedTest
@@ -185,13 +237,5 @@ class ProductTest {
                 .isInstanceOf(InvalidDomainFieldException.class);
             assertThat(product.getStock()).isEqualTo(initialStock);
         }
-    }
-
-    // 테스트에 주입할 파라미터 공급 메서드 (static 필수)
-    private static Stream<String> provideInvalidNames() {
-        return Stream.of(
-            "A",                  // 1자 (너무 짧음)
-            "가".repeat(51)        // 51자 (너무 긺)
-        );
     }
 }
