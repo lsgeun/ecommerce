@@ -28,6 +28,9 @@ import lombok.NoArgsConstructor;
 @Getter
 public class Product {
 
+    public static final int MIN_STOCK = 0;
+    public static final int MAX_STOCK = 999;
+
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private Long id;
@@ -81,9 +84,10 @@ public class Product {
     }
 
     public static void validateStock(int stock) {
-        if ((stock < 0) || (stock > 999)) {
+        if ((stock < MIN_STOCK) || (stock > MAX_STOCK)) {
             throw new InvalidDomainFieldException(
-                Product.class, "stock", stock, "상품 재고는 0 이상, 999 이하이어야 합니다."
+                Product.class, "stock", stock,
+                "상품 재고는 %d 이상, %d 이하이어야 합니다.".formatted(MIN_STOCK, MAX_STOCK)
             );
         }
     }
@@ -103,9 +107,9 @@ public class Product {
     }
 
     // 주문 수량만큼 재고를 줄이며, 재고가 0 미만이 되면 예외로 주문을 막는다
-    public void decreaseStock(int count) {
-        validateStock(this.stock - count);
+    public void decreaseStock(int quantity) {
+        validateStock(this.stock - quantity);
 
-        this.stock -= count;
+        this.stock -= quantity;
     }
 }
