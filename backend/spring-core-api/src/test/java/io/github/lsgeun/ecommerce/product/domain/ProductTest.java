@@ -3,6 +3,7 @@ package io.github.lsgeun.ecommerce.product.domain;
 import io.github.lsgeun.ecommerce.common.exception.business.InvalidDomainFieldException;
 import io.github.lsgeun.ecommerce.support.annotation.UnitTest;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -12,6 +13,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @UnitTest
@@ -30,122 +32,210 @@ class ProductTest {
             .build();
     }
 
-    @ParameterizedTest
-    @NullAndEmptySource
-    @MethodSource("provideInvalidNumbers")
-    @DisplayName("상품 번호가 유효하지 않으면 예외가 발생한다")
-    void validateNumber_유효하지_않으면_예외(String invalidNumber) {
-        // given - (파라미터 주입으로 준비 완료)
+    @Nested
+    @DisplayName("validateNumber")
+    class ValidateNumber {
 
-        // when & then
-        assertThatThrownBy(() -> Product.validateNumber(invalidNumber))
-            .isInstanceOf(InvalidDomainFieldException.class);
+        @ParameterizedTest
+        @NullAndEmptySource
+        @MethodSource("provideInvalidNumbers")
+        @DisplayName("상품 번호가 유효하지 않으면 예외가 발생한다")
+        void 유효하지_않으면_예외(String invalidNumber) {
+            // given - (파라미터 주입으로 준비 완료)
+
+            // when & then
+            assertThatThrownBy(() -> Product.validateNumber(invalidNumber))
+                .isInstanceOf(InvalidDomainFieldException.class);
+        }
+
+        @Test
+        @DisplayName("상품 번호가 유효하면 예외가 발생하지 않는다")
+        void 유효하면_통과() {
+            // given
+            String validNumber = "P001";
+
+            // when & then
+            assertThatCode(() -> Product.validateNumber(validNumber))
+                .doesNotThrowAnyException();
+        }
+
+        // 테스트에 주입할 파라미터 공급 메서드 (static 필수)
+        private static Stream<String> provideInvalidNumbers() {
+            return Stream.of(
+                "A",                  // 1자 (너무 짧음)
+                "가".repeat(51)        // 51자 (너무 긺)
+            );
+        }
     }
 
-    @Test
-    @DisplayName("상품 번호가 유효하면 예외가 발생하지 않는다")
-    void validateNumber_유효하면_통과() {
-        // given
-        String validNumber = "P001";
+    @Nested
+    @DisplayName("validateName")
+    class ValidateName {
 
-        // when & then
-        Product.validateNumber(validNumber);
+        @ParameterizedTest
+        @MethodSource("provideValidNames")
+        @DisplayName("상품 이름이 최소 길이 또는 최대 길이이면 검증을 통과한다")
+        void 경계값이면_통과(String validName) {
+            // given - (파라미터 주입으로 준비 완료)
+
+            // when & then
+            assertThatCode(() -> Product.validateName(validName))
+                .doesNotThrowAnyException();
+        }
+
+        @ParameterizedTest
+        @NullAndEmptySource
+        @MethodSource("provideInvalidNames")
+        @DisplayName("상품 이름이 유효하지 않으면 예외가 발생한다")
+        void 유효하지_않으면_예외(String invalidName) {
+            // given - (파라미터 주입으로 준비 완료)
+
+            // when & then
+            assertThatThrownBy(() -> Product.validateName(invalidName))
+                .isInstanceOf(InvalidDomainFieldException.class);
+        }
+
+        // 테스트에 주입할 파라미터 공급 메서드 (static 필수)
+        private static Stream<String> provideValidNames() {
+            return Stream.of(
+                "가".repeat(2),       // 2자 (최소 길이)
+                "가".repeat(50)       // 50자 (최대 길이)
+            );
+        }
+
+        // 테스트에 주입할 파라미터 공급 메서드 (static 필수)
+        private static Stream<String> provideInvalidNames() {
+            return Stream.of(
+                "A",                  // 1자 (너무 짧음)
+                "가".repeat(51)        // 51자 (너무 긺)
+            );
+        }
     }
 
-    @ParameterizedTest
-    @NullAndEmptySource
-    @MethodSource("provideInvalidNames")
-    @DisplayName("상품 이름이 유효하지 않으면 예외가 발생한다")
-    void validateName_유효하지_않으면_예외(String invalidName) {
-        // given - (파라미터 주입으로 준비 완료)
+    @Nested
+    @DisplayName("validatePrice")
+    class ValidatePrice {
 
-        // when & then
-        assertThatThrownBy(() -> Product.validateName(invalidName))
-            .isInstanceOf(InvalidDomainFieldException.class);
+        @ParameterizedTest
+        @ValueSource(longs = {0L, 10_000L})
+        @DisplayName("가격이 0 이상이면 검증을 통과한다")
+        void 경계값과_정상값이면_통과(long validPrice) {
+            // given - (파라미터 주입으로 준비 완료)
+
+            // when & then
+            assertThatCode(() -> Product.validatePrice(validPrice))
+                .doesNotThrowAnyException();
+        }
+
+        @Test
+        @DisplayName("가격이 음수이면 예외가 발생한다")
+        void 음수이면_예외() {
+            // given
+            long invalidPrice = -1;
+
+            // when & then
+            assertThatThrownBy(() -> Product.validatePrice(invalidPrice))
+                .isInstanceOf(InvalidDomainFieldException.class);
+        }
     }
 
-    @Test
-    @DisplayName("가격이 음수이면 예외가 발생한다")
-    void validatePrice_음수이면_예외() {
-        // given
-        long invalidPrice = -1;
+    @Nested
+    @DisplayName("validateStock")
+    class ValidateStock {
 
-        // when & then
-        assertThatThrownBy(() -> Product.validatePrice(invalidPrice))
-            .isInstanceOf(InvalidDomainFieldException.class);
+        @Test
+        @DisplayName("재고가 최소값이거나 최대값이면 검증을 통과한다")
+        void 경계값이면_통과() {
+            // given - (경계값 최소, 최대)
+
+            // when & then
+            assertThatCode(() -> Product.validateStock(Product.MIN_STOCK))
+                .doesNotThrowAnyException();
+            assertThatCode(() -> Product.validateStock(Product.MAX_STOCK))
+                .doesNotThrowAnyException();
+        }
+
+        @ParameterizedTest
+        @ValueSource(ints = {Product.MIN_STOCK - 1, Product.MAX_STOCK + 1})
+        @DisplayName("재고가 최소값 미만이거나 최대값을 초과하면 예외가 발생한다")
+        void 범위를_벗어나면_예외(int invalidStock) {
+            // given - (파라미터 주입으로 준비 완료)
+
+            // when & then
+            assertThatThrownBy(() -> Product.validateStock(invalidStock))
+                .isInstanceOf(InvalidDomainFieldException.class);
+        }
     }
 
-    @Test
-    @DisplayName("재고가 0이거나 999이면 검증을 통과한다")
-    void validateStock_경계값이면_통과() {
-        // given - (경계값 0, 999)
+    @Nested
+    @DisplayName("decreaseStock")
+    class DecreaseStock {
 
-        // when & then
-        Product.validateStock(0);
-        Product.validateStock(999);
-    }
+        @Test
+        @DisplayName("재고를 줄이면 감소한 수량이 반영된다")
+        void 재고_감소() {
+            // given
+            Product product = validProduct();
 
-    @ParameterizedTest
-    @ValueSource(ints = {-1, 1000})
-    @DisplayName("재고가 0 미만이거나 999를 초과하면 예외가 발생한다")
-    void validateStock_범위를_벗어나면_예외(int invalidStock) {
-        // given - (파라미터 주입으로 준비 완료)
+            // when
+            product.decreaseStock(2);
 
-        // when & then
-        assertThatThrownBy(() -> Product.validateStock(invalidStock))
-            .isInstanceOf(InvalidDomainFieldException.class);
-    }
+            // then
+            assertThat(product.getStock()).isEqualTo(3);
+        }
 
-    @Test
-    @DisplayName("decreaseStock으로 재고를 줄이면 감소한 수량이 반영된다")
-    void decreaseStock_재고_감소() {
-        // given
-        Product product = validProduct();
+        @Test
+        @DisplayName("재고를 정확히 0까지 줄이면 정상 처리된다")
+        void 재고_0까지_감소_성공() {
+            // given
+            Product product = createProduct(2);
 
-        // when
-        product.decreaseStock(2);
+            // when
+            product.decreaseStock(2);
 
-        // then
-        assertThat(product.getStock()).isEqualTo(3);
-    }
+            // then
+            assertThat(product.getStock()).isZero();
+        }
 
-    @Test
-    @DisplayName("decreaseStock으로 재고를 정확히 0까지 줄이면 정상 처리된다")
-    void decreaseStock_0까지_감소_성공() {
-        // given
-        Product product = createProduct(2);
+        @Test
+        @DisplayName("수량이 0이면 재고가 그대로 유지된다")
+        void 수량이_0이면_재고_유지() {
+            // given
+            Product product = validProduct();
+            int initialStock = product.getStock();
 
-        // when
-        product.decreaseStock(2);
+            // when
+            product.decreaseStock(0);
 
-        // then
-        assertThat(product.getStock()).isZero();
-    }
+            // then
+            assertThat(product.getStock()).isEqualTo(initialStock);
+        }
 
-    @Test
-    @DisplayName("decreaseStock으로 보유 재고보다 많은 수량을 줄이면 예외가 발생하고 재고는 그대로다")
-    void decreaseStock_재고보다_많으면_예외() {
-        // given
-        Product product = validProduct();
+        @Test
+        @DisplayName("보유 재고보다 많은 수량을 줄이면 예외가 발생하고 재고는 그대로다")
+        void 재고보다_많으면_예외() {
+            // given
+            Product product = validProduct();
+            int initialStock = product.getStock();
 
-        // when & then
-        assertThatThrownBy(() -> product.decreaseStock(product.getStock() + 1))
-            .isInstanceOf(InvalidDomainFieldException.class);
-        assertThat(product.getStock()).isEqualTo(5);
-    }
+            // when & then
+            assertThatThrownBy(() -> product.decreaseStock(initialStock + 1))
+                .isInstanceOf(InvalidDomainFieldException.class);
+            assertThat(product.getStock()).isEqualTo(initialStock);
+        }
 
-    // 테스트에 주입할 파라미터 공급 메서드 (static 필수)
-    private static Stream<String> provideInvalidNumbers() {
-        return Stream.of(
-            "A",                  // 1자 (너무 짧음)
-            "가".repeat(51)        // 51자 (너무 긺)
-        );
-    }
+        @ParameterizedTest
+        @ValueSource(ints = {-1, -10, -100})
+        @DisplayName("수량이 음수이면 예외가 발생하고 재고는 그대로다")
+        void 수량이_음수이면_예외(int negativeQuantity) {
+            // given
+            Product product = validProduct();
+            int initialStock = product.getStock();
 
-    private static Stream<String> provideInvalidNames() {
-        return Stream.of(
-            "A",                  // 1자 (너무 짧음)
-            "가".repeat(51)        // 51자 (너무 긺)
-        );
+            // when & then
+            assertThatThrownBy(() -> product.decreaseStock(negativeQuantity))
+                .isInstanceOf(InvalidDomainFieldException.class);
+            assertThat(product.getStock()).isEqualTo(initialStock);
+        }
     }
 }

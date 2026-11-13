@@ -3,6 +3,7 @@ package io.github.lsgeun.ecommerce.product.infrastructure;
 import io.github.lsgeun.ecommerce.product.domain.Product;
 import io.github.lsgeun.ecommerce.support.annotation.SliceTest;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -31,29 +32,34 @@ class ProductJpaRepositorySliceTest {
             .build();
     }
 
-    @Test
-    @DisplayName("성공: 존재하는 상품 번호로 findByNumberForUpdate를 호출하면 상품을 반환한다")
-    void findByNumberForUpdate_존재하는_번호면_상품_반환() {
-        // given
-        testEntityManager.persistAndFlush(createProduct("P001"));
+    @Nested
+    @DisplayName("findByNumberForUpdate")
+    class FindByNumberForUpdate {
 
-        // when
-        Optional<Product> foundProduct = productJpaRepository.findByNumberForUpdate("P001");
+        @Test
+        @DisplayName("성공: 존재하는 상품 번호로 호출하면 상품을 반환한다")
+        void 존재하는_번호면_상품_반환() {
+            // given
+            testEntityManager.persistAndFlush(createProduct("P001"));
 
-        // then
-        assertThat(foundProduct).isPresent();
-        assertThat(foundProduct.get().getNumber()).isEqualTo("P001");
-    }
+            // when
+            Optional<Product> foundProduct = productJpaRepository.findByNumberForUpdate("P001");
 
-    @Test
-    @DisplayName("실패: 존재하지 않는 상품 번호로 findByNumberForUpdate를 호출하면 빈 Optional을 반환한다")
-    void findByNumberForUpdate_존재하지_않는_번호면_빈_옵셔널_반환() {
-        // given - (저장된 상품 없음)
+            // then
+            assertThat(foundProduct).isPresent();
+            assertThat(foundProduct.get().getNumber()).isEqualTo("P001");
+        }
 
-        // when
-        Optional<Product> foundProduct = productJpaRepository.findByNumberForUpdate("P999");
+        @Test
+        @DisplayName("실패: 존재하지 않는 상품 번호로 호출하면 빈 Optional을 반환한다")
+        void 존재하지_않는_번호면_빈_옵셔널_반환() {
+            // given - (저장된 상품 없음)
 
-        // then
-        assertThat(foundProduct).isEmpty();
+            // when
+            Optional<Product> foundProduct = productJpaRepository.findByNumberForUpdate("P999");
+
+            // then
+            assertThat(foundProduct).isEmpty();
+        }
     }
 }
