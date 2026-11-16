@@ -49,6 +49,11 @@ dependencies {
 	implementation 'io.micrometer:micrometer-registry-prometheus'
 }
 
+// 응답 DTO 필드가 매핑 없이 비어 나가는 사고를 컴파일 단계에서 막음
+tasks.withType(JavaCompile).configureEach {
+	options.compilerArgs += ['-Amapstruct.unmappedTargetPolicy=ERROR']
+}
+
 def configureTestTask = {
 	useJUnitPlatform()
 
