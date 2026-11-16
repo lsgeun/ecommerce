@@ -24,12 +24,7 @@ class ProductJpaRepositorySliceTest {
     private ProductJpaRepository productJpaRepository;
 
     private Product createProduct(String number) {
-        return Product.builder()
-            .number(number)
-            .name("테스트상품")
-            .price(10_000L)
-            .stock(5)
-            .build();
+        return Product.create(number, "테스트상품", 10_000L, 5);
     }
 
     @Nested

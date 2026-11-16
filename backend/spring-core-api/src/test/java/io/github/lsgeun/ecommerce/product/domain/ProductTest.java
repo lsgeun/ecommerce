@@ -24,12 +24,7 @@ class ProductTest {
     }
 
     private Product createProduct(int stock) {
-        return Product.builder()
-            .number("P001")
-            .name("테스트상품")
-            .price(10_000L)
-            .stock(stock)
-            .build();
+        return Product.create("P001", "테스트상품", 10_000L, stock);
     }
 
     @Nested

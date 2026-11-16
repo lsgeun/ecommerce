@@ -1,6 +1,6 @@
 plugins {
 	id 'java'
-	id 'org.springframework.boot' version '3.5.15'
+	id 'org.springframework.boot' version '3.5.16'
 	id 'io.spring.dependency-management' version '1.1.7'
 }
 
@@ -47,6 +47,11 @@ dependencies {
 	// Monitoring
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'io.micrometer:micrometer-registry-prometheus'
+}
+
+// 응답 DTO 필드가 매핑 없이 비어 나가는 사고를 컴파일 단계에서 막음
+tasks.withType(JavaCompile).configureEach {
+	options.compilerArgs += ['-Amapstruct.unmappedTargetPolicy=ERROR']
 }
 
 def configureTestTask = {

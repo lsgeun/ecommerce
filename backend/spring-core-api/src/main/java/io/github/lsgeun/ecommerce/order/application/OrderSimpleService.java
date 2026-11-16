@@ -28,7 +28,7 @@ public class OrderSimpleService {
             .map(this::createOrderItem)
             .toList();
 
-        return orderRepository.create(Order.create(userId, items));
+        return orderRepository.save(Order.create(userId, items));
     }
 
     @Transactional(readOnly = true)
