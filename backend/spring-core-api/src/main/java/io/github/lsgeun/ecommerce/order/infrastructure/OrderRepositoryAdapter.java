@@ -13,7 +13,7 @@ public class OrderRepositoryAdapter implements OrderRepository {
     private final OrderJpaRepository orderJpaRepository;
 
     @Override
-    public Order create(Order order) {
+    public Order save(Order order) {
         return orderJpaRepository.save(order);
     }
 
