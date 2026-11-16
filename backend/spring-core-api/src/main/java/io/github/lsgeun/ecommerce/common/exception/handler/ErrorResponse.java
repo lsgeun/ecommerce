@@ -5,8 +5,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 import io.github.lsgeun.ecommerce.common.exception.code.ErrorCode;
 import io.github.lsgeun.ecommerce.common.exception.code.ErrorCodeSpec;
-import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Value;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,7 +27,6 @@ public class ErrorResponse {
     LocalDateTime timestamp;
     List<FieldErrorDetail> fieldErrorDetails;
 
-    @Builder(access = AccessLevel.PRIVATE)
     private ErrorResponse(
         String message, String code, int status, LocalDateTime timestamp, List<FieldErrorDetail> fieldErrorDetails
     ) {
@@ -64,12 +61,13 @@ public class ErrorResponse {
     public static ErrorResponse of(ErrorCodeSpec errorCodeSpec, List<FieldErrorDetail> fieldErrorDetails) {
         errorCodeSpec = resolveErrorCodeSpec(errorCodeSpec);
 
-        return builder()
-            .message(errorCodeSpec.getMessage())
-            .code(errorCodeSpec.getCode())
-            .status(errorCodeSpec.getHttpStatusCode())
-            .fieldErrorDetails(fieldErrorDetails)
-            .build();
+        return new ErrorResponse(
+            errorCodeSpec.getMessage(),
+            errorCodeSpec.getCode(),
+            errorCodeSpec.getHttpStatusCode(),
+            null,
+            fieldErrorDetails
+        );
     }
 
     private static ErrorCodeSpec resolveErrorCodeSpec(ErrorCodeSpec errorCodeSpec) {
