@@ -22,7 +22,7 @@ public class ErrorResponse {
 
     String message;
     String code;
-    int status;
+    Integer status;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS", timezone = "Asia/Seoul")
     LocalDateTime timestamp;
     List<FieldErrorDetail> fieldErrorDetails;
