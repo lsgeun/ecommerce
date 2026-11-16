@@ -9,7 +9,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -92,18 +91,21 @@ public class Product {
         }
     }
 
-    @Builder
-    private Product(Long id, String number, String name, long price, int stock) {
+    private Product(String number, String name, long price, int stock) {
         validateNumber(number);
         validateName(name);
         validatePrice(price);
         validateStock(stock);
 
-        this.id = id;
         this.number = number;
         this.name = name;
         this.price = price;
         this.stock = stock;
+    }
+
+    // 식별자는 영속화 시점에 데이터베이스가 부여하므로 생성 시 받지 않는다
+    public static Product create(String number, String name, long price, int stock) {
+        return new Product(number, name, price, stock);
     }
 
     // 주문 수량만큼 재고를 줄이며, 재고가 0 미만이 되면 예외로 주문을 막는다
