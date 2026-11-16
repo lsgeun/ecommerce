@@ -19,8 +19,8 @@ import lombok.NoArgsConstructor;
     name = "product_tb",
     uniqueConstraints = {
         @UniqueConstraint(
-            name = "uk_product_number",
-            columnNames = "product_number"
+            name = "uk_number",
+            columnNames = "number"
         )
     }
 )
@@ -35,7 +35,7 @@ public class Product {
     @Id
     private Long id;
 
-    @Column(name = "product_number", nullable = false, length = 50)
+    @Column(nullable = false, length = 50)
     private String number;
 
     @Column(nullable = false, length = 50)
@@ -44,7 +44,7 @@ public class Product {
     @Column(nullable = false)
     private long price;
 
-    @Column(name = "stock_quantity", nullable = false)
+    @Column(nullable = false)
     private int stock;
 
     public static void validateNumber(String number) {
