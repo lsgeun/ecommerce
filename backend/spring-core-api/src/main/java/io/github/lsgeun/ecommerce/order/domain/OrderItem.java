@@ -21,14 +21,14 @@ public class OrderItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "product_number", nullable = false, length = 50)
+    @Column(nullable = false, length = 50)
     private String productNumber;
 
-    @Column(name = "product_name", nullable = false, length = 50)
+    @Column(nullable = false, length = 50)
     private String productName;
 
     // 주문 시점의 가격을 저장해 이후 상품 가격이 바뀌어도 주문 금액이 유지되도록 함
-    @Column(name = "unit_price", nullable = false)
+    @Column(nullable = false)
     private long unitPrice;
 
     @Column(nullable = false)
