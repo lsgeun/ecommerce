@@ -47,8 +47,8 @@ public class Order {
         validateItems(items);
 
         this.userId = userId;
-        this.items = new ArrayList<>(items);
         this.status = OrderStatus.CREATED;
+        this.items = new ArrayList<>(items);
     }
 
     public static Order create(Long userId, List<OrderItem> items) {
