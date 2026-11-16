@@ -27,8 +27,9 @@ public interface OrderDto {
                 @NotNull(message = "상품 번호는 필수입니다.")
                 String productNumber;
 
+                @NotNull(message = "상품 개수는 필수입니다.")
                 @Min(value = 1, message = "주문 수량은 1 이상이어야 합니다.")
-                int quantity;
+                Integer quantity;
             }
         }
     }
@@ -39,7 +40,7 @@ public interface OrderDto {
         Long id;
         Long userId;
         String status;
-        long totalPrice;
+        Long totalPrice;
         List<ItemResponse> items;
     }
 
@@ -48,8 +49,8 @@ public interface OrderDto {
     class ItemResponse {
         String productNumber;
         String productName;
-        long unitPrice;
-        int quantity;
-        long subtotal;
+        Long unitPrice;
+        Integer quantity;
+        Long subtotal;
     }
 }
