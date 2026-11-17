@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
     name = "product_tb",
     uniqueConstraints = {
         @UniqueConstraint(
-            name = "uk_number",
+            name = "uk_product_number",
             columnNames = "number"
         )
     }
