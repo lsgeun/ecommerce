@@ -11,8 +11,8 @@ COPY --chown=appuser:appuser build/libs/*-SNAPSHOT.jar app.jar
 # 3. 비-root 계정으로 전환
 USER appuser
 
-# 4. 환경 변수 설정 (기본값 stage, 외부에서 전달 가능)
-ENV SPRING_PROFILES_ACTIVE=stage
+# 4. 환경 변수 설정 (기본값 dev, 외부에서 전달 가능)
+ENV SPRING_PROFILES_ACTIVE=dev
 ENV JAVA_OPTS=""
 
 # 5. ENTRYPOINT에서 환경 변수 및 옵션 조합
