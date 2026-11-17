@@ -1,5 +1,6 @@
 package io.github.lsgeun.ecommerce.order.domain;
 
+import io.github.lsgeun.ecommerce.common.exception.business.InvalidDomainFieldException;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -17,8 +18,6 @@ import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import io.github.lsgeun.ecommerce.common.exception.business.InvalidDomainFieldException;
 
 @Entity
 @Table(name = "order_tb")

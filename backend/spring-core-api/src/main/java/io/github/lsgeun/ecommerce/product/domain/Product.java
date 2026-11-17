@@ -13,7 +13,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(
     name = "product_tb",
     uniqueConstraints = {
@@ -23,8 +22,8 @@ import lombok.NoArgsConstructor;
         )
     }
 )
-
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Product {
 
     public static final int MIN_STOCK = 0;
