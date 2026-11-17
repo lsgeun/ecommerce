@@ -23,6 +23,12 @@ env:
   NGINX_DIR: './backend/nginx'
   PROMTAIL_DIR: './backend/promtail'
   DOCKER_COMPOSE_FILE: './backend/docker-compose.yaml'
+  AWS_REGION: 'ap-northeast-2'
+  CODE_DEPLOY_APPLICATION_NAME: 'ecommerce-server-codedeploy-app'
+  CODE_DEPLOY_DEPLOYMENT_GROUP_NAME: 'ecommerce-server-codedeploy-deployment-group'
+  S3_BUCKET_NAME: 'lsgeun-github-actions-s3-bucket-346560662486-ap-northeast-2-an'
+  DOCKERHUB_REPOSITORY: 'ecommerce-backend'
+  DOCKERHUB_USERNAME: 'lsgeun'
 
 jobs:
   build-test:
@@ -96,7 +102,7 @@ jobs:
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          username: ${{ env.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       
       # (6) Docker 이미지 빌드 및 Docker Hub 푸시
@@ -106,7 +112,7 @@ jobs:
           context: ${{ env.SPRING_CORE_API_DIR }}
           file: ${{ env.SPRING_CORE_API_DIR }}/Dockerfile
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_REPOSITORY }}:latest
+          tags: ${{ env.DOCKERHUB_USERNAME }}/${{ env.DOCKERHUB_REPOSITORY }}:latest
           # 10GB 초과시 자동 삭제, 혹은 일정 기간 뒤 자동 삭제
           cache-from: type=gha
           cache-to: type=gha,mode=max
@@ -139,13 +145,13 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_DEPLOYMENT_ACCESS_KEY }}
           aws-secret-access-key: ${{ secrets.AWS_DEPLOYMENT_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
+          aws-region: ${{ env.AWS_REGION }}
 
       # (10) S3에 배포 파일 업로드
       - name: Upload deployment package to S3
         run: |
           echo "🚀 S3 업로드 시작..."
-          aws s3 cp ${{ github.sha }}.zip s3://${{ secrets.S3_BUCKET_NAME }}/${{ github.sha }}.zip
+          aws s3 cp ${{ github.sha }}.zip s3://${{ env.S3_BUCKET_NAME }}/${{ github.sha }}.zip
           echo "✅ S3 업로드 완료"
 
       # (11) AWS CodeDeploy 실행
@@ -153,8 +159,8 @@ jobs:
         run: |
           echo "🚀 EC2 배포 요청 시작..."
           aws deploy create-deployment \
-            --application-name ${{ secrets.CODE_DEPLOY_APPLICATION_NAME }} \
+            --application-name ${{ env.CODE_DEPLOY_APPLICATION_NAME }} \
             --deployment-config-name CodeDeployDefault.AllAtOnce \
-            --deployment-group-name ${{ secrets.CODE_DEPLOY_DEPLOYMENT_GROUP_NAME }} \
-            --s3-location bucket=${{ secrets.S3_BUCKET_NAME }},key=${{ github.sha }}.zip,bundleType=zip
+            --deployment-group-name ${{ env.CODE_DEPLOY_DEPLOYMENT_GROUP_NAME }} \
+            --s3-location bucket=${{ env.S3_BUCKET_NAME }},key=${{ github.sha }}.zip,bundleType=zip
           echo "✅ AWS CodeDeploy 배포 요청 완료!"
