@@ -6,7 +6,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: create-drop # 테스트 시작 시 테이블 생성, 종료 시 삭제
+      ddl-auto: validate # 스키마는 Flyway가 만들고, Hibernate는 엔티티와 일치하는지 검사만 함
     show-sql: true
     properties:
       hibernate:
