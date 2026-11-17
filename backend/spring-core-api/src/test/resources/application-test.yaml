@@ -1,9 +1,5 @@
 spring:
-  datasource:
-    url: jdbc:h2:mem:ecommerce-test;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
-    username: sa
-    password:
-
+  # datasource는 Testcontainers가 MySQL 컨테이너 접속 정보로 자동 주입
   jpa:
     hibernate:
       ddl-auto: validate # 스키마는 Flyway가 만들고, Hibernate는 엔티티와 일치하는지 검사만 함
