@@ -1,15 +1,10 @@
 spring:
-  # 1. H2 콘솔 완벽 비활성화
   datasource:
     url: jdbc:mysql://${MYSQL_HOST}/ecommerce?serverTimezone=Asia/Seoul
     username: ${MYSQL_USER}
     password: ${MYSQL_PASSWORD}
 
-  h2:
-    console:
-      enabled: false
-
-  # 2. JPA & OSIV 설정
+  # JPA & OSIV 설정
   jpa:
     open-in-view: false # OSIV 비활성화 (성능 및 커넥션 풀 고갈 방지)
     show-sql: false

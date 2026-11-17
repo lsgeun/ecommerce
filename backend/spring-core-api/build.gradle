@@ -26,7 +26,6 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.17'
 	compileOnly 'org.projectlombok:lombok'
-	runtimeOnly 'com.h2database:h2'
     // bootRun 시 compose.yaml의 컨테이너를 자동으로 띄움. bootJar에는 포함되지 않음
     developmentOnly 'org.springframework.boot:spring-boot-docker-compose'
 	implementation 'org.flywaydb:flyway-core'

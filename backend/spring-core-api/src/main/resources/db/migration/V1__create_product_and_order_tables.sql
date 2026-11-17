@@ -1,5 +1,3 @@
--- H2(local, test)와 MySQL(dev)에서 모두 실행되도록 두 DB가 공통으로 지원하는 문법만 사용
-
 CREATE TABLE product_tb (
     id BIGINT NOT NULL AUTO_INCREMENT,
     number VARCHAR(50) NOT NULL,
