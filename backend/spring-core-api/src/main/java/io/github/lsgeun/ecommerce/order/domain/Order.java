@@ -19,6 +19,9 @@ import lombok.NoArgsConstructor;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
+
 @Entity
 @Table(name = "order_tb")
 @Getter
@@ -33,7 +36,8 @@ public class Order {
     private Long userId;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @JdbcTypeCode(SqlTypes.VARCHAR)
+    @Column(nullable = false, length = 20)
     private OrderStatus status;
 
     // 주문이 없으면 항목도 의미가 없으므로 주문과 생명주기를 함께 관리

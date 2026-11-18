@@ -11,7 +11,7 @@ CREATE TABLE product_tb (
 CREATE TABLE order_tb (
     id BIGINT NOT NULL AUTO_INCREMENT,
     user_id BIGINT NOT NULL,
-    status ENUM ('CREATED') NOT NULL,
+    status VARCHAR(20) NOT NULL,
     PRIMARY KEY (id)
 );
 
