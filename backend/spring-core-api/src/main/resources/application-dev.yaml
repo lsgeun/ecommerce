@@ -1,21 +1,19 @@
+server:
+  forward-headers-strategy: framework
+
 spring:
-  # 1. H2 콘솔 완벽 비활성화
   datasource:
     url: jdbc:mysql://${MYSQL_HOST}/ecommerce?serverTimezone=Asia/Seoul
     username: ${MYSQL_USER}
     password: ${MYSQL_PASSWORD}
 
-  h2:
-    console:
-      enabled: false
-
-  # 2. JPA & OSIV 설정
+  # JPA & OSIV 설정
   jpa:
     open-in-view: false # OSIV 비활성화 (성능 및 커넥션 풀 고갈 방지)
     show-sql: false
     hibernate:
-      # stage 환경에서 편의상 update 혹은 validate
-      ddl-auto: update
+      # 스키마는 Flyway가 만들고, Hibernate는 엔티티와 일치하는지 검사만 함
+      ddl-auto: validate
     properties:
       hibernate:
         format_sql: false # 운영 로그 용량 절약을 위해 SQL 포맷팅 끔

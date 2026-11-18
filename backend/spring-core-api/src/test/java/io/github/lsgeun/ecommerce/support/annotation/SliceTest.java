@@ -4,10 +4,16 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import io.github.lsgeun.ecommerce.support.container.TestcontainersConfiguration;
 import org.junit.jupiter.api.Tag;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 
+// @DataJpaTest가 DB를 임베디드로 교체하지 않고 Testcontainers MySQL을 그대로 쓰게 함
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ActiveProfiles("test")
+@Import(TestcontainersConfiguration.class)
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Tag("slice")

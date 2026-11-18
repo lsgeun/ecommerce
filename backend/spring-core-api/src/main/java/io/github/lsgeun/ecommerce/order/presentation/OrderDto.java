@@ -3,6 +3,7 @@ package io.github.lsgeun.ecommerce.order.presentation;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Value;
@@ -24,7 +25,7 @@ public interface OrderDto {
 
             @Value
             public static class Item {
-                @NotNull(message = "상품 번호는 필수입니다.")
+                @NotBlank(message = "상품 번호는 필수입니다.")
                 String productNumber;
 
                 @NotNull(message = "주문 수량은 필수입니다.")
