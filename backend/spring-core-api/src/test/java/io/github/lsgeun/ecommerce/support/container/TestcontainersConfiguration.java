@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.utility.DockerImageName;
 
-// 테스트와 local 실행이 함께 쓰는 MySQL 컨테이너 정의
+// 테스트 실행에서 함께 쓰는 MySQL 컨테이너 정의
 // @ServiceConnection이 컨테이너의 접속 정보를 datasource 설정으로 자동 연결한다
 @TestConfiguration(proxyBeanMethods = false)
 public class TestcontainersConfiguration {
