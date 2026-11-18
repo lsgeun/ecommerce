@@ -33,31 +33,3 @@
 AWS EC2 인스턴스 서버의 보안그룹에서 인바운드 ip는 모두 차단, 아웃바운드 ip, 프로토콜, 포트는 모두 허용
 로컬과 AWS EC2 인스턴스와 모니터링 데이터를 송신, 수신할 때, ssh 터널링이 사용
 tailscale 기반 가상 네트워크를 통해 검증된 계정으로만 서버와 로컬이 통신
-
-# 엔티티 컬럼 이름
-
-테이블이 이미 네임스페이스 역할을 하므로, 컬럼 이름은 기본적으로 테이블 이름을 포함하지 않는 이름으로 작성. 예: `status`, `quantity`
-다른 도메인의 값을 참조하거나 복사한 값은 해당 도메인 이름을 접두사로 붙임. 예: `product_name`, `user_id`
-같은 테이블에 같은 종류의 값이 여러 개면 구분되는 접두사를 붙임. 예: `order_status`, `payment_status`
-
-# 테스트 실행
-
-백엔드 테스트는 `backend/spring-core-api`에서 Gradle 태스크로 실행
-테스트는 종류별 태그(`unit`, `slice`, `integration`)로 나뉘며, 태스크도 종류별로 분리
-
-- 전체: `./gradlew test` (단위, 슬라이스, 통합 순으로 실행 후 태그 없는 나머지 실행. 앞 단계가 실패하면 뒤 단계는 실행되지 않음)
-- 단위: `./gradlew unitTest`
-- 슬라이스: `./gradlew sliceTest`
-- 통합: `./gradlew integrationTest`
-
-특정 테스트 클래스만 실행할 때는 해당 종류의 태스크에 `--tests`를 붙임. 예: `./gradlew unitTest --tests '*ProductTest'`
-`test`에 `--tests`를 붙이면 태그 없는 테스트만 대상이라 "No tests found"로 실패하므로 **절대** 쓰지 않음
-Gradle이 up-to-date로 건너뛰면 테스트가 실제로 돌지 않으므로, 결과 확인이 필요하면 `--rerun`을 붙임
-
-# DB 마이그레이션
-
-DB는 MySQL이며, Flyway 마이그레이션(`backend/spring-core-api/src/main/resources/db/migration/V{버전}__{설명}.sql`)은 MySQL 방언으로 작성
-엔티티를 추가, 변경하면 마이그레이션도 함께 작성하고, 컬럼 이름은 "엔티티 컬럼 이름" 규칙을 따름
-**이미 적용(배포)된 마이그레이션은 절대 수정하지 않고** 새 버전 파일을 추가
-컬럼, 테이블 삭제 등 데이터가 사라지는 변경은 작성 전에 사용자에게 확인
-enum 컬럼은 MySQL `ENUM` 타입 대신 `VARCHAR(n)`으로 작성 (값 추가 시 마이그레이션이 필요 없도록)
