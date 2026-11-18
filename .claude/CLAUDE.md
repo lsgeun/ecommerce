@@ -53,3 +53,11 @@ tailscale 기반 가상 네트워크를 통해 검증된 계정으로만 서버�
 특정 테스트 클래스만 실행할 때는 해당 종류의 태스크에 `--tests`를 붙임. 예: `./gradlew unitTest --tests '*ProductTest'`
 `test`에 `--tests`를 붙이면 태그 없는 테스트만 대상이라 "No tests found"로 실패하므로 **절대** 쓰지 않음
 Gradle이 up-to-date로 건너뛰면 테스트가 실제로 돌지 않으므로, 결과 확인이 필요하면 `--rerun`을 붙임
+
+# DB 마이그레이션
+
+DB는 MySQL이며, Flyway 마이그레이션(`backend/spring-core-api/src/main/resources/db/migration/V{버전}__{설명}.sql`)은 MySQL 방언으로 작성
+엔티티를 추가, 변경하면 마이그레이션도 함께 작성하고, 컬럼 이름은 "엔티티 컬럼 이름" 규칙을 따름
+**이미 적용(배포)된 마이그레이션은 절대 수정하지 않고** 새 버전 파일을 추가
+컬럼, 테이블 삭제 등 데이터가 사라지는 변경은 작성 전에 사용자에게 확인
+enum 컬럼은 MySQL `ENUM` 타입 대신 `VARCHAR(n)`으로 작성 (값 추가 시 마이그레이션이 필요 없도록)
