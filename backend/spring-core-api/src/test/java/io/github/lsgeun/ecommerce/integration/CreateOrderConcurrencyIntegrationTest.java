@@ -87,6 +87,7 @@ class CreateOrderConcurrencyIntegrationTest {
             return new ConcurrentResult(successCount, failures);
         } finally {
             executor.shutdownNow();
+            executor.awaitTermination(TASK_TIMEOUT_SECONDS, TimeUnit.SECONDS);
         }
     }
 
