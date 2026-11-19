@@ -115,6 +115,22 @@ public class Product {
         this.stock -= quantity;
     }
 
+    // 주문 취소로 되돌아오는 수량만큼 재고를 늘리며, 재고 상한을 넘으면 예외로 막는다
+    public void increaseStock(int quantity) {
+        validateRestoreQuantity(quantity);
+        validateStock(this.stock + quantity);
+
+        this.stock += quantity;
+    }
+
+    private static void validateRestoreQuantity(int quantity) {
+        if (quantity < 0) {
+            throw new InvalidDomainFieldException(
+                Product.class, "quantity", quantity, "복구 수량은 0 이상이어야 합니다."
+            );
+        }
+    }
+
     // 차감 수량이 음수이면 재고가 오히려 늘어나므로 막는다
     private static void validateQuantity(int quantity) {
         if (quantity < 0) {
