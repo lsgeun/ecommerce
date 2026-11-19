@@ -7,11 +7,11 @@ import io.github.lsgeun.ecommerce.order.infrastructure.OrderJpaRepository;
 import io.github.lsgeun.ecommerce.product.domain.Product;
 import io.github.lsgeun.ecommerce.product.infrastructure.ProductJpaRepository;
 import io.github.lsgeun.ecommerce.support.annotation.IntegrationTest;
+import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.ArrayList;
@@ -30,20 +30,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 // 트랜잭션 롤백으로는 다른 스레드의 커밋을 재현할 수 없으므로 @Transactional을 쓰지 않고 직접 정리한다.
 @SpringBootTest
 @IntegrationTest
+@RequiredArgsConstructor
 class CreateOrderConcurrencyIntegrationTest {
 
     private static final String PRODUCT_NUMBER = "P-CONCURRENCY";
     private static final long USER_ID = 1L;
     private static final long TASK_TIMEOUT_SECONDS = 30L;
 
-    @Autowired
-    private OrderSimpleService orderSimpleService;
-
-    @Autowired
-    private ProductJpaRepository productJpaRepository;
-
-    @Autowired
-    private OrderJpaRepository orderJpaRepository;
+    private final OrderSimpleService orderSimpleService;
+    private final ProductJpaRepository productJpaRepository;
+    private final OrderJpaRepository orderJpaRepository;
 
     @AfterEach
     void cleanUp() {
