@@ -2,10 +2,10 @@ package io.github.lsgeun.ecommerce.product.infrastructure;
 
 import io.github.lsgeun.ecommerce.product.domain.Product;
 import io.github.lsgeun.ecommerce.support.annotation.SliceTest;
+import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
@@ -15,13 +15,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
 @SliceTest
+@RequiredArgsConstructor
 class ProductJpaRepositorySliceTest {
 
-    @Autowired
-    private TestEntityManager testEntityManager;
-
-    @Autowired
-    private ProductJpaRepository productJpaRepository;
+    private final TestEntityManager testEntityManager;
+    private final ProductJpaRepository productJpaRepository;
 
     private Product createProduct(String number) {
         return Product.create(number, "테스트상품", 10_000L, 5);
