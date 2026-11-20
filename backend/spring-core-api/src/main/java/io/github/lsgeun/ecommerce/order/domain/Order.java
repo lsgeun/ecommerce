@@ -1,6 +1,7 @@
 package io.github.lsgeun.ecommerce.order.domain;
 
 import io.github.lsgeun.ecommerce.common.exception.business.InvalidDomainFieldException;
+import io.github.lsgeun.ecommerce.common.exception.business.InvalidDomainStateException;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -12,6 +13,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.Version;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -40,6 +42,10 @@ public class Order {
     @Column(nullable = false, length = 20)
     private OrderStatus status;
 
+    // 취소는 드물게 일어나 충돌이 적으므로 락 대기 없이 커밋 시점에 충돌을 감지하는 낙관적 락 사용
+    @Version
+    private Long version;
+
     // 주문이 없으면 항목도 의미가 없으므로 주문과 생명주기를 함께 관리
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "order_id", nullable = false)
@@ -56,6 +62,17 @@ public class Order {
 
     public static Order create(Long userId, List<OrderItem> items) {
         return new Order(userId, items);
+    }
+
+    // 이미 취소된 주문을 다시 취소하면 재고가 중복 복구되므로 막는다
+    public void cancel() {
+        if (status != OrderStatus.CREATED) {
+            throw new InvalidDomainStateException(
+                Order.class, id, "취소할 수 있는 상태가 아닙니다. 현재 상태: " + status
+            );
+        }
+
+        this.status = OrderStatus.CANCELLED;
     }
 
     public long getTotalPrice() {

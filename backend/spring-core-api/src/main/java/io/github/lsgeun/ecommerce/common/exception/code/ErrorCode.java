@@ -10,6 +10,8 @@ public enum ErrorCode implements ErrorCodeSpec {
     DOMAIN_ENTITY_NOT_FOUND_ERROR("자원을 찾을 수 없습니다", "C001", Status.NOT_FOUND, LogLevel.WARN),
     INVALID_INPUT_ERROR("유효하지 않은 입력값입니다", "C002", Status.BAD_REQUEST, LogLevel.WARN),
     DOMAIN_ENTITY_ALREADY_EXISTS_ERROR("자원이 중복됩니다.", "C003", Status.CONFLICT, LogLevel.WARN),
+    INVALID_DOMAIN_STATE_ERROR("현재 상태에서는 처리할 수 없습니다.", "C004", Status.CONFLICT, LogLevel.WARN),
+    CONCURRENT_MODIFICATION_ERROR("동시 요청이 많아 처리하지 못했습니다. 잠시 후 다시 시도해주세요.", "C005", Status.CONFLICT, LogLevel.WARN),
 
     UNEXPECTED_SERVER_ERROR("서버 오류가 발생했습니다", "S001", Status.INTERNAL_SERVER_ERROR, LogLevel.ERROR);
 

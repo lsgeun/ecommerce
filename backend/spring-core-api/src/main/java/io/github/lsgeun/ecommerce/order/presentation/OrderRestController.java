@@ -1,5 +1,6 @@
 package io.github.lsgeun.ecommerce.order.presentation;
 
+import io.github.lsgeun.ecommerce.order.application.OrderCancelRetryService;
 import io.github.lsgeun.ecommerce.order.application.OrderItemCommand;
 import io.github.lsgeun.ecommerce.order.application.OrderSimpleService;
 import io.github.lsgeun.ecommerce.order.domain.Order;
@@ -21,6 +22,7 @@ import java.util.List;
 public class OrderRestController {
 
     private final OrderSimpleService orderSimpleService;
+    private final OrderCancelRetryService orderCancelRetryService;
     private final OrderDtoMapper orderDtoMapper;
 
     @PostMapping
@@ -39,5 +41,12 @@ public class OrderRestController {
         Order order = orderSimpleService.getOrder(id);
 
         return ResponseEntity.ok(orderDtoMapper.toResponse(order));
+    }
+
+    @PostMapping("/{id}/cancel")
+    public ResponseEntity<OrderDto.Response> cancelOrder(@PathVariable Long id) {
+        Order cancelledOrder = orderCancelRetryService.cancelOrder(id);
+
+        return ResponseEntity.ok(orderDtoMapper.toResponse(cancelledOrder));
     }
 }
